@@ -7,7 +7,7 @@ My goal is to build an RNN that creates music lyrics based on the dataset.
 - [RNN effectiveness (karpathy)](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
 - [Difficulty of training RNNs](http://proceedings.mlr.press/v28/pascanu13.pdf)
 - [Visualizing and understanding RNNs](https://arxiv.org/pdf/1506.02078.pdf)
-
+- [AI written movie](https://arstechnica.com/gaming/2016/06/an-ai-wrote-this-movie-and-its-strangely-moving/)
 - *LSTM*
 ..* [paper about LSTM](http://www.bioinf.jku.at/publications/older/2604.pdf)
 ..* [colah](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
