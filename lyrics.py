@@ -193,7 +193,7 @@ sample = normalizer_X.transform(sample)
 sample = sample.reshape(sample.shape + (1,))
 
 
-predicted = classifier.predict(sample)
+predicted = model.predict(sample)
 
 seq = []
 for prediction in predicted:
