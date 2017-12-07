@@ -17,7 +17,7 @@ def read_file(file_content):
 class CharEncoder:
     
     def __init__(self):
-        self._onehot = OneHotEncoder()
+        self.onehot = OneHotEncoder()
         
     def transform(self, y):
         return np.array([self._vocab[ch].flatten() for ch in y])
@@ -25,9 +25,9 @@ class CharEncoder:
     def fit(self, y):
         vocab = sorted(list(set(y)))
         self._vocab = dict((c,i) for i, c in enumerate(vocab))
-        self._onehot.fit(np.array(list(self._vocab.values())).reshape(-1, 1))
+        self.onehot.fit(np.array(list(self._vocab.values())).reshape(-1, 1))
         for key, value in self._vocab.items():
-            self._vocab[key] = self._onehot.transform(value).toarray().flatten()
+            self._vocab[key] = self.onehot.transform(value).toarray().flatten()
         
     
     def fit_transform(self, y):
