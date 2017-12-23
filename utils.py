@@ -56,13 +56,16 @@ class CharEncoder:
     
     def __init__(self):
         self.onehot = OneHotEncoder()
+        self._RARE = '<RARE_CHAR>'
         
     def transform(self, y):
-        return np.array([self._vocab[ch].flatten() for ch in y])
+        return np.array([self._vocab[ch] if ch in self._vocab else self._vocab[self._RARE].flatten() for ch in y])
     
     def fit(self, y):
         vocab = sorted(list(set(y)))
+        vocab.append(self._RARE)
         self._vocab = dict((c,i) for i, c in enumerate(vocab))
+        
         self.onehot.fit(np.array(list(self._vocab.values())).reshape(-1, 1))
         for key, value in self._vocab.items():
             self._vocab[key] = self.onehot.transform(value).toarray().flatten()
