@@ -14,6 +14,7 @@ My goal is to build an RNN that creates music lyrics based on the dataset.
   -  [LSTM & diagrams](https://medium.com/@shiyan/understanding-lstm-and-its-diagrams-37e2f46f1714)
   -  [LSTM hard math](https://arxiv.org/pdf/1503.04069.pdf)
   -  [Deep sparse rectifier](http://proceedings.mlr.press/v15/glorot11a/glorot11a.pdf)
+  -  [Thesis on LSTM hyphenation (TDK, BME)](http://tdk.bme.hu/VIK/DownloadPaper/Szotagolas-mely-neuralis-halozatokkal1)
 
 ## Frameworks
 - [Dynet](https://github.com/clab/dynet)
@@ -26,3 +27,4 @@ My goal is to build an RNN that creates music lyrics based on the dataset.
 - [Anaconda](https://anaconda.org/)
 
 #### [Deep learning A-Z](https://www.superdatascience.com/deep-learning/)
+#### [Deep learning Goodfellow](http://www.deeplearningbook.org/)
