@@ -60,8 +60,8 @@ for i in range(100, len(sample)):
 out = np.array(out)
 
 y = classifier.predict(out)
-
-y = np.argmax(y, axis=1) #NOT AXIS 0
+#y = np.argmax(y, axis=1)
+y = np.array([np.random.choice(len(single_prediction), p=single_prediction) for single_prediction in y])
 
 result = []
 
