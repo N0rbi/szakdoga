@@ -7,6 +7,7 @@ Created on Sat Nov 25 17:15:11 2017
 @author: Norbi
 """
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import train_test_split
 import numpy as np
 import os
 
@@ -33,24 +34,52 @@ def load_model(name):
     
     return model
 
-
-def get_chunk(data, steps, chunk_size):
-    unit = int(len(data) / chunk_size)
-    has_no_remainer = len(data) % chunk_size == 0
-    chunks = range(unit, len(data), unit)
-    for u in chunks if has_no_remainer else chunks[:-1]:
-        train_X = []
-        train_y = []
-        for i in range(u-unit, u):
-            current_in = data[i:i+steps]
-            current_out = data[i + steps]
-            train_X.append(current_in)
-            train_y.append(current_out)
-        
-        train_X = np.array(train_X)
-        train_y = np.array(train_y)
+class DataChunk:
     
-        yield train_X, train_y
+    def __init__(self, data, steps, chunk_size, test_size=0.2):
+        #TODO: shuffle items in var u and select it in test_size - (1-test_size) fraction
+        self.__data = data
+        self.__steps = steps
+        self.__unit = int(len(data) / chunk_size)
+        self.__has_no_remainer = len(data) % chunk_size == 0
+        self.__chunks = range(self.__unit, len(data), self.__unit)
+    
+    def __iter__(self):
+        '''
+        A generator that returns the current batch of files.
+        '''
+        for u in self.__chunks if self.__has_no_remainer else self.__chunks[:-1]:
+            train_X = []
+            train_y = []
+            for i in range(u-self.__unit, u):
+                current_in = self.__data[i:i+ self.__steps]
+                current_out = self.__data[i + self.__steps]
+                train_X.append(current_in)
+                train_y.append(current_out)
+            
+            train_X = np.array(train_X)
+            train_y = np.array(train_y)
+        
+            yield train_X, train_y
+    
+    def get_dummy(self):
+        '''
+        A function that returns a structure of vectors of zero. The structure
+        is the same shape as the generator's return value's.
+        It is useful for the neural network to fit the input size.
+        '''
+        dummy_var = np.zeros(self.__data[0].shape)
+        dummy_X = []
+        dummy_y = []
+        for i in range(self.__unit):
+            current_in = np.repeat(np.array([dummy_var]), [self.__steps], axis=0)
+            current_out = dummy_var
+            dummy_X.append(current_in)
+            dummy_y.append(current_out)
+        dummy_X = np.array(dummy_X)
+        dummy_y = np.array(dummy_y)
+        
+        return dummy_X, dummy_y
 
 class CharEncoder:
     
