@@ -22,7 +22,7 @@ tensorboard = TensorBoard(log_dir='./logs', histogram_freq=250, write_graph=True
 callbacks_list = [checkpoint, tensorboard]
 
 # reseting the generator
-chunks = enumerate(get_chunk(data, 100, 100))
+chunks = enumerate(get_chunk(data, 100, 2000))
 
 for i, (train_X, train_y) in chunks:
     print('%d. chunk is being trained on.'% i)
@@ -33,40 +33,32 @@ sample = '''A buli íze a számban
 Lányok neonruhában
 Oldódnak a színpadon
 Részeg vagyok, nem is tudom
-Mire jó, ha jó ez
-Ha az alkohol boldoggá tesz
-Akkor az a kevés kis öröm
-Is kihányva fekszik a kövön
-
-Param, pararam
-Pararara-rararam
-Param, pararam
-Á-há
-
-(Refrén 2×:)
-Fáj a fejem, a szívem túl nagy
-És nem tudom, nem tudom, hol vagy
-Forog a világ, elfolyik minden
-Nekem senkim, de senkim sincse'''
+Mire jó, ha jó ez'''
 
 sample = encoder.transform(sample)
 
-out = []
+def predict_next(text):
+    x = text[-100:]
+    x = np.array([x])
+    probabilities = classifier.predict(x)
+    y = np.array([np.random.choice(len(prob), p=prob) for prob in probabilities])
+    y = encoder.onehot.transform(np.array(y).reshape(-1,1)).toarray()
+    text = np.append(text, y, axis=0)
+    return text
 
-for i in range(100, len(sample)):
-    s = sample[i-100:i]
-    out.append(s)
+def predict_next_n(text, n):
+    if n == 0:
+        return text
+    else:
+        return predict_next_n(predict_next(text), n-1)
 
-out = np.array(out)
 
-y = classifier.predict(out)
-#y = np.argmax(y, axis=1)
-y = np.array([np.random.choice(len(single_prediction), p=single_prediction) for single_prediction in y])
+prediction = predict_next_n(sample, 400)
 
 result = []
 
-for yc in y:
-    yc = encoder.onehot.transform(yc).toarray()
+for yc in prediction:
+    yc = yc.reshape(1,-1)
     yc = encoder.inverse_transform(yc)
     result.append(yc)
     
