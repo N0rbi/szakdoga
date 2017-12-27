@@ -3,7 +3,6 @@
 My goal is to build an RNN that creates music lyrics based on the dataset.
 
 ## Sources: 
-- [Multi task learning](http://ruder.io/multi-task/)
 - [RNN effectiveness (karpathy)](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
 - [Difficulty of training RNNs](http://proceedings.mlr.press/v28/pascanu13.pdf)
 - [Visualizing and understanding RNNs](https://arxiv.org/pdf/1506.02078.pdf)
@@ -15,6 +14,10 @@ My goal is to build an RNN that creates music lyrics based on the dataset.
   -  [LSTM hard math](https://arxiv.org/pdf/1503.04069.pdf)
   -  [Deep sparse rectifier](http://proceedings.mlr.press/v15/glorot11a/glorot11a.pdf)
   -  [Thesis on LSTM hyphenation (TDK, BME)](http://tdk.bme.hu/VIK/DownloadPaper/Szotagolas-mely-neuralis-halozatokkal1)
+- **Multitask learning**
+  - [Multi task learning](http://ruder.io/multi-task/)
+  - [Bidirectional Long Short-Term Memory Models and Auxiliary Loss](https://arxiv.org/abs/1604.05529)
+  - [Semi-supervised Multitask Learning for Sequence Labeling](https://arxiv.org/abs/1704.07156)
 
 ## Frameworks
 - [Dynet](https://github.com/clab/dynet)
@@ -28,3 +31,4 @@ My goal is to build an RNN that creates music lyrics based on the dataset.
 
 #### [Deep learning A-Z](https://www.superdatascience.com/deep-learning/)
 #### [Deep learning Goodfellow](http://www.deeplearningbook.org/)
+#### [Software 2.0 - (karpathy)](https://medium.com/@karpathy/software-2-0-a64152b37c35)
