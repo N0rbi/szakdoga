@@ -36,13 +36,12 @@ def load_model(name):
 
 class DataChunk:
     
-    def __init__(self, data, steps, chunk_size, test_size=0.2):
-        #TODO: shuffle items in var u and select it in test_size - (1-test_size) fraction
+    def __init__(self, data, steps, chunk_size):
         self.__data = data
         self.__steps = steps
-        self.__unit = int(len(data) / chunk_size)
-        self.__has_no_remainer = len(data) % chunk_size == 0
-        self.__chunks = range(self.__unit, len(data), self.__unit)
+        self.__chunk_size = chunk_size
+        self.__has_no_remainer = len(self.__data) % self.__chunk_size == 0
+        self.__chunks = range(self.__steps, len(data), self.__chunk_size)
     
     def __iter__(self):
         '''
@@ -51,7 +50,7 @@ class DataChunk:
         for u in self.__chunks if self.__has_no_remainer else self.__chunks[:-1]:
             train_X = []
             train_y = []
-            for i in range(u-self.__unit, u):
+            for i in range(u-self.__steps, u):
                 current_in = self.__data[i:i+ self.__steps]
                 current_out = self.__data[i + self.__steps]
                 train_X.append(current_in)
@@ -61,6 +60,7 @@ class DataChunk:
             train_y = np.array(train_y)
         
             yield train_X, train_y
+        return
     
     def get_dummy(self):
         '''
@@ -71,7 +71,7 @@ class DataChunk:
         dummy_var = np.zeros(self.__data[0].shape)
         dummy_X = []
         dummy_y = []
-        for i in range(self.__unit):
+        for i in range(self.__chunk_size):
             current_in = np.repeat(np.array([dummy_var]), [self.__steps], axis=0)
             current_out = dummy_var
             dummy_X.append(current_in)
