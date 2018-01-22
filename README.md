@@ -25,6 +25,15 @@ My goal is to build an RNN that creates music lyrics based on the dataset.
 - [Keras](https://keras.io/)
 - [Tensorflow](https://www.tensorflow.org/)
 
+## Word based encoding
+- [fastText](https://fasttext.cc/)
+- [fastText genism wrapper](https://radimrehurek.com/gensim/models/wrappers/fasttext.html)
+- [tokenization](http://www.nltk.org/api/nltk.tokenize.html)
+- [word embeddings (and motivation behind it)](https://www.youtube.com/watch?v=5PL0TmQhItY)
+
+## Heuristics
+- [Bias-variance tradeoff (?)](https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff)
+- [perplexity](https://en.wikipedia.org/wiki/Perplexity)
 
 ## Environment
 - [Anaconda](https://anaconda.org/)
