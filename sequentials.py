@@ -49,7 +49,7 @@ def get_classifier_1lstm_short_mem(X_train, y_train):
     
     classifier.add(Dense(units = y_train.shape[1], activation='softmax'))
     
-    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy")
+    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
     
     return classifier
 

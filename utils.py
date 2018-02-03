@@ -40,25 +40,25 @@ class DataChunk:
         self.__data = data
         self.__steps = steps
         self.__chunk_size = chunk_size
-        self.__has_no_remainer = len(self.__data) % self.__chunk_size == 0
-        self.__chunks = range(self.__steps, len(data), self.__chunk_size)
+        self.__chunks = range(0, len(data)-self.__steps, self.__chunk_size)
+        print('')
     
     def __iter__(self):
         '''
         A generator that returns the current batch of files.
         '''
-        for u in self.__chunks if self.__has_no_remainer else self.__chunks[:-1]:
+        for u in self.__chunks:
             train_X = []
             train_y = []
-            for i in range(u-self.__steps, u):
-                current_in = self.__data[i:i+ self.__steps]
+            for i in range(u, u+self.__chunk_size-self.__steps+1):
+                current_in = self.__data[i:i + self.__steps]
                 current_out = self.__data[i + self.__steps]
                 train_X.append(current_in)
                 train_y.append(current_out)
-            
+
             train_X = np.array(train_X)
             train_y = np.array(train_y)
-        
+
             yield train_X, train_y
         return
     
