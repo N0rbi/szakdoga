@@ -10,8 +10,6 @@ PATIENCE_LIMIT = 25
 data = read_file('dataset/%s.txt' % ARTIST)
 DATA_SLICE = len(data) // 10
 
-log = TrainLogger('train-log-%s.csv' % ARTIST)
-
 TENSOR_LOGGER = './tf-logs'
 tensorboard = TensorBoard(TENSOR_LOGGER)
 train_log_per_batch_names = ['train_batch_loss', 'train_batch_accuracy']
@@ -60,8 +58,6 @@ for epoch in range(EPOCHS):
     write_log_to_board(tensorboard, val_log_names, (val_loss_avg, val_acc_avg), global_steps)
     write_log_to_board(tensorboard, train_log_per_epoch_names, (train_loss_avg, train_acc_avg), global_steps)
     print('[%d]FINISHING EPOCH.. val_loss = %f, val_acc = %f' % (epoch + 1, val_loss_avg, val_acc_avg))
-
-    log.add_entry(train_loss_avg, train_acc_avg, val_loss_avg, val_acc_avg)
 
     if val_loss_avg <= min_loss:
         min_loss = val_loss_avg

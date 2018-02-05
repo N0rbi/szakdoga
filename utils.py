@@ -186,23 +186,3 @@ def load_or_create_encoder(artist, formatter, data):
             os.mkdir(ENCODERS_DIR)
         persist_object(encoder, filename)
     return encoder
-
-
-class TrainLogger(object):
-    '''
-    Training logger class was pulled from ekzhang's repo on char rnn for keras
-    https://github.com/ekzhang/char-rnn-keras/blob/master/train.py
-    '''
-    def __init__(self, file):
-        self.file = os.path.join(LOG_DIR, file)
-        self.epochs = 0
-        if not os.path.exists(LOG_DIR):
-            os.mkdir(LOG_DIR)
-        with open(self.file, 'w') as f:
-            f.write('epoch,loss,acc,v loss, v acc\n')
-
-    def add_entry(self, loss, acc, v_loss, v_acc):
-        self.epochs += 1
-        s = '{},{},{},{},{}\n'.format(self.epochs, loss, acc, v_loss, v_acc)
-        with open(self.file, 'a') as f:
-            f.write(s)
