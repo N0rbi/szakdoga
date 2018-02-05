@@ -36,7 +36,7 @@ def get_classifier_1lstm_long_mem(X_train, y_train):
     
     classifier.add(Dense(units = y_train.shape[1], activation='softmax'))
     
-    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy")
+    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
 
     return classifier
 
@@ -63,6 +63,6 @@ def get_classifier_2lstm_medium_mem(X_train, y_train):
     classifier.add(Dropout(rate=0.2))
     classifier.add(Dense(units = y_train.shape[1], activation='softmax'))
     
-    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy")
+    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
     
     return classifier

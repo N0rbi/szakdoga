@@ -16,10 +16,15 @@ def read_file(file_content):
         content = file_ref.read()
     return content
 
+
+MODELS_DIR = 'models'
+
+
 def persist_model(model, name):
     serialized = model.to_json()
-
-    with open(os.path.join("models", name+".json"), "w") as json:
+    if not os.path.exists(MODELS_DIR):
+        os.mkdir(MODELS_DIR)
+    with open(os.path.join(MODELS_DIR, name+".json"), "w") as json:
         json.write(serialized)
     
     model.save_weights(os.path.join("models", name+".h5"))
@@ -51,6 +56,8 @@ class DataChunk:
             train_X = []
             train_y = []
             for i in range(u, u+self.__chunk_size-self.__steps+1):
+                if i + self.__steps == len(self.__data):
+                    return
                 current_in = self.__data[i:i + self.__steps]
                 current_out = self.__data[i + self.__steps]
                 train_X.append(current_in)
@@ -81,6 +88,7 @@ class DataChunk:
         
         return dummy_X, dummy_y
 
+
 class CharEncoder:
     
     def __init__(self):
@@ -110,3 +118,24 @@ class CharEncoder:
 
     def _invert_onehot(self, encoded):
         return np.where(encoded==1)[0][0]
+
+LOG_DIR = 'train_log'
+
+class TrainLogger(object):
+    '''
+    Training logger class was pulled from ekzhang's repo on char rnn for keras
+    https://github.com/ekzhang/char-rnn-keras/blob/master/train.py
+    '''
+    def __init__(self, file):
+        self.file = os.path.join(LOG_DIR, file)
+        self.epochs = 0
+        if not os.path.exists(LOG_DIR):
+            os.mkdir(LOG_DIR)
+        with open(self.file, 'w') as f:
+            f.write('epoch,loss,acc,v loss, v acc\n')
+
+    def add_entry(self, loss, acc, v_loss, v_acc):
+        self.epochs += 1
+        s = '{},{},{},{},{}\n'.format(self.epochs, loss, acc, v_loss, v_acc)
+        with open(self.file, 'a') as f:
+            f.write(s)
