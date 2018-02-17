@@ -17,6 +17,7 @@ MODELS_DIR = 'models'
 LOG_DIR = 'train_log'
 ENCODERS_DIR = 'encoders'
 
+
 def read_file(file_content):
     with open(file_content, encoding='utf-8') as file_ref:
         content = file_ref.read()
@@ -29,7 +30,7 @@ def persist_model(model, name):
         os.mkdir(MODELS_DIR)
     with open(os.path.join(MODELS_DIR, name+".json"), "w") as json:
         json.write(serialized)
-    
+
     model.save_weights(os.path.join("models", name+".h5"))
 
 
@@ -40,7 +41,7 @@ def load_model(name):
     loaded.close()
     model = model_from_json(model)
     model.load_weights(os.path.join("models", name+".h5"))
-    
+
     return model
 
 
@@ -71,17 +72,18 @@ def write_log_to_board(tensorboard_callback, names, logs, batch_no):
 
 
 class DataChunk:
-    
-    def __init__(self, data, steps, chunk_size):
+
+    def __init__(self, data, steps, chunk_size, encoder):
         self.__data = data
         self.__steps = steps
         self.__chunk_size = chunk_size
         self.__chunks = range(0, len(data)-self.__steps, self.__chunk_size)
+        self.__encoder = encoder
         print('')
-    
+
     def __iter__(self):
         '''
-        A generator that returns the current batch of files.
+        A generator that returns the current batch of data.
         '''
         for u in self.__chunks:
             train_X = []
@@ -91,40 +93,21 @@ class DataChunk:
                     return
                 current_in = self.__data[i:i + self.__steps]
                 current_out = self.__data[i + self.__steps]
-                train_X.append(current_in)
-                train_y.append(current_out)
+                train_X.append(self.__encoder.transform(current_in, False))
+                train_y.append(self.__encoder.transform(current_out).flatten())
 
             train_X = np.array(train_X)
             train_y = np.array(train_y)
 
             yield train_X, train_y
         return
-    
-    def get_dummy(self):
-        '''
-        A function that returns a structure of vectors of zero. The structure
-        is the same shape as the generator's return value's.
-        It is useful for the neural network to fit the input size.
-        '''
-        dummy_var = np.zeros(self.__data[0].shape)
-        dummy_X = []
-        dummy_y = []
-        for i in range(self.__chunk_size):
-            current_in = np.repeat(np.array([dummy_var]), [self.__steps], axis=0)
-            current_out = dummy_var
-            dummy_X.append(current_in)
-            dummy_y.append(current_out)
-        dummy_X = np.array(dummy_X)
-        dummy_y = np.array(dummy_y)
-        
-        return dummy_X, dummy_y
 
 
 ENCODER_FORMAT_LOWERCASE = {'lowercase': lambda t: t.lower()}
 
 
 class CharEncoder:
-    
+
     def __init__(self, formaters=dict()):
         self.onehot = OneHotEncoder()
         self._RARE = '<RARE_CHAR>'
@@ -136,28 +119,29 @@ class CharEncoder:
             y = formater(y)
         return y
 
-    def transform(self, y):
+    def transform(self, y, with_onehot=True):
         y = self._format(y)
-        return np.array([self._vocab[ch] if ch in self._vocab else self._vocab[self._RARE].flatten() for ch in y])
-    
+        transformed_with_onehot = np.array([self._vocab[ch] if ch in self._vocab else self._vocab[self._RARE].flatten() for ch in y])
+        return [self._invert_onehot(xx) for xx in transformed_with_onehot] if not with_onehot else transformed_with_onehot
+
     def fit(self, y):
         y = self._format(y)
         vocab = sorted(list(set(y)))
         vocab.append(self._RARE)
-        self._vocab = dict((c,i) for i, c in enumerate(vocab))
-        
+        self._vocab = dict((c, i) for i, c in enumerate(vocab))
+
         self.onehot.fit(np.array(list(self._vocab.values())).reshape(-1, 1))
         for key, value in self._vocab.items():
             self._vocab[key] = self.onehot.transform(value).toarray().flatten()
-    
+
     def fit_transform(self, y):
         self.fit(y)
         y = self._format(y)
         return self.transform(y)
-    
+
     def inverse_transform(self, y):
         rev_vocab = {self._invert_onehot(v): k for k, v in self._vocab.items()}
-        return ''.join([rev_vocab[self._invert_onehot(i)] for i in y])
+        return ''.join([rev_vocab[i] for i in y])
 
     @staticmethod
     def _invert_onehot(encoded):

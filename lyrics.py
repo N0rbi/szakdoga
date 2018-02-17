@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from utils import *
-from sequentials import get_classifier_1lstm_short_mem, get_classifier_2lstm_medium_mem, get_classifier_1lstm_long_mem
+from sequentials import get_classifier
 from keras.callbacks import TensorBoard
 import math
 
 ARTIST = 'halott-penz'
-EPOCHS = 10
+EPOCHS = 250
 PATIENCE_LIMIT = 25
 data = read_file('dataset/%s.txt' % ARTIST)
 DATA_SLICE = len(data) // 10
@@ -18,15 +18,14 @@ val_log_names = ['val_loss', 'val_accuracy']
 test_log_names = ['test_loss', 'test_accuracy']
 
 encoder = load_or_create_encoder(ARTIST, ENCODER_FORMAT_LOWERCASE, data)
-data = encoder.transform(data)
 # Split data for testing and validating purposes
 val_data = data[0: DATA_SLICE]
 test_data = data[DATA_SLICE:2*DATA_SLICE]
 data = data[DATA_SLICE:]
-chunk = DataChunk(data, 100, 300)
-test_chunk = DataChunk(test_data, 100, 300)
+chunk = DataChunk(data, 100, 300, encoder)
+test_chunk = DataChunk(test_data, 100, 300, encoder)
 
-classifier = get_classifier_1lstm_short_mem(*chunk.get_dummy())
+classifier = get_classifier(*next(iter(chunk)), 2, 256, 64)
 tensorboard.set_model(classifier)
 
 min_loss = math.inf
@@ -35,8 +34,8 @@ best_model_name = None
 global_steps = 0
 for epoch in range(EPOCHS):
     print('\n[%d]Epoch %d/%d' % (epoch + 1, epoch + 1, EPOCHS))
-    chunk = DataChunk(data, 100, 300)
-    val_chunk = DataChunk(val_data, 100, 300)
+    chunk = DataChunk(data, 100, 300, encoder)
+    val_chunk = DataChunk(val_data, 100, 300, encoder)
     losses, accs, v_losses, v_accs = [], [], [], []
     for i, (train_X, train_y) in enumerate(iter(chunk)):
         loss, acc = classifier.train_on_batch(train_X, train_y)
@@ -45,12 +44,13 @@ for epoch in range(EPOCHS):
         losses.append(loss)
         accs.append(acc)
         global_steps += 1
+    classifier.reset_states()
 
     for (val_X, val_y) in iter(val_chunk):
         val_loss, val_acc = classifier.test_on_batch(val_X, val_y)
         v_losses.append(val_loss)
         v_accs.append(val_acc)
-
+    classifier.reset_states()
     val_loss_avg = np.average(v_losses)
     val_acc_avg = np.average(v_accs)
     train_loss_avg = np.average(losses)
@@ -77,7 +77,7 @@ classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics
 t_losses, t_accs = [], []
 for i, (test_X, test_y) in enumerate(iter(test_chunk)):
     test_loss, test_acc = classifier.test_on_batch(test_X, test_y)
-    write_log_to_board(tensorboard, test_log_names, (test_loss, test_acc), i)
+    write_log_to_board(tensorboard, test_log_names, (test_loss, test_acc), global_steps+i)
     t_losses.append(test_loss)
     t_accs.append(test_acc)
 

@@ -1,11 +1,11 @@
-from utils import load_model, read_file, CharEncoder
+from utils import load_model, load_or_create_encoder, ENCODER_FORMAT_LOWERCASE
 import numpy as np
 
 ARTIST = 'halott-penz'
 
-classifier = load_model('%s_e_10_l_2.4009' % ARTIST)
+classifier = load_model('%s_e_0_l_2.8633' % ARTIST)
 t_losses, t_accs = [], []
-classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy")
+classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=["accuracy"])
 
 sample = '''A buli íze a számban
 Lányok neonruhában
@@ -13,11 +13,9 @@ Oldódnak a színpadon
 Részeg vagyok, nem is tudom
 Mire jó, ha jó ez'''
 
-data = read_file('dataset/%s.txt' % ARTIST)
-encoder = CharEncoder() #TODO save encoder as well
-data = encoder.fit(data)
+encoder = load_or_create_encoder(ARTIST, ENCODER_FORMAT_LOWERCASE, None)
 
-sample = encoder.transform(sample)
+sample = encoder.transform(sample, False)
 
 
 def predict_next(text):
@@ -25,8 +23,7 @@ def predict_next(text):
     x = np.array([x])
     probabilities = classifier.predict(x)
     y = np.array([np.random.choice(len(prob), p=prob) for prob in probabilities])
-    y = encoder.onehot.transform(np.array(y).reshape(-1, 1)).toarray()
-    text = np.append(text, y, axis=0)
+    text = np.append(text, y)
     return text
 
 
@@ -37,13 +34,9 @@ def predict_next_n(text, n):
         return predict_next_n(predict_next(text), n - 1)
 
 
-prediction = predict_next_n(sample, 400)
+prediction = predict_next_n(sample, 300)
 
-result = []
+result = encoder.inverse_transform(prediction)
 
-for yc in prediction:
-    yc = yc.reshape(1, -1)
-    yc = encoder.inverse_transform(yc)
-    result.append(yc)
 
 print(''.join(result))
