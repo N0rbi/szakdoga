@@ -12,10 +12,12 @@ import dill as pickle
 import numpy as np
 import os
 import tensorflow as tf
+import datetime
 
-MODELS_DIR = 'models'
-LOG_DIR = 'train_log'
-ENCODERS_DIR = 'encoders'
+TARGET_DIR = 'target'
+MODELS_DIR = os.path.join(TARGET_DIR, 'models')
+LOG_DIR = os.path.join(TARGET_DIR, 'train_log')
+ENCODERS_DIR = os.path.join(TARGET_DIR, 'encoders')
 
 
 def read_file(file_content):
@@ -24,38 +26,56 @@ def read_file(file_content):
     return content
 
 
-def persist_model(model, name):
-    serialized = model.to_json()
-    if not os.path.exists(MODELS_DIR):
-        os.mkdir(MODELS_DIR)
-    with open(os.path.join(MODELS_DIR, name+".json"), "w") as json:
-        json.write(serialized)
+class ModelArtifact:
 
-    model.save_weights(os.path.join("models", name+".h5"))
+    def __init__(self, artist, model_id=None):
+        self.__id = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + "_" + artist \
+            if not model_id else model_id
+        # Create target dirs
+        if not os.path.exists(TARGET_DIR):
+            os.mkdir(TARGET_DIR)
+            if not os.path.exists(MODELS_DIR):
+                os.mkdir(MODELS_DIR)
+            if not os.path.exists(LOG_DIR):
+                os.mkdir(LOG_DIR)
+            if not os.path.exists(ENCODERS_DIR):
+                os.mkdir(ENCODERS_DIR)
 
+    def persist_model(self, model):
+        serialized = model.to_json()
+        if not os.path.exists(MODELS_DIR):
+            os.mkdir(MODELS_DIR)
+        with open(os.path.join(MODELS_DIR, self.__id + ".json"), "w+") as json:
+            json.write(serialized)
 
-def load_model(name):
-    from keras.models import model_from_json
-    loaded = open(os.path.join("models", name+".json"), 'r')
-    model = loaded.read()
-    loaded.close()
-    model = model_from_json(model)
-    model.load_weights(os.path.join("models", name+".h5"))
+        model.save_weights(os.path.join(MODELS_DIR, self.__id+".h5"))
 
-    return model
+    def load_model(self):
+        from keras.models import model_from_json
+        loaded = open(os.path.join(MODELS_DIR, self.__id+".json"), 'r')
+        model = loaded.read()
+        loaded.close()
+        model = model_from_json(model)
+        model.load_weights(os.path.join(MODELS_DIR, self.__id+".h5"))
 
+        return model
 
-def persist_object(obj, name):
-    file_name = '%s.pickle' % name
-    if os.path.exists(file_name):
-        raise FileExistsError
-    with open(file_name, 'wb') as file_stream:
-        pickle.dump(obj, file_stream)
+    def load_or_create_encoder(self, data):
+        file_name = os.path.join(ENCODERS_DIR, '%s.pickle' % self.__id)
+        try:
+            with open(os.path.join(file_name, 'rb')) as file_stream:
+                encoder = pickle.load(file_stream)
+        except FileNotFoundError:
+            encoder = CharEncoder(ENCODER_FORMAT_LOWERCASE)
+            encoder.fit(data)
+            if os.path.exists(file_name):
+                raise FileExistsError
+            with open(file_name, 'wb') as file_stream:
+                pickle.dump(encoder, file_stream)
+        return encoder
 
-
-def load_object(name):
-    with open('%s.pickle' % name, 'rb') as file_stream:
-        return pickle.load(file_stream)
+    def get_tensorflow_logdir(self):
+        return os.path.join(LOG_DIR, self.__id)
 
 
 def write_log_to_board(tensorboard_callback, names, logs, batch_no):
@@ -157,16 +177,3 @@ def get_formaters_str(format_dict):
     :return: formater identifier
     """
     return ''.join(sorted(list(map(lambda key: key[0], [key for key, _ in format_dict.items()]))))
-
-
-def load_or_create_encoder(artist, formatter, data):
-    filename = '%s/%s_encoder_%s' % (ENCODERS_DIR, artist, get_formaters_str(formatter))
-    try:
-        encoder = load_object(filename)
-    except FileNotFoundError:
-        encoder = CharEncoder(ENCODER_FORMAT_LOWERCASE)
-        encoder.fit(data)
-        if not os.path.exists(ENCODERS_DIR):
-            os.mkdir(ENCODERS_DIR)
-        persist_object(encoder, filename)
-    return encoder
