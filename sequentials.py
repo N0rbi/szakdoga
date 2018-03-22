@@ -4,7 +4,7 @@ Created on Sun Dec 10 16:25:02 2017
 
 @author: Norbi
 """
-
+from metrics import perplexity
 
 def get_classifier(X_train, y_train, lstm_layers, units, embedding_units):
     from keras.models import Sequential
@@ -18,6 +18,6 @@ def get_classifier(X_train, y_train, lstm_layers, units, embedding_units):
         classifier.add(Dropout(rate=0.2))
 
     classifier.add(Dense(units=y_train.shape[1], activation='softmax'))
-    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
+    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
     return classifier

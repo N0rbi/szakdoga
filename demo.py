@@ -1,9 +1,9 @@
 from utils import load_model, load_or_create_encoder, ENCODER_FORMAT_LOWERCASE
 import numpy as np
 
-ARTIST = 'halott-penz'
+ARTIST = '30y'
 
-classifier = load_model('%s_e_0_l_2.8633' % ARTIST)
+classifier = load_model('30y_e_9_l_2.1595', from_reference=True)
 t_losses, t_accs = [], []
 classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=["accuracy"])
 

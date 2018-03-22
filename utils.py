@@ -25,7 +25,6 @@ def read_file(file_content):
         content = file_ref.read()
     return content
 
-
 class ModelArtifact:
 
     def __init__(self, artist, model_id=None):
@@ -77,7 +76,6 @@ class ModelArtifact:
     def get_tensorflow_logdir(self):
         return os.path.join(LOG_DIR, self.__id)
 
-
 def write_log_to_board(tensorboard_callback, names, logs, batch_no):
     """
     [Source](https://gist.github.com/joelthchao/ef6caa586b647c3c032a4f84d52e3a11#file-demo-py-L24)
@@ -89,6 +87,20 @@ def write_log_to_board(tensorboard_callback, names, logs, batch_no):
         summary_value.tag = name
         tensorboard_callback.writer.add_summary(summary, batch_no)
         tensorboard_callback.writer.flush()
+
+
+def save_embedding_to_board(tensorboard_callback, batch_no):
+    tensorboard_callback.saver.save(tensorboard_callback.sess,
+                                    tensorboard_callback.embeddings_ckpt_path,
+                                    batch_no)
+
+
+def save_metadata_of_embedding(path, vocab):
+    with open(path, 'w') as file:
+        buffer = "Word\tFrequency\n"
+        for key, value in vocab.items():
+            buffer += repr(key) + '\t' + str(value) + '\n'
+        file.write(buffer)
 
 
 class DataChunk:
@@ -131,7 +143,8 @@ class CharEncoder:
     def __init__(self, formaters=dict()):
         self.onehot = OneHotEncoder()
         self._RARE = '<RARE_CHAR>'
-        self._vocab = dict()
+        self.vocab = dict()
+        self._onehotted_vocab = dict()
         self._formaters = formaters
 
     def _format(self, y):
@@ -141,31 +154,29 @@ class CharEncoder:
 
     def transform(self, y, with_onehot=True):
         y = self._format(y)
-        transformed_with_onehot = np.array([self._vocab[ch] if ch in self._vocab else self._vocab[self._RARE].flatten() for ch in y])
-        return [self._invert_onehot(xx) for xx in transformed_with_onehot] if not with_onehot else transformed_with_onehot
+        if not with_onehot:
+            return np.array([self.vocab[ch] if ch in self.vocab else self.vocab[self._RARE].flatten() for ch in y])
+        else:
+            return np.array([self._onehotted_vocab[ch] if ch in self.vocab else self.vocab[self._RARE].flatten() for ch in y])
 
     def fit(self, y):
         y = self._format(y)
         vocab = sorted(list(set(y)))
         vocab.append(self._RARE)
-        self._vocab = dict((c, i) for i, c in enumerate(vocab))
+        self.vocab = dict((c, i) for i, c in enumerate(vocab))
 
-        self.onehot.fit(np.array(list(self._vocab.values())).reshape(-1, 1))
-        for key, value in self._vocab.items():
-            self._vocab[key] = self.onehot.transform(value).toarray().flatten()
+        self.onehot.fit(np.array(list(self.vocab.values())).reshape(-1, 1))
+        for key, value in self.vocab.items():
+            self._onehotted_vocab[key] = self.onehot.transform(value).toarray().flatten()
 
-    def fit_transform(self, y):
+    def fit_transform(self, y, with_onehot=True):
         self.fit(y)
         y = self._format(y)
-        return self.transform(y)
+        return self.transform(y, with_onehot)
 
     def inverse_transform(self, y):
-        rev_vocab = {self._invert_onehot(v): k for k, v in self._vocab.items()}
+        rev_vocab = {v: k for k, v in self.vocab.items()}
         return ''.join([rev_vocab[i] for i in y])
-
-    @staticmethod
-    def _invert_onehot(encoded):
-        return np.where(encoded == 1)[0][0]
 
     def get_formaters_str(self):
         return get_formaters_str(self._formaters)
