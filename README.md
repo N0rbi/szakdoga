@@ -9,7 +9,7 @@ python lyrics.py --help
 for info.
 For tensorboard use
 ```
-tensorboard --logdir=target=train_log
+tensorboard --logdir=target/train_log
 ```
 from base folder (only works if you have at least 1 running/finished training).
 
