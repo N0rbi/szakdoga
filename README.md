@@ -2,6 +2,17 @@
 
 My goal is to build an RNN that creates music lyrics based on the dataset.
 
+To train use
+```
+python lyrics.py --help
+```
+for info.
+For tensorboard use
+```
+tensorboard --logdir=target=train_log
+```
+from base folder (only works if you have at least 1 running/finished training).
+
 ## Sources: 
 - [RNN effectiveness (karpathy)](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
 - [Difficulty of training RNNs](http://proceedings.mlr.press/v28/pascanu13.pdf)
