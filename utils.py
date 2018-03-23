@@ -62,7 +62,7 @@ class ModelArtifact:
     def load_or_create_encoder(self, data):
         file_name = os.path.join(ENCODERS_DIR, '%s.pickle' % self.__id)
         try:
-            with open(os.path.join(file_name, 'rb')) as file_stream:
+            with open(file_name, 'rb') as file_stream:
                 encoder = pickle.load(file_stream)
         except FileNotFoundError:
             encoder = CharEncoder(ENCODER_FORMAT_LOWERCASE)
