@@ -76,6 +76,7 @@ class ModelArtifact:
     def get_tensorflow_logdir(self):
         return os.path.join(LOG_DIR, self.__id)
 
+
 def write_log_to_board(tensorboard_callback, names, logs, batch_no):
     """
     [Source](https://gist.github.com/joelthchao/ef6caa586b647c3c032a4f84d52e3a11#file-demo-py-L24)
