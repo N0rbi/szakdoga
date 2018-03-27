@@ -20,7 +20,7 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
 
     tensorboard = TensorBoard(tensor_logger, embeddings_freq=100)
     train_log_per_batch_names = ['train_batch_loss', 'train_batch_accuracy', 'train_batch_perplexity']
-    train_log_per_epoch_names = ['train_epoch_loss', 'train_epoch_accuracy', 'train_epoch_accuracy']
+    train_log_per_epoch_names = ['train_epoch_loss', 'train_epoch_accuracy', 'train_epoch_perplexity']
     val_log_names = ['val_loss', 'val_accuracy', 'val_perplexity']
     test_log_names = ['test_loss', 'test_accuracy']
 
