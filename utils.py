@@ -74,7 +74,19 @@ class ModelArtifact:
         return encoder
 
     def get_tensorflow_logdir(self):
-        return os.path.join(LOG_DIR, self.__id)
+        tf_dir = os.path.join(LOG_DIR, self.__id)
+        if not os.path.exists(tf_dir):
+            os.mkdir(tf_dir)
+        return tf_dir
+
+    def save_metadata_of_embedding(self, vocab):
+        path = os.path.join(self.get_tensorflow_logdir(), 'metadata.tsv')
+        with open(path, 'w') as file:
+            buffer = "Word\tFrequency\n"
+            for key, value in vocab.items():
+                buffer += repr(key) + '\t' + str(value) + '\n'
+            file.write(buffer)
+        return path
 
 
 def write_log_to_board(tensorboard_callback, names, logs, batch_no):
@@ -94,14 +106,6 @@ def save_embedding_to_board(tensorboard_callback, batch_no):
     tensorboard_callback.saver.save(tensorboard_callback.sess,
                                     tensorboard_callback.embeddings_ckpt_path,
                                     batch_no)
-
-
-def save_metadata_of_embedding(path, vocab):
-    with open(path, 'w') as file:
-        buffer = "Word\tFrequency\n"
-        for key, value in vocab.items():
-            buffer += repr(key) + '\t' + str(value) + '\n'
-        file.write(buffer)
 
 
 class DataChunk:

@@ -18,12 +18,10 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     tensor_logger = artifact.get_tensorflow_logdir()
     encoder = artifact.load_or_create_encoder(data)
 
-    #save_metadata_of_embedding('tf-logs/metadata.tsv', encoder.vocab)
-
-    tensorboard = TensorBoard(tensor_logger, embeddings_freq=True, embeddings_metadata='metadata.tsv')  # we need the callback to init the visualizer
-    train_log_per_batch_names = ['train_batch_loss', 'train_batch_accuracy']
-    train_log_per_epoch_names = ['train_epoch_loss', 'train_epoch_accuracy']
-    val_log_names = ['val_loss', 'val_accuracy']
+    tensorboard = TensorBoard(tensor_logger, embeddings_freq=100)
+    train_log_per_batch_names = ['train_batch_loss', 'train_batch_accuracy', 'train_batch_perplexity']
+    train_log_per_epoch_names = ['train_epoch_loss', 'train_epoch_accuracy', 'train_epoch_accuracy']
+    val_log_names = ['val_loss', 'val_accuracy', 'val_perplexity']
     test_log_names = ['test_loss', 'test_accuracy']
 
     # Split data for testing and validating purposes
@@ -43,37 +41,45 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
         print('\n[%d]Epoch %d/%d' % (epoch + 1, epoch + 1, epochs))
         chunk = DataChunk(data, size_x, 300, encoder)
         val_chunk = DataChunk(val_data, size_x, 300, encoder)
-        losses, accs, v_losses, v_accs = [], [], [], []
+        losses, accs, perps, v_losses, v_accs, v_perps = [], [], [], [], [], []
         for i, (train_X, train_y) in enumerate(iter(chunk)):
             loss, acc, perp = classifier.train_on_batch(train_X, train_y)
             print('[%d]Batch %d: loss = %f, acc = %f, perp = %f' % (epoch + 1, i + 1, loss, acc, perp))
-            write_log_to_board(tensorboard, train_log_per_batch_names, (loss, acc), global_steps)
+            write_log_to_board(tensorboard, train_log_per_batch_names, (loss, acc, perp), global_steps)
             losses.append(loss)
             accs.append(acc)
+            perps.append(perp)
             global_steps += 1
         classifier.reset_states()
 
         for (val_X, val_y) in iter(val_chunk):
-            val_loss, val_acc, _ = classifier.test_on_batch(val_X, val_y)
+            val_loss, val_acc, v_perp = classifier.test_on_batch(val_X, val_y)
             v_losses.append(val_loss)
             v_accs.append(val_acc)
+            v_perps.append(v_perp)
         classifier.reset_states()
         val_loss_avg = np.average(v_losses)
         val_acc_avg = np.average(v_accs)
+        val_perp_avg = np.average(v_perps)
         train_loss_avg = np.average(losses)
         train_acc_avg = np.average(accs)
-        write_log_to_board(tensorboard, val_log_names, (val_loss_avg, val_acc_avg), global_steps)
-        write_log_to_board(tensorboard, train_log_per_epoch_names, (train_loss_avg, train_acc_avg), global_steps)
+        train_perp_avg = np.average(perps)
+        write_log_to_board(tensorboard, val_log_names, (val_loss_avg, val_acc_avg, val_perp_avg), global_steps)
+        write_log_to_board(tensorboard, train_log_per_epoch_names,
+                           (train_loss_avg, train_acc_avg, train_perp_avg), global_steps)
         save_embedding_to_board(tensorboard, global_steps)
-        print('[%d]FINISHING EPOCH.. val_loss = %f, val_acc = %f' % (epoch + 1, val_loss_avg, val_acc_avg))
+        print('[%d]FINISHING EPOCH.. val_loss = %f, val_acc = %f, val_perplexity = %f' %
+              (epoch + 1, val_loss_avg, val_acc_avg, val_perp_avg))
 
         if val_loss_avg <= min_loss:
             min_loss = val_loss_avg
             patience = 0
             artifact.persist_model(classifier)
-            print('[%d]New best model for validation set found.. val_loss = %f, val_acc = %f' % (epoch + 1, val_loss_avg, np.average(v_accs)))
+            print('[%d]New best model for validation set found.. val_loss = %f, val_acc = %f' %
+                  (epoch + 1, val_loss_avg, np.average(v_accs)))
         elif patience >= patience_limit:
-            print('[%d]Patience limit (%d) reached stopping iteration. Best validation loss found was: %f' % (epoch + 1, patience_limit, min_loss))
+            print('[%d]Patience limit (%d) reached stopping iteration. Best validation loss found was: %f' %
+                  (epoch + 1, patience_limit, min_loss))
             break
         else:
             patience += 1
@@ -100,7 +106,7 @@ if __name__ == '__main__':
                         help='At which epoch after not increasing accuracy the program should terminate.', default=25)
     parser.add_argument('--lstm_layers', type=int, help='How many layers of lstm should the model be built with.', default=3)
     parser.add_argument('--lstm_units', type=int, help='How many hidden units the lstm layers should have.', default=64)
-    parser.add_argument('--embedding', type=int, help='How many dimensions should the embedding project to.', default=128)
+    parser.add_argument('--embedding', type=int, help='How many dimensions should the embedding project to.', default=64)
     parser.add_argument('--size_x', type=int, help='How long should the the input be.', default=100)
     parser.add_argument('--model_name', type=str,
                         help='Name of the model (if not given it will use the timestamp followed by the artist).', default=None)
