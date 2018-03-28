@@ -52,3 +52,4 @@ from base folder (only works if you have at least 1 running/finished training).
 #### [Deep learning A-Z](https://www.superdatascience.com/deep-learning/)
 #### [Deep learning Goodfellow](http://www.deeplearningbook.org/)
 #### [Software 2.0 - (karpathy)](https://medium.com/@karpathy/software-2-0-a64152b37c35)
+#### [Intro to ANN in tensorflow](https://www.youtube.com/watch?v=BhpvH5DuVu8&index=3&list=PLSPWNkAMSvv5DKeSVDbEbUKSsK4Z-GgiP)
