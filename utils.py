@@ -13,6 +13,7 @@ import numpy as np
 import os
 import tensorflow as tf
 import datetime
+import fnmatch, re
 
 TARGET_DIR = 'target'
 MODELS_DIR = os.path.join(TARGET_DIR, 'models')
@@ -24,6 +25,7 @@ def read_file(file_content):
     with open(file_content, encoding='utf-8') as file_ref:
         content = file_ref.read()
     return content
+
 
 class ModelArtifact:
 
@@ -88,6 +90,24 @@ class ModelArtifact:
             file.write(buffer)
         return path
 
+    @staticmethod
+    def show_all_artifacts():
+        def list_files():
+            ls = []
+            for root, _, files in os.walk('.'):
+                for filename in files:
+                    ls.append(os.path.join(root, filename))
+            return ls
+
+        def extract_model_name(file_name):
+            match = re.search('models/(.+?).h5$', file_name)
+            return match.group(1) if match else None
+
+        file_list = list_files()
+        model_weights = fnmatch.filter(file_list, '*.h5')
+        model_names = list(map(extract_model_name, model_weights))
+        return model_names
+
 
 def write_log_to_board(tensorboard_callback, names, logs, batch_no):
     """
@@ -116,7 +136,6 @@ class DataChunk:
         self.__chunk_size = chunk_size
         self.__chunks = range(0, len(data)-self.__steps, self.__chunk_size)
         self.__encoder = encoder
-        print('')
 
     def __iter__(self):
         '''
