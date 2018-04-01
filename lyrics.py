@@ -18,7 +18,13 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     tensor_logger = artifact.get_tensorflow_logdir()
     encoder = artifact.load_or_create_encoder(data)
 
-    tensorboard = TensorBoard(tensor_logger, embeddings_freq=100)
+    os.makedirs(artifact.get_tensorflow_logdir(), exist_ok=True)
+    metadata_file_name = os.path.abspath(os.path.join(artifact.get_tensorflow_logdir(), "metadata" + ".tsv"))
+    save_metadata_of_embedding(metadata_file_name, encoder.vocab)
+
+    # embeddings_freq=True is a hack for embeddings to be shown
+    tensorboard = TensorBoard(tensor_logger, embeddings_metadata=metadata_file_name, embeddings_freq=True)
+    # we need the callback to init the visualizer
     train_log_per_batch_names = ['train_batch_loss', 'train_batch_accuracy', 'train_batch_perplexity']
     train_log_per_epoch_names = ['train_epoch_loss', 'train_epoch_accuracy', 'train_epoch_perplexity']
     val_log_names = ['val_loss', 'val_accuracy', 'val_perplexity']
@@ -31,7 +37,7 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     chunk = DataChunk(data, size_x, 300, encoder)
     test_chunk = DataChunk(test_data, size_x, 300, encoder)
 
-    classifier = get_classifier(*next(iter(chunk)), lstm_layers, lstm_units, embedding)
+    classifier = get_classifier(*next(iter(chunk)), lstm_layers, lstm_units, embedding, len(encoder.vocab))
     tensorboard.set_model(classifier)
 
     min_loss = math.inf
@@ -67,7 +73,8 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
         write_log_to_board(tensorboard, val_log_names, (val_loss_avg, val_acc_avg, val_perp_avg), global_steps)
         write_log_to_board(tensorboard, train_log_per_epoch_names,
                            (train_loss_avg, train_acc_avg, train_perp_avg), global_steps)
-        save_embedding_to_board(tensorboard, global_steps)
+        if epoch % 20 == 0:
+            save_embedding_to_board(tensorboard.embeddings_ckpt_path, epoch)
         print('[%d]FINISHING EPOCH.. val_loss = %f, val_acc = %f, val_perplexity = %f' %
               (epoch + 1, val_loss_avg, val_acc_avg, val_perp_avg))
 
@@ -97,20 +104,27 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     print('Best model\'s test_loss = %f, test_acc = %f' % (np.average(t_losses), np.average(t_accs)))
 
 
-if __name__ == '__main__':
+def cli():
     import argparse
     parser = argparse.ArgumentParser(description='Lyrics generating with Keras and recurrent networks')
     parser.add_argument('--artist', type=str, help='The dataset to be used during learning.')
-    parser.add_argument('--epochs', type=int, help='For how many epochs the program should learn.', default=250)
+    parser.add_argument('--epochs', type=int, help='For how many epochs the program should learn.', default=1)
     parser.add_argument('--patience_limit', type=int,
                         help='At which epoch after not increasing accuracy the program should terminate.', default=25)
-    parser.add_argument('--lstm_layers', type=int, help='How many layers of lstm should the model be built with.', default=3)
+    parser.add_argument('--lstm_layers', type=int, help='How many layers of lstm should the model be built with.',
+                        default=3)
     parser.add_argument('--lstm_units', type=int, help='How many hidden units the lstm layers should have.', default=64)
-    parser.add_argument('--embedding', type=int, help='How many dimensions should the embedding project to.', default=64)
+    parser.add_argument('--embedding', type=int, help='How many dimensions should the embedding project to.',
+                        default=32)
     parser.add_argument('--size_x', type=int, help='How long should the the input be.', default=100)
     parser.add_argument('--model_name', type=str,
-                        help='Name of the model (if not given it will use the timestamp followed by the artist).', default=None)
+                        help='Name of the model (if not given it will use the timestamp followed by the artist).',
+                        default=None)
 
     args = vars(parser.parse_args())
 
     train(**args)
+
+
+if __name__ == '__main__':
+    cli()

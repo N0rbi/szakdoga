@@ -13,7 +13,9 @@ import numpy as np
 import os
 import tensorflow as tf
 import datetime
-import fnmatch, re
+import fnmatch
+import re
+import keras
 
 TARGET_DIR = 'target'
 MODELS_DIR = os.path.join(TARGET_DIR, 'models')
@@ -121,13 +123,6 @@ def write_log_to_board(tensorboard_callback, names, logs, batch_no):
         tensorboard_callback.writer.add_summary(summary, batch_no)
         tensorboard_callback.writer.flush()
 
-
-def save_embedding_to_board(tensorboard_callback, batch_no):
-    tensorboard_callback.saver.save(tensorboard_callback.sess,
-                                    tensorboard_callback.embeddings_ckpt_path,
-                                    batch_no)
-
-
 class DataChunk:
 
     def __init__(self, data, steps, chunk_size, encoder):
@@ -212,3 +207,22 @@ def get_formaters_str(format_dict):
     :return: formater identifier
     """
     return ''.join(sorted(list(map(lambda key: key[0], [key for key, _ in format_dict.items()]))))
+
+
+def save_metadata_of_embedding(path, vocab):
+    with open(path, 'w+') as file:
+        buffer = "Word\tFrequency\n"
+        for key, value in vocab.items():
+            buffer += strip_quotes(repr(key)) + '\t' + str(value) + '\n'
+        file.write(buffer)
+
+
+def strip_quotes(str):
+    strip1 = str.strip("'")
+    strip2 = str.strip('"')
+    return strip1 if len(strip2) > len(strip1) else strip2
+
+
+def save_embedding_to_board(ckpt, epoch):
+    saver = tf.train.Saver()
+    saver.save(keras.backend.get_session(), ckpt, epoch)

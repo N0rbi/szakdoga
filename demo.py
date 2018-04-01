@@ -40,7 +40,7 @@ Mire jó, ha jó ez'''
     return ''.join(result)
 
 
-if __name__ == '__main__':
+def cli():
     import argparse
     parser = argparse.ArgumentParser(description='Testing already learnt models in real life scenarios.')
     parser.add_argument('--model_name', type=str, help='The name of the artifact to load.', default=None)
@@ -65,3 +65,7 @@ if __name__ == '__main__':
         args['model_name'] = model_names[choosen]
 
     print(predict(**args))
+
+
+if __name__ == '__main__':
+    cli()
