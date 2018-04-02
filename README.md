@@ -2,16 +2,52 @@
 
 My goal is to build an RNN that creates music lyrics based on the dataset.
 
-To train use
+## Runnable installation
+```bash
+pip install -r requirements.txt
 ```
+
+### Train
+
+To train use for example
+```bash
+python lyrics.py --artist=30y --epochs=250 --patience_limit=25 --lstm_layers=3 \
+--lstm_units=64 --embedding=32 --size_x=100 --model_name=foobar
+```
+You can change any params, or you can just delete them (except for artist)
+or:
+```bash
 python lyrics.py --help
 ```
 for info.
 For tensorboard use
-```
+```bash
 tensorboard --logdir=target/train_log
 ```
 from base folder (only works if you have at least 1 running/finished training).
+
+### Predict
+
+```bash
+python demo.py --model_name=${name_of_the_model}
+```
+or if you keep it blank you get the list of models you can predict from.
+
+## Latex
+
+### Installation
+
+```bash
+sudo apt-get update
+sudo apt-get install texlive-full
+```
+
+### Compiling
+
+```bash
+./doc/gen_pdf.sh
+```
+use -s flag if you want it to be silent.
 
 ## Sources: 
 - [RNN effectiveness (karpathy)](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
