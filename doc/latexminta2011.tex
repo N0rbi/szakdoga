@@ -77,7 +77,7 @@
 %A TÖBBI OLDAL FEJ ÉS LÁBLÉCE:
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{A diplomamunka címe}
+\fancyhead[L]{Zeneszövegek generálása karakteralapú rekurrens neurális hálózatok segítségével}
 \fancyfoot[R]{\thepage}
 
 
@@ -95,7 +95,7 @@
 \vspace*{3.8cm}
 
 
-{\LARGE\bf A diplomamunka címe}
+{\LARGE\bf }
 
 
 \vspace*{3.6cm}
@@ -109,9 +109,9 @@
 {\large
 \begin{tabular}{c@{\hspace{4cm}}c}
 \emph{Készítette:}     &\emph{Témavezetõ:}\\
-\bf{Hallgató Claudia}  &\bf{Oktató Bonifác}\\
-informatika szakos     &egyetemi docens\\
-hallgató&
+\bf{Kis-Szabó Norbert}  &\bf{Berend Gábor}\\
+programtervezõ informatika     &Számítógépes Algoritmusok és\\
+szakos hallgató               &Mesterséges Intelligencia Tanszék\\
 \end{tabular}
 }
 
@@ -121,7 +121,7 @@ hallgató&
 Szeged
 \\
 \vspace{2mm}
-2011
+2018
 }
 \end{center}
 
@@ -139,13 +139,22 @@ A témavezetõ által megfogalmazott feladatkiírás. Önálló oldalon szerepel.
 \chapter*{Tartalmi összefoglaló}
 \addcontentsline{toc}{section}{Tartalmi összefoglaló}
 
-A tartalmi összefoglalónak tartalmaznia kell (rövid, legfeljebb egy oldalas, összefüggõ megfogalmazásban)
-a következõket: a téma megnevezése, a megadott feladat megfogalmazása - a feladatkiíráshoz viszonyítva-,
-a megoldási mód, az alkalmazott eszközök, módszerek, az elért eredmények, kulcsszavak (4-6 darab).
+A rekurrens neurális hálók már a 80-as években megjelentek. Ezek olyan neurális hálók,
+ melyek figyelembe veszik az elõzõ állapokokat a döntéshozatalban. A ma használt rekurrens hálók közül az lstm azaz a
+long shot-term memory a legkedveltebb mind közül, mert megolást talál az rnn-ek egy alapvetõ problémájára,
+a gradiensek drasztikus növekedésére vagy csökkenésére, melyek ellehetetlenitik a hosszútávú tanulást. Ezt a hálótipust alkalmazom dolgozatomban.
 
-Az összefoglaló nyelvének meg kell egyeznie a dolgozat nyelvével. Ha a dolgozat idegen nyelven készül,
-magyar nyelvû tartalmi összefoglaló készítése is kötelezõ (külön lapon), melynek terjedelmét a TVSZ szabályozza.
+Dolgozatom célja lstm rétegekkel létrehozni egy model-t, amely képes megtanulni egy adott elõadó zenei stilusát karakterek sorozatát nézve.
+Ponotsabban felteszi magában a kérdést: "ha ezt az x hosszú szöveget látom, vajon az elõadó mit irna x+1. karakternek?".
+A model létrehozásában a python nyelven elérhetõ keras és annak hátterében a tensorflow keretrendszereket használom.
+Keras egy API amely elfedi a neurális hálókhoz szükséges matematikát, igy átláthatóbbá téve a kódot, tensorflow pedig
+egy eszköz mellyel gépi tanuló szoftvereket könnyedén tudsz tanitani gyorsasága miatt, valamint
+átláthatóvá teszi a fejlesztést a tensorboard segitségével, mely egy vizualizációs eszköz.
 
+Szakdolgozatomban elõször ismertetem az egyszerû neurális hálókat, mûködésüket,
+majd ismertetem a rekurrens hálókat azok hasznát, és kitérek a problémájukra melyet az lstm old meg.
+Ezután ismertetem a keras keretrendszerét, a tensorflow mûködését és ezen belül a tensorboard-ot.
+Ezek ismeretében már olvasható a tensorboard vizualizációja, igy megmutatom a tanitások eredményeit.
 
 \chapter*{Bevezetés}
 \addcontentsline{toc}{section}{Bevezetés}
