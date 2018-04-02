@@ -108,7 +108,7 @@ def cli():
     import argparse
     parser = argparse.ArgumentParser(description='Lyrics generating with Keras and recurrent networks')
     parser.add_argument('--artist', type=str, help='The dataset to be used during learning.')
-    parser.add_argument('--epochs', type=int, help='For how many epochs the program should learn.', default=1)
+    parser.add_argument('--epochs', type=int, help='For how many epochs the program should learn.', default=250)
     parser.add_argument('--patience_limit', type=int,
                         help='At which epoch after not increasing accuracy the program should terminate.', default=25)
     parser.add_argument('--lstm_layers', type=int, help='How many layers of lstm should the model be built with.',
