@@ -61,6 +61,7 @@ use -s flag if you want it to be silent.
   -  [LSTM hard math](https://arxiv.org/pdf/1503.04069.pdf)
   -  [Deep sparse rectifier](http://proceedings.mlr.press/v15/glorot11a/glorot11a.pdf)
   -  [Thesis on LSTM hyphenation (TDK, BME)](http://tdk.bme.hu/VIK/DownloadPaper/Szotagolas-mely-neuralis-halozatokkal1)
+  -  [LSTM dropout](https://arxiv.org/pdf/1409.2329.pdf)
 - **Multitask learning**
   - [Multi task learning](http://ruder.io/multi-task/)
   - [Bidirectional Long Short-Term Memory Models and Auxiliary Loss](https://arxiv.org/abs/1604.05529)
