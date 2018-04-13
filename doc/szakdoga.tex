@@ -99,7 +99,8 @@
 
 
 \vspace*{3.6cm}
-
+%\title{Zeneszövegek generálása karakteralapú rekurrens neurális hálózatok 
+%segítségével}
 {\Large Diplomamunka}
 % vagy {\Large Szakdolgozat}
 
@@ -134,27 +135,43 @@ Szeged
 %A tartalomjegyzékben mégis szerepeltetni kell, mint szakasz(section) szerepeljen:
 \addcontentsline{toc}{section}{Feladatkiírás}
 
-A témavezetõ által megfogalmazott feladatkiírás. Önálló oldalon szerepel.
+A rekurrens neurális hálók igen sikeres és népszerû megoldásnak számítanak 
+számos nyelvtechnológiai probléma megoldása során. A hallgató feladata 
+(zene)szövegek generálására képes karakterszintû nyelvi modellek létrehozása 
+rekurrens neurális hálók segítségével Keras környezetben Tensorflow backend 
+használata mellett. A szakdolgozat további célja annak vizsgálata, hogy a 
+nyelvi modellezés kontextusában milyen multi-task tanulási (\textit{multi-task 
+learning}) feladatok fogalmazhatók meg, illetve hogy ezek milyen eredmény 
+elérésére képesek.
 
 \chapter*{Tartalmi összefoglaló}
 \addcontentsline{toc}{section}{Tartalmi összefoglaló}
 
-A rekurrens neurális hálók már a 80-as években megjelentek. Ezek olyan neurális hálók,
- melyek figyelembe veszik az elõzõ állapokokat a döntéshozatalban. A ma használt rekurrens hálók közül az lstm azaz a
-long shot-term memory a legkedveltebb mind közül, mert megolást talál az rnn-ek egy alapvetõ problémájára,
-a gradiensek drasztikus növekedésére vagy csökkenésére, melyek ellehetetlenitik a hosszútávú tanulást. Ezt a hálótipust alkalmazom dolgozatomban.
+A rekurrens neurális hálók már a 80-as években megjelentek. Ezek olyan neurális 
+hálók,
+ melyek figyelembe veszik az elõzõ állapotokat a döntéshozatalban. A ma 
+ használt rekurrens hálók közül az lstm azaz a
+long shot-term memory a legkedveltebb mind közül, mert megoldást talál az 
+rnn-ek egy alapvetõ problémájára,
+a gradiensek drasztikus növekedésére vagy csökkenésére, melyek ellehetetlenitik 
+a hosszútávú tanulást. Ezt a hálótípust alkalmazom dolgozatomban.
 
-Dolgozatom célja lstm rétegekkel létrehozni egy model-t, amely képes megtanulni egy adott elõadó zenei stilusát karakterek sorozatát nézve.
-Ponotsabban felteszi magában a kérdést: "ha ezt az x hosszú szöveget látom, vajon az elõadó mit irna x+1. karakternek?".
+Dolgozatom célja lstm rétegekkel létrehozni egy modellt, amely képes megtanulni 
+egy adott elõadó zenei stílusát karakterek sorozatát nézve.
+Pontosabban felteszi magában a kérdést: "ha ezt az x hosszú szöveget látom, 
+vajon az elõadó mit írna x+1. karakternek?".
 A model létrehozásában a python nyelven elérhetõ keras és annak hátterében a tensorflow keretrendszereket használom.
 Keras egy API amely elfedi a neurális hálókhoz szükséges matematikát, igy átláthatóbbá téve a kódot, tensorflow pedig
-egy eszköz mellyel gépi tanuló szoftvereket könnyedén tudsz tanitani gyorsasága miatt, valamint
-átláthatóvá teszi a fejlesztést a tensorboard segitségével, mely egy vizualizációs eszköz.
+egy eszköz mellyel gépi tanuló szoftvereket könnyedén tudsz tanítani gyorsasága 
+miatt, valamint
+átláthatóvá teszi a fejlesztést a tensorboard segítségével, mely egy 
+vizualizációs eszköz.
 
 Szakdolgozatomban elõször ismertetem az egyszerû neurális hálókat, mûködésüket,
 majd ismertetem a rekurrens hálókat azok hasznát, és kitérek a problémájukra melyet az lstm old meg.
 Ezután ismertetem a keras keretrendszerét, a tensorflow mûködését és ezen belül a tensorboard-ot.
-Ezek ismeretében már olvasható a tensorboard vizualizációja, igy megmutatom a tanitások eredményeit.
+Ezek ismeretében már olvasható a tensorboard vizualizációja, így megmutatom a 
+tanítások eredményeit.
 
 \chapter*{Bevezetés}
 \addcontentsline{toc}{section}{Bevezetés}
