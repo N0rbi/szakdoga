@@ -154,6 +154,10 @@ class DataChunk:
         return
 
 
+def get_aux_out(y):
+    return y
+
+
 ENCODER_FORMAT_LOWERCASE = {'lowercase': lambda t: t.lower()}
 
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from utils import *
+from sequentials import *
 
 
 def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, size_x, model_name):
-    from sequentials import get_classifier
     from keras.callbacks import TensorBoard
     from metrics import perplexity
     import math
@@ -36,8 +36,9 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     data = data[DATA_SLICE:]
     chunk = DataChunk(data, size_x, 300, encoder)
     test_chunk = DataChunk(test_data, size_x, 300, encoder)
-
-    classifier = get_classifier(*next(iter(chunk)), lstm_layers, lstm_units, embedding, len(encoder.vocab))
+    x_t, y_t = next(iter(chunk))
+    classifier = get_multitask_classifier(
+        x_t, y_t, get_aux_out(y_t), len(encoder.vocab), embedding, lstm_units, lstm_layers)
     tensorboard.set_model(classifier)
 
     min_loss = math.inf
@@ -49,7 +50,8 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
         val_chunk = DataChunk(val_data, size_x, 300, encoder)
         losses, accs, perps, v_losses, v_accs, v_perps = [], [], [], [], [], []
         for i, (train_X, train_y) in enumerate(iter(chunk)):
-            loss, acc, perp = classifier.train_on_batch(train_X, train_y)
+            #print(classifier.metrics_names)
+            _, loss, _, acc, perp, _, _ = classifier.train_on_batch(train_X, [train_y, get_aux_out(train_y)])
             print('[%d]Batch %d: loss = %f, acc = %f, perp = %f' % (epoch + 1, i + 1, loss, acc, perp))
             write_log_to_board(tensorboard, train_log_per_batch_names, (loss, acc, perp), global_steps)
             losses.append(loss)
@@ -59,7 +61,7 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
         classifier.reset_states()
 
         for (val_X, val_y) in iter(val_chunk):
-            val_loss, val_acc, v_perp = classifier.test_on_batch(val_X, val_y)
+            _, val_loss, _, val_acc, v_perp, _, _ = classifier.test_on_batch(val_X, [val_y, get_aux_out(val_y)])
             v_losses.append(val_loss)
             v_accs.append(val_acc)
             v_perps.append(v_perp)
@@ -96,7 +98,7 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
 
     t_losses, t_accs = [], []
     for i, (test_X, test_y) in enumerate(iter(test_chunk)):
-        test_loss, test_acc, _ = classifier.test_on_batch(test_X, test_y)
+        _, test_loss, _, test_acc, _, _, _ = classifier.test_on_batch(test_X, test_y)
         write_log_to_board(tensorboard, test_log_names, (test_loss, test_acc), global_steps+i)
         t_losses.append(test_loss)
         t_accs.append(test_acc)
