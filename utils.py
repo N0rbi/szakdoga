@@ -31,7 +31,7 @@ def read_file(file_content):
 
 class ModelArtifact:
 
-    def __init__(self, artist, model_id=None):
+    def __init__(self, artist, size_x, model_id=None):
         self.__id = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + "_" + artist \
             if not model_id else model_id
         # Create target dirs
@@ -43,6 +43,7 @@ class ModelArtifact:
                 os.mkdir(LOG_DIR)
             if not os.path.exists(ENCODERS_DIR):
                 os.mkdir(ENCODERS_DIR)
+        self.size_x = size_x
 
     def persist_model(self, model):
         serialized = model.to_json()
@@ -123,36 +124,6 @@ def write_log_to_board(tensorboard_callback, names, logs, batch_no):
         tensorboard_callback.writer.add_summary(summary, batch_no)
         tensorboard_callback.writer.flush()
 
-class DataChunk:
-
-    def __init__(self, data, steps, chunk_size, encoder):
-        self.__data = data
-        self.__steps = steps
-        self.__chunk_size = chunk_size
-        self.__chunks = range(0, len(data)-self.__steps, self.__chunk_size)
-        self.__encoder = encoder
-
-    def __iter__(self):
-        '''
-        A generator that returns the current batch of data.
-        '''
-        for u in self.__chunks:
-            train_X = []
-            train_y = []
-            for i in range(u, u+self.__chunk_size-self.__steps+1):
-                if i + self.__steps == len(self.__data):
-                    return
-                current_in = self.__data[i:i + self.__steps]
-                current_out = self.__data[i + self.__steps]
-                train_X.append(self.__encoder.transform(current_in, False))
-                train_y.append(self.__encoder.transform(current_out).flatten())
-
-            train_X = np.array(train_X)
-            train_y = np.array(train_y)
-
-            yield train_X, train_y
-        return
-
 
 ENCODER_FORMAT_LOWERCASE = {'lowercase': lambda t: t.lower()}
 
@@ -226,3 +197,17 @@ def strip_quotes(str):
 def save_embedding_to_board(ckpt, epoch):
     saver = tf.train.Saver()
     saver.save(keras.backend.get_session(), ckpt, epoch)
+
+
+def read_batches(data, vocab_size, batch_size, seq_length):
+    length = data.shape[0]
+    batch_chars = length // batch_size
+
+    for start in range(0, batch_chars - seq_length, seq_length):
+        X = np.zeros((batch_size, seq_length))
+        Y = np.zeros((batch_size, seq_length, vocab_size))
+        for batch_idx in range(0, batch_size):
+            for i in range(0, seq_length):
+                X[batch_idx, i] = data[batch_chars * batch_idx + start + i]
+                Y[batch_idx, i, data[batch_chars * batch_idx + start + i + 1]] = 1
+        yield X, Y

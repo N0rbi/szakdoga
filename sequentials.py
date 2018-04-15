@@ -7,17 +7,17 @@ Created on Sun Dec 10 16:25:02 2017
 from metrics import perplexity
 
 
-def get_classifier(X_train, y_train, lstm_layers, units, embedding_units, number_of_chars):
+def get_classifier(batch_size, seq_len, vocab_size, layers, embedding, units):
     from keras.models import Sequential
-    from keras.layers import Dense, LSTM, Dropout, Embedding
+    from keras.layers import Dense, LSTM, Dropout, Embedding, TimeDistributed, Activation
     classifier = Sequential()
-    input_length = X_train.shape[1]
-    classifier.add(Embedding(number_of_chars, embedding_units, input_length=input_length))
-    for i in range(lstm_layers):
-        classifier.add(LSTM(units=units, return_sequences=i != lstm_layers-1, recurrent_dropout=0.3))
-        classifier.add(Dropout(rate=0.2))
+    classifier.add(Embedding(vocab_size, embedding, batch_input_shape=(batch_size, seq_len)))
+    for i in range(layers):
+        classifier.add(LSTM(units, return_sequences=True, stateful=True))
+        classifier.add(Dropout(0.2))
 
-    classifier.add(Dense(units=y_train.shape[1], activation='softmax'))
+        classifier.add(TimeDistributed(Dense(vocab_size)))
+    classifier.add(Activation('softmax'))
     classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
     return classifier
