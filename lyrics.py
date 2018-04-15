@@ -11,9 +11,11 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     if not artist:
         print('You need to pick an artist first')
         exit(-1)
+
+    BATCH_SIZE=32
     data = read_file('dataset/%s.txt' % artist)
     DATA_SLICE = len(data) // 10
-    artifact_params = (artist,) if not model_name else (artist, model_name)
+    artifact_params = (artist, size_x) if not model_name else (artist, size_x, model_name)
     artifact = ModelArtifact(*artifact_params)
     tensor_logger = artifact.get_tensorflow_logdir()
     encoder = artifact.load_or_create_encoder(data)
@@ -31,14 +33,10 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     test_log_names = ['test_loss', 'test_accuracy']
 
     # Split data for testing and validating purposes
-    val_data = data[0: DATA_SLICE]
-    test_data = data[DATA_SLICE:2*DATA_SLICE]
-    data = data[DATA_SLICE:]
-    chunk = DataChunk(data, size_x, 300, encoder)
-    test_chunk = DataChunk(test_data, size_x, 300, encoder)
-    x_t, y_t = next(iter(chunk))
-    classifier = get_multitask_classifier(
-        x_t, y_t, get_aux_out(y_t), len(encoder.vocab), embedding, lstm_units, lstm_layers)
+    val_data = encoder.transform(data[0: DATA_SLICE], with_onehot=False)
+    test_data = encoder.transform(data[DATA_SLICE:2*DATA_SLICE], with_onehot=False)
+    data = encoder.transform(data[DATA_SLICE:], with_onehot=False)
+    classifier = get_classifier(BATCH_SIZE, size_x, len(encoder.vocab), lstm_layers, embedding, lstm_units)
     tensorboard.set_model(classifier)
 
     min_loss = math.inf
@@ -46,26 +44,22 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     global_steps = 0
     for epoch in range(epochs):
         print('\n[%d]Epoch %d/%d' % (epoch + 1, epoch + 1, epochs))
-        chunk = DataChunk(data, size_x, 300, encoder)
-        val_chunk = DataChunk(val_data, size_x, 300, encoder)
         losses, accs, perps, v_losses, v_accs, v_perps = [], [], [], [], [], []
-        for i, (train_X, train_y) in enumerate(iter(chunk)):
-            #print(classifier.metrics_names)
-            _, loss, _, acc, perp, _, _ = classifier.train_on_batch(train_X, [train_y, get_aux_out(train_y)])
+
+        for i, (X, Y) in enumerate(read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x)):
+            loss, acc, perp = classifier.train_on_batch(X, Y)
             print('[%d]Batch %d: loss = %f, acc = %f, perp = %f' % (epoch + 1, i + 1, loss, acc, perp))
             write_log_to_board(tensorboard, train_log_per_batch_names, (loss, acc, perp), global_steps)
             losses.append(loss)
             accs.append(acc)
             perps.append(perp)
             global_steps += 1
-        classifier.reset_states()
 
-        for (val_X, val_y) in iter(val_chunk):
-            _, val_loss, _, val_acc, v_perp, _, _ = classifier.test_on_batch(val_X, [val_y, get_aux_out(val_y)])
+        for (val_X, val_y) in read_batches(val_data, len(encoder.vocab), BATCH_SIZE, size_x):
+            val_loss, val_acc, v_perp = classifier.test_on_batch(val_X, val_y)
             v_losses.append(val_loss)
             v_accs.append(val_acc)
             v_perps.append(v_perp)
-        classifier.reset_states()
         val_loss_avg = np.average(v_losses)
         val_acc_avg = np.average(v_accs)
         val_perp_avg = np.average(v_perps)
@@ -97,8 +91,8 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
     t_losses, t_accs = [], []
-    for i, (test_X, test_y) in enumerate(iter(test_chunk)):
-        _, test_loss, _, test_acc, _, _, _ = classifier.test_on_batch(test_X, test_y)
+    for i, (test_X, test_y) in enumerate(read_batches(test_data, len(encoder.vocab), BATCH_SIZE, size_x)):
+        test_loss, test_acc, _ = classifier.test_on_batch(test_X, test_y)
         write_log_to_board(tensorboard, test_log_names, (test_loss, test_acc), global_steps+i)
         t_losses.append(test_loss)
         t_accs.append(test_acc)
