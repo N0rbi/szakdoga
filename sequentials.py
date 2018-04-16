@@ -16,27 +16,26 @@ def get_classifier(batch_size, seq_len, vocab_size, layers, embedding, units):
         classifier.add(LSTM(units, return_sequences=True, stateful=True))
         classifier.add(Dropout(0.2))
 
-        classifier.add(TimeDistributed(Dense(vocab_size)))
+    classifier.add(TimeDistributed(Dense(vocab_size)))
     classifier.add(Activation('softmax'))
     classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
     return classifier
 
 
-def get_multitask_classifier(X_train, y_train, y_aux, number_of_chars,
-                             embedding_units, units, lstm_layers):
+def get_multitask_classifier(batch_size, seq_len, vocab_size, aux_vocab_size, layers, embedding, units):
     from keras.models import Model
-    from keras.layers import Dense, LSTM, Dropout, Embedding, Input
-    input_length = X_train.shape[1]
-    input = Input(shape=(input_length,))
-    x = Embedding(number_of_chars, embedding_units, input_length=input_length)(input)
-    for i in range(lstm_layers):
-        x = (LSTM(units=units, return_sequences=i != lstm_layers-1, recurrent_dropout=0.1))(x)
+    from keras.layers import Dense, LSTM, Dropout, Embedding, Input, TimeDistributed, Activation
+    input = Input(batch_shape=(batch_size, seq_len))
+    x = Embedding(vocab_size, embedding)(input)
+    for i in range(layers):
+        x = (LSTM(units, return_sequences=True, stateful=True))(x)
         x = Dropout(rate=0.2)(x)
 
-    main_out = Dense(units=y_train.shape[1], activation='softmax')(x)
-    aux_out = Dense(units=y_aux.shape[1], activation='softmax')(x)
-
+    main_out = TimeDistributed(Dense(vocab_size))(x)
+    aux_out = TimeDistributed(Dense(aux_vocab_size))(x)
+    main_out = Activation('softmax', name='main_out')(main_out)
+    aux_out = Activation('softmax', name='aux_out')(aux_out)
     model = Model(inputs=[input], outputs=[main_out, aux_out])
     model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
