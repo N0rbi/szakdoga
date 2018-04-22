@@ -176,246 +176,63 @@ tanítások eredményeit.
 \chapter*{Bevezetés}
 \addcontentsline{toc}{section}{Bevezetés}
 
-Itt kezdõdik a bevezetés, mely nem kap sorszámot.
+A neurális hálók egyre több figyelmet kapnak a mindennapokban, elképesztõ teljesítményekre képesek mint például az AlphaGo, egy általános célú mesterséges intelligencia képes volt legyõzni a világ legjobb go játékosát. Ezt az eseményt nem várták a következõ évtized távlatában. Mások úgy látják, hogy a neurális hálók leváltják a tradicionális programozást és az emberek csak felügyelni fogják az algoritmusok mûködését, finomhangolják a hiperparamétereket. Rengeteg helyen már sikerült is áttörést elérnie az imperatív programozás ellen. Ilyenek például a gépi látás, beszéd felismerés, robotika de rengeteg más terület vár a hálók hódítására konstans számításigénye és memóriaigénye, könnyû áramkörbe égethetõsége és agilissága miatt. Bármi is vár a mesterséges intelligenciára az biztos, hogy egyre több jelentõsége lesz az életünkben.
+
+A mesterséges intelligencia egy fontos kutatási területe a nyelv felismerés (angolul: natural language processing, röviden NLP). Vannak imperatív algoritmusok hasonló feladatokra, de egyre nagyobb jelentõséget kap a feladat neurális hálókkal történõ megvalósítása. Ilyen feladatok például a gépi fordítás, chatbotok, text-to-speech. Ezek mind olyan feladatok amelyek a gépek és az emberek közötti kommunikációt könnyítik meg. 
+
+Dolgozatom témája ebbe a témakörbe tartozik, célja automatikus dalszöveg generálás az elõzõ karakterek megfigyelése alapján. A modell próbál értelmezhetõ magyar dalszöveget gyártani úgy, hogy közben követi az adott zenész/zenei egyesület stílusát. Mivel a karaktereket választottuk absztrakciós rétegnek az inputnak, így nem várható el érhetõ magyar szöveg az outputban, jó eredménynek számít viszont, ha érthetõnek, természetesnek hat a generált szöveg, bár a validálást az utolsó fejezetben statisztikailag végezzük, nem példák segítségével.
 
 
+\chapter{Neurális hálók}
 
-\chapter{Egy találó cím}
+A neurális hálók az agyunkban elõforduló neuronok hálózata. Ezek határozzák meg a gondolatainkat, ez alapján hozunk döntést a minket körülvevõ világról. Ahhoz, hogy ezt számítani lehessen szükség van egy matematikai formulára, egy modellre. A neurológia jelenleg elfogadott elméletére építjük a mesterséges neurális hálókat, és ezeknek az alapjait ebben a fejezetben fogom ismertetni.
+Minden mély háló õse az elõrecsatolt mesterséges neurális háló, így a dolgozatban használt rekurrens, azaz hosszú távú memóriával rendelkezõ háló az LSTM alapja is. A fejezet ezeket a témákat fogja jobban szemügyre venni. A továbbiakban neurális hálók alatt a mesterséges neurális hálókat értem.
 
-Ez pedig már az elsõ fejezet, ...
+\section{Elõrecsatolt neurális hálók}
 
-\section{Alcím}
-Ebben alfejezetek is lehetnek
+Az elõrecsatolt neurális hálók olyan adatszerkezetek, melyek képesek megbecsülni az \textit{f} függvényt úgy, hogy $ y = f(x, T) $ ahol \textit{T} a hálónak adott legjobb eredménnyel becslõ hiperparamétereket tartalmazza. A nevét onnan kapta, hogy az információ áramlásának iránya az inputtól az outputig tart, és nincsenek benne hurkok, ciklusok.
 
-\subsection{Al-al cím}
-Sõt al-al fejezetek is.
+A legegyszerûbb mûködõ neurális háló egyetlen perceptronból áll, melynek van egy súlya (\textit{W}) és egy ferdesége (\textit{b}). Ezekbõl a neurális háló elõállítja a $ \hat{y}=Wx + b $ egyenletet, és ezt optimalizálja a tanuló inputra és outputra hiba-visszaterjesztés alkalmazásával. Sajnos ennek a megoldásnak van egy limitációja, csak lineáris regresszió elõállítására képes. Erre hozták létre az aktivációs függvényeket, melyek nem lineáris függvények, és minden perceptron számításának a eredményére egy nem lineáris függvény hívódik meg. Ezeket a függvényeket aktivációs függvényeknek nevezik. Rengeteg létezik belõle, de itt van néhány példa a leggyakrabban használtak közül: \textit{reLU}, \textit{sigmoid}, \textit{tanh}. Szóval ha hozzáadjuk az aktivációs függvény \textit{g}-t az elõzõ példánkhoz a következõ egyenlõségrendszert kapjuk.
+\begin{displaymath}
+\hat{y}= g(z),\ ahol\ z = Wx + b
+\end{displaymath}
 
-\subsection{Másik}
-Na lássunk egy másodikat is.
+A neurális háló attól lesz mély neurális háló, hogy több perceptron réteget egymás után kötünk. Ekkor lesz egy input réteg, lesznek köztes, azaz láthatatlan rétegek és lesz egy output réteg. Több hálóval mélyebb tudást tud szerezni egy modell, viszont feladatfüggõ, mivel van olyan feladat amely jobban teljesít egy rejtett hálóval mint többel.
 
-\subsection{Harmadik}
-Meg egy harmadikat is.
+\section{Rekurrens neurális hálók}
 
-\section{Mindjárt vége a fejezetnek}
-Tényleg, itt valóban vége.
+Az emberek új gondolatai nem törlik ki az elõzõeket. Nem az adott pillanatból ítéljük meg a helyzetünket, vagy hozunk döntést azzal kapcsolatban. Ez egy hasznos tulajdonság, hiszen kevés dolog van az életben, ami nem egy folyamat része. A rekurrens neurális hálók célja ezen folyamatok lemodellezése, így mivel tudja mi történt a múltban hosszútávú kapcsolatokkal is számításba venni modelljében. Minden egyes \textit{t} idõpillanatban az adott állapot megkapja saját inputját $x_t$ valamint az elõzõ idõpillanat predikciójának eredményét $U_{t-1}$ és ez alapján a következõ egyenlettel végzi el a predikciót az adott perceptron: $h_t = f(Wx_t + Uh_{t-1}+b)$. Jól látható hogy a $h_x$ egy az \textit{x}-tõl függõ egyenlet, mely egy általános problémához vezet minket. Az eltûnõ és kirobbanó gradiens problémájához.
 
+\subsection{Az RNN-ek problémája}
 
-\chapter{Hosszú}
-\section{Részletek}
-Ebbe a fejezetbe pedig írunk sok sok szöveget. Szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg,   szöveg, szöveg, szöveg
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
+A rekurrens neurális hálók képesek nagyon nagy pontossággal dönteni, de hihetetlenül nehéz õket jól betanítani, elsõsorban az eltûnõ és kirobbanó gradiens problémája miatt. Ugyanúgy ahogy az elõrecsatolt neurális hálók, a rekurrens hálók is hiba-visszaterjesztéssel optimalizálják perceptronjaikat. A probléma ott mutatkozik, hogy a rejtett rétegek összeköttetésben vannak egymással, így ha frissíteni akarjuk az egyik réteget akkor az összes elõtte lévõt frissíteni kell. Ekkor a háló elsõ rétegei rengetegszer változnak a tanulás során, és ha a gradiens, mellyel beszorozzuk túl nagy vagy kicsi lesz, az értéktelenné teszi az adott perceptront, mivel az összes utána lévõ neuron visszaterjeszti a hibáját rá, és ha rengetegszer szorzunk egy kis számmal, vagy egy naggyal akkor az megközelíti a nullát vagy a végtelent. Ekkor az elsõ neuronjaink használhatatlanná válnak, de mivel minden réteg megkapja az elõzõ réteg outputját, így az utolsó neuronok is értéküket vesztik. Ezekre a problémákra született rengetek megoldás. Kirobbanó gradiens: levágott hiba-visszaterjesztés, büntetõfüggvények, gradiens megfékezése. Eltûnõ gradiens: súlyok inicializálása, valamit az rnn-ek egy altípusa, amelyet a következõ alfejezetben fejtek ki, az LSTM.
 
-\chapter{Egyebek}
+\subsection{LSTM}
 
-\section{Környezetek}
-\begin{tét}
-\label{tét-alap}
-Ez itt egy tétel.
-\end{tét}
+A Long Short Term Memory (LSTM) kulcsa az úgynevezett cella, egy hosszú egyenes csõ, melyen csak lineáris transzformációkat hajtunk végre, így nem lesz radikális a változás a kezdõ és végállapot között, ezzel elkerülve a parciális derivált kiugróan magas vagy alacsony értékeit. Ez a csõ felel a hosszútávú memóriáért. Ezt a csövet módosítja az elfelejtõ kapu (forget gate) mely egy \textit{sigmoid} aktivációs függvényt tartalmazó réteg, valamint az új információt szolgáltató csõ, mely két részbõl épül fel. Az egyik egy \textit{sigmoid} aktivációs függvénnyel ellátott réteg, a másik pedig \textit{tanh}-val van ellátva. Elõször a \textit{tanh} kiszámolja az új információt amelyet továbbítani szeretne outputként majd átadja a \textit{sigmoid}-nak. A \textit{sigmoid} 0 és 1 közé képzi le a az inputját, minden \textit{sigmoid} után áll egy elemenkénti szorzás operátor. Ez a konstrukció képes eldönteni, hogy mely elemnek milyen jelentõsége van, mennyire releváns az adott kontextusban. Ez után a szûrt outputot hozzáadja a szûrt hosszútávú memóriához, amelyet majd a következõ iteráció fog megkapni hosszútávú memóriaként. Az adott réteg outputja viszont úgy generálódik, hogy ezt a csövet, mely az új hosszútávú memóriát tartalmazza átvezetjük egy \textit{tanh}-s rétegen, hogy -1 és 1 közé kerüljenek az értékek, valamint alkalmazunk még egy \textit{sigmoid} szûrõt a kapott értéken ezzel megkapva az outputot, ami a következõ réteg inputja is egyben.
+Fontos megjegyezni, hogy mind a \textit{sigmoid}-ok, mind a \textit{tanh}-k neuronok, melyek tanulás alatt optimalizálják a változóikat (\textit{W} és \textit{b}) ezzel megtanulva mit kell továbbítani a következõ rétegeknek, valamint a globális információból (a cella) mely információ releváns számára. Hiba-visszaterjesztéskor ezek változnak radikálisan, hisz ezeknek jóval kisebb vagy nagyobb tud lenni a gradiense, mint a lineáris transzformációknak.
 
-%A bizonyítás \begin{proof} és \end{proof} közé kerül:
-\begin{proof}
-Ez pedig a bizonyítása, melyben szerepel egy képlet:
-\begin{equation}
-\begin{split}
-E^{\text{globális}} &= \text{tét}_1\cdot E_1^{\text{elemi}}+\text{tét}_2\cdot
-E_2^{\text{elemi}}+\ldots+\text{tét}_n\cdot E_n^{elemi} \\
-&=E^{\text{elemi}}\left(\text{tét}_1+\text{tét}_2+\ldots+\text{tét}_n\right)\\
-&=E^{\text{elemi}}\cdot\text{össztét}
-\end{split}
-\end{equation}
-A második egyenlõségnél azt használtunk ki, hogy ...
+% LSTM verziókról pár szó ??
 
-Ezzel a bizonyítást befejeztük.
-\end{proof}
+\chapter{Mély tanuló könyvtárak}
 
-\begin{defi}
-\label{def-pelda}
-Ez egy definíció. Számozása a tételekkel együtt történik.
-\end{defi}
+%python és a mélytanuló könyvtárai: pytorch, tf, mnct
 
-\begin{áll}
-A követekezõ négy állítás egymással ekvivalens:
-\label{áll-ekvivalencia}
-  \begin{itemize}
-  \item[(i)] $M$ és $N$ gyengén ekvivalensek.
-  \item[(ii)] Minden $n$
-  nemnegatív egész számra $|L_{M}\cap \Sigma_{1}^{n}|=|L_{N}\cap \Sigma_{2}^{n}|$ teljesül.
-  \item[(iii)] Minden $n$ nemnegatív egész szám esetén
-   létezik
-  $ \pi_{n}: L_{M}\cap \Sigma_{1}^{n} \rightarrow L_{N}\cap \Sigma_{2}^{n} $ kölcsönösen egyértelmû
-  leképezés.
-  \item[(iv)] Minden nemnegatív $n$-re $x A^{n} y^{T}=x' A'^{n} y'^{T}$.
-  \end{itemize}
-\end{áll}
+\section{Keras}
 
-\begin{köv}
-  Ez pedig egy következmény.
-\end{köv}
+\section{Tensorflow}
 
-\begin{pld}
-  Ez lesz a példa, ezt nem szedjük dõlten.
-\end{pld}
+\subsection{Tensorboard}
 
-\begin{megj}
-  A fejezetet pedig egy megjegyzés zárja.
-\end{megj}
+\chapter{Karakter alapú szöveg modellezés}
 
+\section{Preprocesszálás}
 
-\section{Listák}
+\section{A modell}
 
-Ez egy felsorolás:
-\begin{itemize}
-    \item elsõ
-    \item második
-      \subitem elsõ
-      \subitem második
-    \item harmadik
-    \item[$\clubsuit$]  saját jel is alkalmazható
-\end{itemize}
-Ez pedig egy számozott lista:
-\begin{enumerate}
-            \item hétfõ
-            \item kedd
-            \item szerda
-\end{enumerate}
+\subsection{Hibafüggvény}
 
-%Oldaltörést is alkalmazhatunk
-\pagebreak
-
-
-\section{Egy táblázat és egy ábra}
-
-A táblázat itt következik.
-\begin{table}[!h]\label{strategia}
-\caption{Példa stratégiatáblára a Black Jack esetében}
-\begin{center}
-\begin{tabular}{l||r|r|r|r|r|r|r|r|r|r}
-&ász&2&3&4&5&6&7&8&9&10\\
-\hline\hline
-21&n&n&n&n&n&n&n&n&n&n\\
-20&n&n&n&n&n&n&n&n&n&n\\
-19&n&n&n&n&n&n&n&n&n&n\\
-18&n&n&n&n&n&n&n&n&n&n\\
-17&n&n&n&n&n&n&n&n&n&n\\
-16&h&n&n&n&n&n&h&h&b&b\\
-15&h&n&n&n&n&n&h&h&h&b\\
-14&h&n&n&n&n&n&h&h&h&b\\
-13&h&n&n&n&n&n&h&h&h&h\\
-12&h&n&n&n&n&n&h&h&h&h\\
-11&h&D&D&D&D&D&D&D&D&h\\
-\end{tabular}
-\end{center}
-\end{table}
-
-Lássunk egy ábrát is!
-\begin{figure}[!h]
-\unitlength 8mm
-\begin{center}
-\begin{picture}(8,6)
-\thicklines
-\multiput(0,1)(0,1){2}{\line(1,0){5}}
-\multiput(3,0)(1,0){2}{\line(0,1){6}}
-\multiput(1,0)(1,0){2}{\line(0,1){1}}
-\multiput(6,0)(1,0){2}{\line(0,1){5}}
-\multiput(0,1)(1,0){3}{\line(0,1){1}}
-\multiput(2,4)(3,0){3}{\line(0,1){1}}
-\multiput(3,0)(0,3){3}{\line(1,0){1}}
-\multiput(6,0)(0,1){4}{\line(1,0){1}}
-\multiput(7,2)(0,1){2}{\line(1,0){1}}
-\multiput(2,4)(0,1){2}{\line(1,0){6}}
-\put(5,1){\line(0,1){1}}
-\put(8,2){\line(0,1){1}}
-\put(1,0){\line(1,0){1}}
-\put(1,1){\makebox(1,1){\(\sphericalangle\)}}
-\put(7,2){\makebox(1,1){\(\$\)}}
-\end{picture}
-\end{center}
-\caption{\label{labirintus}Labirintus bejárása}
-\end{figure}
-
-%laptörés:
-\newpage
-
-Külön fájlban elkészített grafika beillesztését a \ref{abra-automata} ábra szemlélteti.
-\begin{figure}[h]
-\centering
-%A psfrag csomag használatával a (encapsulated)postcript abra feliratait LaTeX koddal helyettesíthatjük:
-\psfrag{a}[c][c]{$q_0$}
-\psfrag{b}[c][c]{$q_1$}
-\psfrag{c}[c][c]{$q_2$}
-\psfrag{d}[c][c]{$q_3$}
-\psfrag{e}[c][c]{$q_4$}
-\psfrag{f}[c][c]{$q_5$}
-\psfrag{g}[c][c]{$q_6$}
-\psfrag{h}[c][c]{$q_7$}
-\psfrag{0}[c][c]{$a_{0}$}
-\psfrag{9}[c][c]{$a_{9}$}
-\psfrag{3}[c][c]{$a_{3}$}
-\psfrag{12}[c][c]{$a_{12}$}
-\psfrag{15}[c][c]{$a_{15}$}
-%Garfika belillesztese, "scale2 a nagyitas/kicinyites merteke, itt 80%.
-\includegraphics[scale=0.8]{abra.eps}
-\caption{\label{abra-automata} A $4\times m$-es tábla lefedéseinek mátrixreprezentációit felismerõ automata}
-\end{figure}
-
-
-\chapter{Függelék}
-
-\section{A program forráskódja}
-A függelékbe kerülhetnek a hosszú táblázatok, vagy mondjuk egy programlista:
-% A verbatim kornyezet hasznalatanal ügyeljünk rá, hogy az editor a szóközöjket át ne írja tab karakterekre!
-\begin{verbatim}
-   while (ujkmodosito[i]<0)
-   {
-      if (ujkmodosito[i]+kegyenletes[i]<0)
-      {
-         j=i+1;
-         while (j<14)
-         if (kegyenletes[i]+ujkmodosito[j]>-1) break;
-         else j++;
-         temp=ujkmodosito[j];
-         for (l=i;l<j;l++) ujkmodosito[l+1]=ujkmodosito[l];
-         ujkmodosito[i]=temp;
-      }
-      i++;
-   }
-\end{verbatim}
-
+\subsection{Metrikák}
 
 \chapter*{Nyilatkozat}
 %Egy üres sort adunk a tartalomjegyzékhez:
