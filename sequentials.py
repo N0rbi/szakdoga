@@ -16,7 +16,7 @@ def get_classifier(batch_size, seq_len, vocab_size, layers, embedding, units):
         classifier.add(LSTM(units, return_sequences=True, stateful=True))
         classifier.add(Dropout(0.2))
 
-        classifier.add(TimeDistributed(Dense(vocab_size)))
+    classifier.add(TimeDistributed(Dense(vocab_size)))
     classifier.add(Activation('softmax'))
     classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
