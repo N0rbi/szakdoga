@@ -216,9 +216,21 @@ Fontos megjegyezni, hogy mind a \textit{sigmoid}-ok, mind a \textit{tanh}-k neur
 
 \chapter{Mély tanuló könyvtárak}
 
-%python és a mélytanuló könyvtárai: pytorch, tf, mnct
+%python és a mélytanuló könyvtárai: pytorch, tf, CNTK, theano, caffe
+% http://diploma.biblDeepLearning4J.u-szeged.hu/59970/ ?
+Rengeteg könyvtárat hoztak létre melyek segítik a mély tanulás leimplementálását. Elõször is meg kell említeni, hogy az elmúlt években a python nyelv vált a mély tanulás de facto standardjává. Létezik más nyelvre is ismert könyvtár pl: Java - DeepLearning4J, lua - torch, Matlab - Neural network toolbox, de kétségtelen a python elõnye a piacon. 
+Ott van például a Caffe, melyet a Berkeley egyetem egy tanulója, Yangqing Jia PhD tanulmányai során készített, és az óta is közkedvelt keretrendszer. Másik példa a Microsoft Cognitive toolkit, melyet az óriás vállalat tart karban, így plusz funkcióként az Azure-t is támogatja. Hasonló helyzet áll fent a PyTorch-al kapcsolatban is, melyet a Facebook kezel és a Torch nevû lua framework python-ra való portolása, mely támogatja a dinamikus hálókat. Úgy mint a PyTorch, a dynet, mely a Carnegie Mellon Egyetemen született, is támogatja a dinamikus modellt.
+Amikor döntöttem keretrendszer választás tekintetében, akkor ezekrõl le kellett mondanom, mivel szerettem volna használni a magas szintû API-t amelyet a Keras nyújt, és amelyre a következõ szekcióban kitérek. Amikor a kódot elkezdtem leimplementálni csak a TensorFlow és a Theano volt kompatibilis a Keras-sal(, igaz azóta a Microsoft Cognitive Toolkit is kompatibilis vele).
+Theano könyvtár egy matematikai segédeszköz, mely gyors és pontos számításokra képes, mátrix mûveleteket optimalizálja, valamint CPU-n és GPU-n is futtatható. Egyetlen probléma vele, hogy a fõ karbantartója MILA (Montreal Institute for Learning Algorithms) abba hagyta a fejlesztését, és jelentõsen visszaesett a fejlesztõi hozzájárulások száma az elmúlt fél évben.
+TensorFlow a ma használt egyik legkedveltebb mély tanuló könyvtár, jól dokumentált, minden megtalálható benne ami egy gépi tanulást alkalmazó programnak kell. Igaz csak statikus modelleket képes létrehozni, de könnyû debuggolni, a hozzá lefejlesztett segédeszköz, a TensorBoard segítségével. így a választásom a TensorFlow-ra esett.
 
 \section{Keras}
+
+A Keras, mint már említésre került, egy magas szintû API, melynek fõ célja a gyors kísérletezés. Ahogy a honlapjukon található idézet írja: `Az egyik legfontosabb dolog a kutatásban, hogy minél gyorsabban elérjünk az ötlettõl az eredményig.'. Kulcsfontosságú volt a fejlesztése során a modularitás és a felhasználó barátság, cserébe nem kapunk olyan gyors algoritmust, melyet mondjuk akkor kapnánk, ha TensorFlow-t használnánk, Keras nélkül.
+Az API alapja a \textit{Model} osztály. Ebbõl funkcionális programozás segítségével komplex gráfokat tudunk létrehozni, de ha csak sor-folytonosan szeretnénk rétegeket hozzáadni akkor az ebbõl leszármazó
+\textit{Sequential} osztályt kell alkalmazni, melynek az \textit{add} metódusa paraméterül egy \textit{Layer} objektumot vár, és hozzáadja következõ elemként a modellhez. Ez után a \textit{compile} függvénnyel megadhatjuk mit használjon, hibafüggvénynek, ami alapján megmondja hogy teljesít a modell, valamint mi legyen az optimalizáló függvény, ami a hiba-visszaterjesztést vezérli, valamint milyen metrikákat használjon pl: loss(hibaérték), accuracy(pontosság).
+A compile után a modell kész a tanulásra. \textit{numpy} tömböket vár inputként és azt is ad vissza outputként. A tanulásnak több módja van, például a \textit{fit} a legegyszerûbb, két kötelezõ paramétere van: \textit{x} és \textit{y}. Az én esetemben viszont ez nem volt járható út, mivel a korpusz amelybõl tanul elérheti a $(730441-100) * 101 = 73764441$ elemû multidimenziós tömböt (ezt a rock.txt választással, 100-as szekvencián tudjuk elérni). Ebben az esetben használható az alacsonyabb szintû \textit{train\_on\_batch} függvény, így futásidõben képes voltam az inputot kigenerálni a Keras számára.
+Attól függõen hogy milyen módon adjuk meg az inputot, a tesztelés is másképp mûködik. A \textit{fit}-hez hasonlóan tesztadatra megnézhetjük hogyan teljesít modellünk még nem látott adaton a \textit{evaluate} és a \textit{train\_on\_batch}-hez hasonlóan mûködik a \textit{test\_on\_batch}. Ha szeretnénk egy konkrét predikciót kapni akkor a \textit{predict} függvényre van szükségünk, ahol egy adott \textit{x}-re visszakapjuk az output \textit{y}-t.
 
 \section{Tensorflow}
 
