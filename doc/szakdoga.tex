@@ -232,7 +232,15 @@ Az API alapja a \textit{Model} osztály. Ebbõl funkcionális programozás segítségé
 A compile után a modell kész a tanulásra. \textit{numpy} tömböket vár inputként és azt is ad vissza outputként. A tanulásnak több módja van, például a \textit{fit} a legegyszerûbb, két kötelezõ paramétere van: \textit{x} és \textit{y}. Az én esetemben viszont ez nem volt járható út, mivel a korpusz amelybõl tanul elérheti a $(730441-100) * 101 = 73764441$ elemû multidimenziós tömböt (ezt a rock.txt választással, 100-as szekvencián tudjuk elérni). Ebben az esetben használható az alacsonyabb szintû \textit{train\_on\_batch} függvény, így futásidõben képes voltam az inputot kigenerálni a Keras számára.
 Attól függõen hogy milyen módon adjuk meg az inputot, a tesztelés is másképp mûködik. A \textit{fit}-hez hasonlóan tesztadatra megnézhetjük hogyan teljesít modellünk még nem látott adaton a \textit{evaluate} és a \textit{train\_on\_batch}-hez hasonlóan mûködik a \textit{test\_on\_batch}. Ha szeretnénk egy konkrét predikciót kapni akkor a \textit{predict} függvényre van szükségünk, ahol egy adott \textit{x}-re visszakapjuk az output \textit{y}-t.
 
-\section{Tensorflow}
+\section{TensorFlow}
+% https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+A TensorFlow egy a Google által karbantartott keretrendszer, mely az elmúlt idõben egyre jobban fejlõdik. Alapból Python-hoz és c++ -hoz készítették, viszont már létezik JavaScript-es és telefon kompatibilis (TensorFlow Lite) változata is. Az alap verzió is fejlõdött, hiszen már nem csak CPU-val, hanem GPU-val és TPU-val, azaz tensor processing unit, melyet konkréten a TensorFlow-hoz készítettek. Ezen felül elosztott rendszereket is támogatja.
+
+A TensorFlow egy matematikai mûveletek optimalizációjáért felelõs könyvtár. A Python programozási nyelv egy szkriptnyelv. Ezzel nagyon sokat nyerünk, hiszen egy sor kód felelõs lehet több sornyi c kódért. Pythonban akár úgy is írhatunk kódot, hogy egy emberi mondattal leírhatjuk a jelentését. Például: a,b = b,a jelentheti azt, hogy felcserélem az a és b változó értékét. Viszont ezzel gyorsaságot veszítünk, hiszen a Python sorról sorra fordítja át a kódot c kóddá. Ennek a lassúságnak elkerülése érdekében találták ki a TensorFlow-t mely a háttérben c kódot generál, optimalizálva a mûveleteket, így a neurális hálókhoz szükséges intenzív matematikai számítások napokról órákra csökkenhetnek.
+
+A keretrendszer elméleti háttere, hogy a modellünket egy adatfolyam gráfnak tekinti, melyekben a folyamok találkozási pontjánál transzformációk történnek. Az adat amely keresztül megy a gráfon, egy vektor, más néven Tensor.
+
+Attól függetlenül, hogy matematikai számításokra fejlesztették, nagyon sok mély tanuló tartalom van benne, hibafüggvényektõl és optimalizáló függvényektõl kezdve kész modelleken át. Dolgozatom kezdete óta a Keras is része lett a TensorFlow könyvtárnak.
 
 \subsection{Tensorboard}
 
