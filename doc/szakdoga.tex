@@ -242,11 +242,23 @@ A keretrendszer elméleti háttere, hogy a modellünket egy adatfolyam gráfnak teki
 
 Attól függetlenül, hogy matematikai számításokra fejlesztették, nagyon sok mély tanuló tartalom van benne, hibafüggvényektõl és optimalizáló függvényektõl kezdve kész modelleken át. Dolgozatom kezdete óta a Keras is része lett a TensorFlow könyvtárnak.
 
-\subsection{Tensorboard}
+\subsection{TensorBoard}
+
+Az elõzõ szekcióban említett mély tanuló könyvtár egy nagyon nagy elõnye ellenfeleivel szemben a beépített vizualizációs eszköz, a TensorBoard. Ennek segítségével kevés kóddal nagyszerû vizualizációkat figyelhetünk meg tanulás közben és után is. A TensorFlow-nak számokra van szüksége ahhoz, hogy a modell elkészüljön, mivel ez egy optimalizálási feladat, viszont az embereknek nehéz felfogni hatalmas adatok táblázatát, erre jó a vizualizáció, hogyha valami nincs rendben a modellel egy gyakorlott adattudós könnyen észreveheti hol rontotta el a modelljét, valamint egy kezdõ is meglátja hogyha valami probláma van a modellel. Ilyen eszközök a skaláris vektorok, melyek az idõ függvényében mutatják meg egy tensor értékének változását, hisztogramok, melyek az eloszlását nézik az adott tensor értékeinek, a projektorral képes vagy egy vektorteret kirajzolni, melyet PCA (Principle Component Analysis) vagy T-SNE (T-distributed Stochastic Neighbour Rendering), esetleg egyéni leképezéssel. A modell architektúráját is közelebbrõl szemügyre vehetjük, hiszen van egy olyan menüpont, mely egy gráfot generál nekünk az elkészült modellbõl amelyben láthatjuk hogy a tensorok hogy folynak végig a számítási gráfon, azaz egy statikus képet kapunk, hogy futásidõben hogyan fog végigfolyni az adat. Viszont dolgozatom megkezdése óta a TensorBoard egy újabb verziója már támogatja a dinamikus hibakeresést is.
 
 \chapter{Karakter alapú szöveg modellezés}
 
+% https://en.wikipedia.org/wiki/Natural-language_processing
+A természetes nyelvfeldolgozás egy olyan tudományág, melynek célja az emberek és a gépek közötti kommunikáció létrehozása. Erre nagyon sok algoritmus született az elmúlt évszázadban, viszont az idõ azt igazolta, hogy a neurális hálók legalább olyan jók erre a célra mint a létezõ NLP algoritmusok. 
+Dolgozatomban egy karakter alapú neurális hálót hoztam létre, mely az elõzõ karakterek alapján képes megjósolni, hogy a tanult korpusz (egy zeneszerzõ) mely karakterrel folytatná a kapott sztringet (dalszöveget).
+Az írott szöveg modellezésének több absztrakciója is létezik: karakter, token, szó és mondat alapú.
+Ezek a balról jobbra egyre komplexebb egységek, ami azt jelenti, hogy több adatra van szükség, hogy a modell releváns értéket adjon vissza, hiszen például karakterbõl sokkal kevesebb van mint szóból, így ha szó alapú modellt használnánk rengeteg irreleváns információt kapnánk ritka szavakról (bár erre is van megoldás, melyre az elsõ szekcióban kitérek). Ez azt jelenti, hogy nagyon nagy adathalmazzal és számítókapacitással megéri magasabb szintû absztrakciót használni, viszont én az egyszerûség és a könnyû fejlesztés (kevés várakozás a modellek futtatása között,) miatt a karakteralapú modellezést választottam.
+
 \section{Preprocesszálás}
+
+Minden neurális modell elsõ és az egyik legfontosabb része a preprocesszálás, azaz az adatok elõkésítése a tanulásra. 
+Jelen esetben a elõször is szükségünk van egy map-re, mely a karakternek egy egyéni azonosítót ad 0 és az összes eltérõ karakter száma (továbbiakban \textit{N}) között. Ez után átalakítjuk a számokat one-hot kódolást használva, azaz minden karakter kap egy \textit{N} dimenziós vektort, és az \textit{n}-edik azonosító lineárisan független az \textit{n+1}-ediktõl. Ezzel azt érjük el, hogy miközben a modellünk tanul, nem próbál meg relációt vonni a karakterek között például ha nem használunk kódolást, és azt mondjuk hogy a indexe 1 és b indexe 2, azt is gondolhatja a modellünk hogy b kétszer olyan értékes mint a, ezért van szükségünk a lineáris függetlenségre, hisz akkor nem állhat fenn rezonancia.
+Az újabb megvalósításhoz egy másik módszert használunk, melyhez nincs szükségünk a one-hot kódolásra, mert a modell meg fogja tanítani az adott karaktert reprezentáló vektorokat minden vektorra, de ezek nem lesznek lineárisan függetlenek, relációba állíthatóak a karakterek, viszont ezek a relációk várhatóan relevánsak lesznek, nem úgy mint az elõbb felhozott példám. Ezt a megvalósítást a keras \textit{Embedding} rétege fogja megvalósítani.
 
 \section{A modell}
 
