@@ -262,7 +262,21 @@ Az újabb megvalósításhoz egy másik módszert használunk, melyhez nincs szükségünk
 
 \section{A modell}
 
+A modell a Keras keretrendszer objektumaiból épül fel, a szekció ezekre tér ki. Mivel dolgozatom során nem volt szükségem komplex modellre, elég volt a \textit{Sequential}-t használnom, melyhez a \textit{add} függvénnyel lehet hozzáadni réteget. A legutoljára felhasznált osztály, melyre már említést tettem az \textit{Embedding} réteg, melyrõl a dokumentáció is írja, hogy csak a modell elsõ rétegként alkalmazható. Ennek 3 paraméterét adjuk meg, a szótár mérete, az elvárt embedding egységek száma, azaz mennyi dimenzióra szeretnénk levetíteni az inputot. Ezt a számot általában érdemes nagyobbra állítani mint a szótár méretét, mert így tudnak kialakulni látható kapcsolatok karakterek között, például a számok össze tudnak csoportosulni, de ezt vizuálisan is tudjuk késõbb szemléltetni.
+Az \textit{Embedding} valójában egy \textit{Dense} réteg, mely paraméterül vár egy one-hot kódolással ellátott vektort. Ez csak egy segítség a fejlesztõ számára, hogy levegye a terhet a válláról, valamint a
+TensorBoard használatával vizualizálhatjuk az szótár elemei közötti kapcsolatokat.
+
+Az elõbb említett \textit{Dense} réteg egy teljesen összekapcsolt réteg, az input mindegyik eleme hozzá van kapcsolva az output összes részéhez. Ha sima neurális hálóra lenne szükségünk ezeket kellene használnunk, különbözõ mennyiségben, különbözõ számú output egységekkel.
+
+A következõ réteg az \textit{LSTM}, azaz a rekurrencia részét képzõ háló/hálók. Egy olyan háló, mely önmagába csatolódik vissza minden input karakter után. A következõ paramétereket használom units, azaz hány egység legyen benne, hasonlóan mûködik mint a \textit{Dense} egységek, \textit{return\_sequences}, mely ha igazra van állítva, mint jelen esetben, azt mondja meg hogy az összes állapotot adja-e vissza, valamint a \textit{statefulness}, azaz a következõ állapot az elõzõt vegye-e paraméterül, ami szintén igazra van állítva.
+
+Utoljára egy \textit{Dense} réteget adunk meg, \textit{szigmoid} függvénnyel, melynek output dimenzióinak meg kell egyeznie az \textit{y} dimenzióival, mivel ez a modellünk outputja.
+
+Ezzel elkészül a magas szintû keras modellünk, ez után a \textit{compile} függvénnyel elkészül ebbõl a TensorFlow modellünk. De ehhez elõbb még meg kell említenünk a \textit{compile} metódus összes szükséges paraméterét. Ezek a hibafüggvény, az optimalizáló és opcionális a metrikák.
+
 \subsection{Hibafüggvény}
+
+\subsection{Optimalizáló függvény}
 
 \subsection{Metrikák}
 
