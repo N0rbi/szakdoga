@@ -48,6 +48,8 @@
 \newtheorem{megj}[tét]{Megjegyzés}
 \newtheorem{pld}[tét]{Példa}
 
+\usepackage{setspace}
+
 %Margók:
 \hoffset -1in
 \voffset -1in
@@ -58,6 +60,7 @@
 \headsep 5mm
 \textheight 237mm
 
+\setstretch{1.5}
 
 
 
@@ -188,11 +191,33 @@ Dolgozatom témája ebbe a témakörbe tartozik, célja automatikus dalszöveg generál
 A neurális hálók az agyunkban elõforduló neuronok hálózata. Ezek határozzák meg a gondolatainkat, ez alapján hozunk döntést a minket körülvevõ világról. Ahhoz, hogy ezt számítani lehessen szükség van egy matematikai formulára, egy modellre. A neurológia jelenleg elfogadott elméletére építjük a mesterséges neurális hálókat, és ezeknek az alapjait ebben a fejezetben fogom ismertetni.
 Minden mély háló õse az elõrecsatolt mesterséges neurális háló, így a dolgozatban használt rekurrens, azaz hosszú távú memóriával rendelkezõ háló az LSTM alapja is. A fejezet ezeket a témákat fogja jobban szemügyre venni. A továbbiakban neurális hálók alatt a mesterséges neurális hálókat értem.
 
+\section{Neurális hálók és a gépi tanulás}
+%https://www.zendesk.com/blog/machine-learning-and-deep-learning/
+A mély tanulás és a gépi tanulás kifejezések a köznyelvben gyakran összemosódnak, viszont lényeges különbség van a kettõ között. A gépi tanulás feldolgozza az adatot, tanul a megfigyeltekbõl, és ezt késõbb felhasználja ha hasonló helyzetbe kerül. Ezt úgy éri el hogy a programozó egy adott programozási nyelven leimplementálja az adott lépéseket: feldolgozás, tanulás, predikálás. Szóval ha egy problémát észlel a rendszerben, megkeresi a probléma forrását és kijavítja az adott metódust/osztályt, amely a problémát elõidézte.
+ 
+Ezzel szemben a mély tanulásban nem a részegységeit készíti elõ a programozó, hanem megadja az input adatot, valamint a várt eredményt, és beállítja a modell hiperparamétereit, úgy hogy a tanulás hatásos legyen. Tulajdonképpen a mély tanulás részhalmaza a gépi tanulásnak, mert ugyanazt a célt szolgálják, viszont a mély tanulásban nem azt kell meghatározni, hogy milyen alrendszerei vannak az adott rendszernek, hanem megadjuk az $(x,y)$ párokat úgy, hogy $f(x)=y$ legyen, és az \textit{f} függvényt a gép próbálja meg közelíteni úgy hogy nem ismert $(x_1, y_1)$ párra is jól tippeljen a háló.
+
+\section{Felügyelt és felügyelet mentes tanulás}
+%https://www.youtube.com/watch?v=lEfrr0Yr684
+A tanulás egy másik csoportosítási szempontja, hogy felügyelt-e a modell tanulása. A felügyelet azt jelenti jelent esetben, hogy az input adat egy címkét kap, azaz megmondjuk mi a várt output. Ezzel szemben a felügyelet mentes modell célja automatikus információkinyerés az input adatból. 
+
+Ilyen például a SOM (azaz Self Organizing Map), mely egy adathalmaz klaszterizálását viszi véghez, vagy az autoencoder, mely célja, hogy kódolja az inputot, és visszaalakítsa azt. Ennek egy felhasználási módja például az input zajmentesítése. 
+
+A rekurrens neurális hálók, amit én is fogok alkalmazni a dolgozatomban a felügyelt tanulás csoportjába tartoznak, mivel definíció szerint a rekurrencia azt mondja meg, hogy \textit{x} lépés után mi lesz az \textit{x+1}. lépés, ehhez az inputban meg kell adnunk az \textit{x+1}. lépést, ekkor ezek lesznek a címkék, melyekre a modell optimalizálja magát. Ebbe a kategóriába tatoznak például az elõrecsatolt valamint a konvolúciós neurális hálók.
+
 \section{Elõrecsatolt neurális hálók}
 
 Az elõrecsatolt neurális hálók olyan adatszerkezetek, melyek képesek megbecsülni az \textit{f} függvényt úgy, hogy $ y = f(x, T) $ ahol \textit{T} a hálónak adott legjobb eredménnyel becslõ hiperparamétereket tartalmazza. A nevét onnan kapta, hogy az információ áramlásának iránya az inputtól az outputig tart, és nincsenek benne hurkok, ciklusok.
 
-A legegyszerûbb mûködõ neurális háló egyetlen perceptronból áll, melynek van egy súlya (\textit{W}) és egy ferdesége (\textit{b}). Ezekbõl a neurális háló elõállítja a $ \hat{y}=Wx + b $ egyenletet, és ezt optimalizálja a tanuló inputra és outputra hiba-visszaterjesztés alkalmazásával. Sajnos ennek a megoldásnak van egy limitációja, csak lineáris regresszió elõállítására képes. Erre hozták létre az aktivációs függvényeket, melyek nem lineáris függvények, és minden perceptron számításának a eredményére egy nem lineáris függvény hívódik meg. Ezeket a függvényeket aktivációs függvényeknek nevezik. Rengeteg létezik belõle, de itt van néhány példa a leggyakrabban használtak közül: \textit{reLU}, \textit{sigmoid}, \textit{tanh}. Szóval ha hozzáadjuk az aktivációs függvény \textit{g}-t az elõzõ példánkhoz a következõ egyenlõségrendszert kapjuk.
+A legegyszerûbb mûködõ neurális háló egyetlen perceptronból áll, melynek van egy súlya (\textit{W}) és egy ferdesége (\textit{b}). Ezekbõl a neurális háló elõállítja a $ \hat{y}=Wx + b $ egyenletet, és ezt optimalizálja a tanuló inputra és outputra hiba-visszaterjesztés alkalmazásával. 
+% http://ataspinar.com/2016/12/22/the-perceptron/
+	\begin{figure}
+		\centering
+		\includegraphics[scale=0.6]{perceptron.png}
+		\caption{A perceptron}
+	\end{figure}
+
+Sajnos ennek a megoldásnak van egy limitációja, csak lineáris regresszió elõállítására képes. Erre hozták létre az aktivációs függvényeket, melyek nem lineáris függvények, és minden perceptron számításának a eredményére egy nem lineáris függvény hívódik meg. Ezeket a függvényeket aktivációs függvényeknek nevezik. Rengeteg létezik belõle, de itt van néhány példa a leggyakrabban használtak közül: \textit{reLU}, \textit{sigmoid}, \textit{tanh}. Szóval ha hozzáadjuk az aktivációs függvény \textit{g}-t az elõzõ példánkhoz a következõ egyenlõségrendszert kapjuk.
 \begin{displaymath}
 \hat{y}= g(z),\ ahol\ z = Wx + b
 \end{displaymath}
@@ -210,6 +235,7 @@ A rekurrens neurális hálók képesek nagyon nagy pontossággal dönteni, de hihetetl
 \subsection{LSTM}
 
 A Long Short Term Memory (LSTM) kulcsa az úgynevezett cella, egy hosszú egyenes csõ, melyen csak lineáris transzformációkat hajtunk végre, így nem lesz radikális a változás a kezdõ és végállapot között, ezzel elkerülve a parciális derivált kiugróan magas vagy alacsony értékeit. Ez a csõ felel a hosszútávú memóriáért. Ezt a csövet módosítja az elfelejtõ kapu (forget gate) mely egy \textit{sigmoid} aktivációs függvényt tartalmazó réteg, valamint az új információt szolgáltató csõ, mely két részbõl épül fel. Az egyik egy \textit{sigmoid} aktivációs függvénnyel ellátott réteg, a másik pedig \textit{tanh}-val van ellátva. Elõször a \textit{tanh} kiszámolja az új információt amelyet továbbítani szeretne outputként majd átadja a \textit{sigmoid}-nak. A \textit{sigmoid} 0 és 1 közé képzi le a az inputját, minden \textit{sigmoid} után áll egy elemenkénti szorzás operátor. Ez a konstrukció képes eldönteni, hogy mely elemnek milyen jelentõsége van, mennyire releváns az adott kontextusban. Ez után a szûrt outputot hozzáadja a szûrt hosszútávú memóriához, amelyet majd a következõ iteráció fog megkapni hosszútávú memóriaként. Az adott réteg outputja viszont úgy generálódik, hogy ezt a csövet, mely az új hosszútávú memóriát tartalmazza átvezetjük egy \textit{tanh}-s rétegen, hogy -1 és 1 közé kerüljenek az értékek, valamint alkalmazunk még egy \textit{sigmoid} szûrõt a kapott értéken ezzel megkapva az outputot, ami a következõ réteg inputja is egyben.
+
 Fontos megjegyezni, hogy mind a \textit{sigmoid}-ok, mind a \textit{tanh}-k neuronok, melyek tanulás alatt optimalizálják a változóikat (\textit{W} és \textit{b}) ezzel megtanulva mit kell továbbítani a következõ rétegeknek, valamint a globális információból (a cella) mely információ releváns számára. Hiba-visszaterjesztéskor ezek változnak radikálisan, hisz ezeknek jóval kisebb vagy nagyobb tud lenni a gradiense, mint a lineáris transzformációknak.
 
 % LSTM verziókról pár szó ??
@@ -219,17 +245,24 @@ Fontos megjegyezni, hogy mind a \textit{sigmoid}-ok, mind a \textit{tanh}-k neur
 %python és a mélytanuló könyvtárai: pytorch, tf, CNTK, theano, caffe
 % http://diploma.biblDeepLearning4J.u-szeged.hu/59970/ ?
 Rengeteg könyvtárat hoztak létre melyek segítik a mély tanulás leimplementálását. Elõször is meg kell említeni, hogy az elmúlt években a python nyelv vált a mély tanulás de facto standardjává. Létezik más nyelvre is ismert könyvtár pl: Java - DeepLearning4J, lua - torch, Matlab - Neural network toolbox, de kétségtelen a python elõnye a piacon. 
+
 Ott van például a Caffe, melyet a Berkeley egyetem egy tanulója, Yangqing Jia PhD tanulmányai során készített, és az óta is közkedvelt keretrendszer. Másik példa a Microsoft Cognitive toolkit, melyet az óriás vállalat tart karban, így plusz funkcióként az Azure-t is támogatja. Hasonló helyzet áll fent a PyTorch-al kapcsolatban is, melyet a Facebook kezel és a Torch nevû lua framework python-ra való portolása, mely támogatja a dinamikus hálókat. Úgy mint a PyTorch, a dynet, mely a Carnegie Mellon Egyetemen született, is támogatja a dinamikus modellt.
+
 Amikor döntöttem keretrendszer választás tekintetében, akkor ezekrõl le kellett mondanom, mivel szerettem volna használni a magas szintû API-t amelyet a Keras nyújt, és amelyre a következõ szekcióban kitérek. Amikor a kódot elkezdtem leimplementálni csak a TensorFlow és a Theano volt kompatibilis a Keras-sal(, igaz azóta a Microsoft Cognitive Toolkit is kompatibilis vele).
+
 Theano könyvtár egy matematikai segédeszköz, mely gyors és pontos számításokra képes, mátrix mûveleteket optimalizálja, valamint CPU-n és GPU-n is futtatható. Egyetlen probléma vele, hogy a fõ karbantartója MILA (Montreal Institute for Learning Algorithms) abba hagyta a fejlesztését, és jelentõsen visszaesett a fejlesztõi hozzájárulások száma az elmúlt fél évben.
+
 TensorFlow a ma használt egyik legkedveltebb mély tanuló könyvtár, jól dokumentált, minden megtalálható benne ami egy gépi tanulást alkalmazó programnak kell. Igaz csak statikus modelleket képes létrehozni, de könnyû debuggolni, a hozzá lefejlesztett segédeszköz, a TensorBoard segítségével. így a választásom a TensorFlow-ra esett.
 
 \section{Keras}
-
+\label{keras}
 A Keras, mint már említésre került, egy magas szintû API, melynek fõ célja a gyors kísérletezés. Ahogy a honlapjukon található idézet írja: `Az egyik legfontosabb dolog a kutatásban, hogy minél gyorsabban elérjünk az ötlettõl az eredményig.'. Kulcsfontosságú volt a fejlesztése során a modularitás és a felhasználó barátság, cserébe nem kapunk olyan gyors algoritmust, melyet mondjuk akkor kapnánk, ha TensorFlow-t használnánk, Keras nélkül.
+
 Az API alapja a \textit{Model} osztály. Ebbõl funkcionális programozás segítségével komplex gráfokat tudunk létrehozni, de ha csak sor-folytonosan szeretnénk rétegeket hozzáadni akkor az ebbõl leszármazó
 \textit{Sequential} osztályt kell alkalmazni, melynek az \textit{add} metódusa paraméterül egy \textit{Layer} objektumot vár, és hozzáadja következõ elemként a modellhez. Ez után a \textit{compile} függvénnyel megadhatjuk mit használjon, hibafüggvénynek, ami alapján megmondja hogy teljesít a modell, valamint mi legyen az optimalizáló függvény, ami a hiba-visszaterjesztést vezérli, valamint milyen metrikákat használjon pl: loss(hibaérték), accuracy(pontosság).
+
 A compile után a modell kész a tanulásra. \textit{numpy} tömböket vár inputként és azt is ad vissza outputként. A tanulásnak több módja van, például a \textit{fit} a legegyszerûbb, két kötelezõ paramétere van: \textit{x} és \textit{y}. Az én esetemben viszont ez nem volt járható út, mivel a korpusz amelybõl tanul elérheti a $(730441-100) * 101 = 73764441$ elemû multidimenziós tömböt (ezt a rock.txt választással, 100-as szekvencián tudjuk elérni). Ebben az esetben használható az alacsonyabb szintû \textit{train\_on\_batch} függvény, így futásidõben képes voltam az inputot kigenerálni a Keras számára.
+
 Attól függõen hogy milyen módon adjuk meg az inputot, a tesztelés is másképp mûködik. A \textit{fit}-hez hasonlóan tesztadatra megnézhetjük hogyan teljesít modellünk még nem látott adaton a \textit{evaluate} és a \textit{train\_on\_batch}-hez hasonlóan mûködik a \textit{test\_on\_batch}. Ha szeretnénk egy konkrét predikciót kapni akkor a \textit{predict} függvényre van szükségünk, ahol egy adott \textit{x}-re visszakapjuk az output \textit{y}-t.
 
 \section{TensorFlow}
@@ -250,35 +283,115 @@ Az elõzõ szekcióban említett mély tanuló könyvtár egy nagyon nagy elõnye ellenfe
 
 % https://en.wikipedia.org/wiki/Natural-language_processing
 A természetes nyelvfeldolgozás egy olyan tudományág, melynek célja az emberek és a gépek közötti kommunikáció létrehozása. Erre nagyon sok algoritmus született az elmúlt évszázadban, viszont az idõ azt igazolta, hogy a neurális hálók legalább olyan jók erre a célra mint a létezõ NLP algoritmusok. 
+
 Dolgozatomban egy karakter alapú neurális hálót hoztam létre, mely az elõzõ karakterek alapján képes megjósolni, hogy a tanult korpusz (egy zeneszerzõ) mely karakterrel folytatná a kapott sztringet (dalszöveget).
+
 Az írott szöveg modellezésének több absztrakciója is létezik: karakter, token, szó és mondat alapú.
 Ezek a balról jobbra egyre komplexebb egységek, ami azt jelenti, hogy több adatra van szükség, hogy a modell releváns értéket adjon vissza, hiszen például karakterbõl sokkal kevesebb van mint szóból, így ha szó alapú modellt használnánk rengeteg irreleváns információt kapnánk ritka szavakról (bár erre is van megoldás, melyre az elsõ szekcióban kitérek). Ez azt jelenti, hogy nagyon nagy adathalmazzal és számítókapacitással megéri magasabb szintû absztrakciót használni, viszont én az egyszerûség és a könnyû fejlesztés (kevés várakozás a modellek futtatása között,) miatt a karakteralapú modellezést választottam.
 
 \section{Preprocesszálás}
 
-Minden neurális modell elsõ és az egyik legfontosabb része a preprocesszálás, azaz az adatok elõkésítése a tanulásra. 
+Minden neurális modell elsõ és az egyik legfontosabb része a preprocesszálás, azaz az adatok elõkészítése a tanulásra.
+ 
 Jelen esetben a elõször is szükségünk van egy map-re, mely a karakternek egy egyéni azonosítót ad 0 és az összes eltérõ karakter száma (továbbiakban \textit{N}) között. Ez után átalakítjuk a számokat one-hot kódolást használva, azaz minden karakter kap egy \textit{N} dimenziós vektort, és az \textit{n}-edik azonosító lineárisan független az \textit{n+1}-ediktõl. Ezzel azt érjük el, hogy miközben a modellünk tanul, nem próbál meg relációt vonni a karakterek között például ha nem használunk kódolást, és azt mondjuk hogy a indexe 1 és b indexe 2, azt is gondolhatja a modellünk hogy b kétszer olyan értékes mint a, ezért van szükségünk a lineáris függetlenségre, hisz akkor nem állhat fenn rezonancia.
+
 Az újabb megvalósításhoz egy másik módszert használunk, melyhez nincs szükségünk a one-hot kódolásra, mert a modell meg fogja tanítani az adott karaktert reprezentáló vektorokat minden vektorra, de ezek nem lesznek lineárisan függetlenek, relációba állíthatóak a karakterek, viszont ezek a relációk várhatóan relevánsak lesznek, nem úgy mint az elõbb felhozott példám. Ezt a megvalósítást a keras \textit{Embedding} rétege fogja megvalósítani.
+
+%TODO: referencia a CharEncoder osztályra
 
 \section{A modell}
 
 A modell a Keras keretrendszer objektumaiból épül fel, a szekció ezekre tér ki. Mivel dolgozatom során nem volt szükségem komplex modellre, elég volt a \textit{Sequential}-t használnom, melyhez a \textit{add} függvénnyel lehet hozzáadni réteget. A legutoljára felhasznált osztály, melyre már említést tettem az \textit{Embedding} réteg, melyrõl a dokumentáció is írja, hogy csak a modell elsõ rétegként alkalmazható. Ennek 3 paraméterét adjuk meg, a szótár mérete, az elvárt embedding egységek száma, azaz mennyi dimenzióra szeretnénk levetíteni az inputot. Ezt a számot általában érdemes nagyobbra állítani mint a szótár méretét, mert így tudnak kialakulni látható kapcsolatok karakterek között, például a számok össze tudnak csoportosulni, de ezt vizuálisan is tudjuk késõbb szemléltetni.
-Az \textit{Embedding} valójában egy \textit{Dense} réteg, mely paraméterül vár egy one-hot kódolással ellátott vektort. Ez csak egy segítség a fejlesztõ számára, hogy levegye a terhet a válláról, valamint a
-TensorBoard használatával vizualizálhatjuk az szótár elemei közötti kapcsolatokat.
 
-Az elõbb említett \textit{Dense} réteg egy teljesen összekapcsolt réteg, az input mindegyik eleme hozzá van kapcsolva az output összes részéhez. Ha sima neurális hálóra lenne szükségünk ezeket kellene használnunk, különbözõ mennyiségben, különbözõ számú output egységekkel.
+Az \textit{Embedding} a Keras keretrendszeren belül valójában egy \textit{Dense} olyan réteg, mely paraméterül vár egy one-hot kódolással ellátott vektort. Ez csak egy segítség a fejlesztõ számára, hogy levegye a terhet a válláról, valamint a TensorBoard használatával vizualizálhatjuk az szótár elemei közötti kapcsolatokat.
 
-A következõ réteg az \textit{LSTM}, azaz a rekurrencia részét képzõ háló/hálók. Egy olyan háló, mely önmagába csatolódik vissza minden input karakter után. A következõ paramétereket használom units, azaz hány egység legyen benne, hasonlóan mûködik mint a \textit{Dense} egységek, \textit{return\_sequences}, mely ha igazra van állítva, mint jelen esetben, azt mondja meg hogy az összes állapotot adja-e vissza, valamint a \textit{statefulness}, azaz a következõ állapot az elõzõt vegye-e paraméterül, ami szintén igazra van állítva.
+Az embedding tulajdonképpen egy adathalmaz elemeit próbálja relációba állítani. Fõleg szavak relációba állítására használják, de a fent említett példából látható, hogy az általam létrehozott karakter alapú embedding-nek is van emberileg felfogható értéke. Vannak nem mély tanuló algoritmusok szóbeágyazásokra, valamint vannak elõre tanított adathalmazok, ha olyan programot szeretnénk írni amiben szó alapú nyelvi felismerésre van szükség. Ilyen például a Google által karban tartott \textit{word2vec} valamint a nagy riválisa a \textit{GloVe}. A kettõ között a lényegi különbség hogy a \textit{word2vec} predikciókat végez, ameddig a \textit{GloVe} statisztikai alapon végzi a számolást, viszont a motorháztetõ alatt mindkettõ a szöveg kontextusából próbál meg rájönni az adott szó jelentésére.
+
+A már említett \textit{Dense} réteg egy teljesen összekapcsolt réteg, az input mindegyik eleme hozzá van kapcsolva az output összes részéhez. Ha sima neurális hálóra lenne szükségünk ezeket kellene használnunk, különbözõ mennyiségben, különbözõ számú output egységekkel.
+
+A következõ réteg az \textit{LSTM}, azaz a rekurrencia részét képzõ háló/hálók. Egy olyan háló, mely önmagába csatolódik vissza minden input karakter után. A következõ paramétereket használom: \textit{units}, azaz hány egység legyen benne, hasonlóan mûködik mint a \textit{Dense} egységek, \textit{return\_sequences}, mely ha igazra van állítva, mint jelen esetben, azt mondja meg hogy az összes állapotot adja-e vissza, valamint a \textit{statefulness}, azaz a következõ állapot az elõzõt vegye-e paraméterül, ami szintén igazra van állítva.
 
 Utoljára egy \textit{Dense} réteget adunk meg, \textit{szigmoid} függvénnyel, melynek output dimenzióinak meg kell egyeznie az \textit{y} dimenzióival, mivel ez a modellünk outputja.
 
 Ezzel elkészül a magas szintû keras modellünk, ez után a \textit{compile} függvénnyel elkészül ebbõl a TensorFlow modellünk. De ehhez elõbb még meg kell említenünk a \textit{compile} metódus összes szükséges paraméterét. Ezek a hibafüggvény, az optimalizáló és opcionális a metrikák.
 
 \subsection{Hibafüggvény}
+% wikipédia
+A hibafüggvény a matematikai optimalizációban, statisztikában, gépi tanulásnál és mély tanulásnál használt kifejezés. Tulajdonképp vektorokat, mátrixokat (a mi esetünkben tensorokat) egy valós számra vetít le, melyet a fent említett területeken használnak, hogy számszerûsíteni tudják a tanulás állapotait, azaz meg tudja nézni hogy javult-e a tanulás az adott iterációban (más néven kisebb-e a hibafüggvény értéke).
+
+A hibafüggvényt a programozó feladata meghatározni, hiszen rossz hibafüggvénnyel a tanulás értelmetlen.
+Kerasban a kész modellünk compile függvényében szerepel a hibafüggvény, kötelezõ paraméterként. Mi magunk is létrehozhatunk hibafüggvényeket, melyben paraméterként kapunk egy \textit{y\_true} és egy \textit{y\_pred} tensort és ez alapján kell kiszámolni a hibát.
+Ha általános hibafüggvényre van szükség a Keras magába foglal rengeteget közülük. Ezeket jelentésükkel együtt a következõ táblázat fogja szemléltetni. Ezeket begépelhetjük sztringként az alábbi táblázat alapján, vagy a \textit{keras.losses} csomagban található rájuk a referencia, mellyel saját paraméterekkel is meghívhatjuk õket, de a dokumentációban ki van emelve, hogy ez nem ajánlott.
+%TODO leirás
+\begin{table}[!h]\label{loss}
+	\caption{Keras keretrendszer elõredefiniált hibafüggvényei}
+	\begin{center}
+		\begin{tabular}{r|r}
+			Név&Leírás\\
+			\hline\hline
+			mean\_squared\_error&n\\
+			mean\_absolute\_error&n\\
+			mean\_absolute\_percentage\_error&n\\
+			mean\_squared\_logarithmic\_error&n\\
+			squared\_hinge&n\\
+			hinge&n\\
+			categorical\_hinge&n\\
+			logcosh&n\\
+			categorical\_crossentropy&n\\
+			sparse\_categorical\_crossentropy&n\\
+			binary\_crossentropy&n\\
+			kullback\_leibler\_divergence&n\\
+			poisson&n\\
+			cosine\_proximity&n\\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+A mi esetünkben a megfelelõ választás a categorical\_crossentropy lesz, mivel minden karakter egy különálló kategória és azt akarjuk megmondani hogy az adott kategóriának mekkora esélye van a következõnek lenni az input alapján.
 
 \subsection{Optimalizáló függvény}
+%https://towardsdatascience.com/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f
+A compile függvény másik kötelezõ paramétere az optimalizáló függvény, melyet megadhatunk sztringként is valamint egy callback-el is hozzáadhatjuk a modellünkhöz. A keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak. Az optimalizáló célja minimalizálni a hibafüggvény értékét. Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol ha a hibafüggvényünk $f(x) = y$, akkor megkeresi azt az értéket ahol $f'(x)$ értéke negatív, azaz $y$ $x$ viszonylatában csökken. Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát számításköltséges kiszámolni.
+
+\begin{table}[!h]\label{optimizer}
+	\caption{Keras keretrendszer elõredefiniált optimalizáló függvényei}
+	\begin{center}
+		\begin{tabular}{r|r}
+			Név&Leírás\\
+			\hline\hline
+			SGD&n\\
+			RMSProp&n\\
+			Adagrad&n\\
+			Adadelta&n\\
+			Adam&n\\
+			Adamax&n\\
+			Nadam&n\\
+			TFOptimizer&n\\
+		\end{tabular}
+	\end{center}
+\end{table}
 
 \subsection{Metrikák}
+
+Szintén megadható paraméterként a compile-nak a \textit{metrics}, mely egy tömböt vár, melynek elemei vagy sztringek, vagy egy callback függvény. A kódban ez az egyetlen példa, ahol kihasználom a callback függvénnyel való definiálást, mivel a keras alapból nem tartalmazza a perplexitás metrikát. A perplexitás a természetes nyelvfeldolgozás egy alap metrikája, jelentése az, hogy a modell milyen jól másolja a valódi korupusz eloszlását. A másik felhasznált metrika a pontosság, lényegében visszakérjük a kerastól hogy a modell milyen pontosan határozta meg a várt értéket a tanítás során. 
+
+A metrika egy olyan egysége a modellnek, melyet nem használ fel a tanulás során, ez csak a fejlesztõ számára nyújt segítséget, hogy megértse hogyan viselkedik a modellje.
+
+\section{A tanulás menete}
+
+Ott tartunk hogy van egy modellünk, az input tanításra kész állapotban van, és a modell le lett compile-olva az adott alacsony szintû nyelvre, adott esetben tensorflow-ra.
+
+A keras több módot is felkínál a modellünk tanítására, melyekrõl már szó esett a kerasról szóló \ref{keras} fejezetben. Személy szerint az alacsony szintû \textit{train\_on\_batch} megvalósítást választottam, mivel az elsõ próbálkozás alkalmával a fit nem bizonyult használhatónak a hatalmas tármennyiségnek amit a preprocesszált input adat megkövetel. Erre használhattam volna a \textit{fit\_generator}-t, viszont mikor ezt észrevettem már hatalmas refaktorálásra lett volna szükségem a \textit{lyrics.py} fájlban, mivel az összes callback-et, melyet a \textit{fit} támogat meg kellett valósítanom a saját kódomban. Ezek a tensorboard vizualizációi, valamint az korai megállás.
+
+Az early stopping, azaz korai megállás azt jelenti, hogy habár a tanuló adathalmazon állandóan egyre jobb értékeket sikerül elérnie, a validációs halmazon látszik, hogy van egy pont, ahol elkezd romlani az érték. Ekkor ha hagyjuk a modellnek hogy tovább tanuljon egyre rosszabbul teljesít majd a validációs halmazon, és egyre jobb lesz a tanító inputon, ezt a jelenséget szeretnénk elkerülni. Ezt egyszerûen megtehetjük, de elõbb pár a tanításhoz fontos fogalommal meg kell ismerkednünk.
+
+% EPOCH, BATCH, validation, test
+
+% early stopping megvalósítása
+
+% tensorboard logolások
+
+\chapter{Tanulás eredményei}
 
 \chapter*{Nyilatkozat}
 %Egy üres sort adunk a tartalomjegyzékhez:
