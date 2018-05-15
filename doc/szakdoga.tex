@@ -28,6 +28,8 @@
 
 %A fejléc láblécek kialakításához:
 \usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{listings}
 
 %Természetesen további csomagok is használhatók,
 %például ábrák beillesztéséhez a graphix és a psfrag,
@@ -333,10 +335,15 @@ Igaz csak statikus modelleket képes létrehozni, de könnyû debuggolni, a hozzá le
 %https://github.com/begab/compsem/blob/master/eloadasok/01_intro.pdf
 A Python egy interpretált nyelv, csak úgy mint a böngészõkben futó JavaScript nyelv, nagy elõnyük, hogy lehetõség van érthetõbb kód írására velük, viszont ezek a nem olyan gyorsak mint a fordított nyelvek, például: c, c++.
 
-A nyelv szintaxisa megközelíti a pszeudokódét, például a hármas operátort az alábbi forráskódban látható módon definiáljuk, valamint sok vezérlési szerkezet helyettesítve lett.
-\begin{verbatim}
-a = b if x else c
-\end{verbatim}
+A nyelv szintaxisa megközelíti a pszeudokódét, például a hármas operátort a \ref{ternary} forráskódban látható módon definiáljuk, valamint sok vezérlési szerkezet helyettesítve lett.
+\begin{figure}
+	\label{ternary}
+	\caption{A hármas if-then-else operátor pythonban}
+	\centering
+	\begin{BVerbatim}
+	a = b if x else c
+	\end{BVerbatim}
+\end{figure}
 Például az \&\& valamint a || ki lett cserélve az \textit{and} és \textit{or} kulcsszóra, a kapcsos zárójelek helyett indentálással, azaz szóközök vagy tabulátor alkalmazásával látható hogy az adott sor melyik függvény vagy vezérlési szerkezet látóköréhez tartozik.
 
 A választott nyelv nagy ellenfelei az R és a Matlab nyelvek, hiszen kutatók legkedveltebb nyelvei könnyû szintaktikájuk miatt, viszont ezek nem általános programozási nyelvek, a Pythonnal ellentétben.
@@ -426,7 +433,7 @@ Viszont dolgozatom megkezdése óta a TensorBoard egy újabb verziója már támogatja
 % annyira nem régi dolog az NLP, hogy érdemes lenne elmúlt évszázadról 
 %beszélni. Legyen inkább elmúlt évtizedekben
 A természetes nyelvfeldolgozás egy olyan tudományág, melynek célja az emberek és a gépek közötti kommunikáció létrehozása, valamint az adatbányászatra használt eszköz. 
-Az adatbányászat egy fontos területe, hisz rettentõ nagy mennyiségû ember által írt forrás található meg az interneten, mely bányászatához sokszor elengedhetetlen a nyelvtudás, ekkor tud segíteni a nyelvfeldolgozás. 
+Az utóbbihoz rendkívül hasznos, hisz rettentõ nagy mennyiségû ember által írt forrás található meg az interneten, mely bányászatához sokszor elengedhetetlen a nyelvtudás, ekkor tud segíteni a nyelvfeldolgozás. 
 A beszédfelismerés, természetes nyelv megértése valamint generálása is ezen tudományterület szerepkörei közé tartozik. 
 Ezekre a célokra nagyon sok algoritmus született az elmúlt évtizedben, viszont az idõ azt igazolta, hogy a neurális hálók legalább olyan jók erre a célra mint a létezõ NLP algoritmusok. 
 
@@ -447,9 +454,18 @@ Ezzel azt érjük el, hogy miközben a modellünk tanul, nem próbál meg relációt von
 Az újabb megvalósításhoz egy másik módszert használunk, melyhez nincs szükségünk a one-hot kódolásra, mert a modell meg fogja tanítani az adott karaktert reprezentáló vektorokat minden vektorra, de ezek nem lesznek lineárisan függetlenek, relációba állíthatóak a karakterek, viszont ezek a relációk várhatóan relevánsak lesznek, nem úgy mint az elõbb felhozott példám. 
 Ezt a megvalósítást a keras \textit{Embedding} rétege fogja megvalósítani.
 
-%TODO: referencia a CharEncoder osztályra
+A preprocesszálást a \textit{scikit-learn} csomag által definiált encoder séma szerint csináltam.
+Lényegében van egy \textit{fit} függvénye, mely beállítja az encoder-t az input alapján, egy \textit{transform}, mely visszaadja a megváltoztatott inputot, ezeknek a kombinációja a \textit{fit\_transform}, mely sor-folytonosan meghívja a két függvényt.
+Az \textit{inverse\_transform} melynek célja hogyha f a transform függvény és g az inverse transform, akkor $g(f(x)) = x$ bármely \textit{x}-re.
+
+Célom volt továbbra az, hogyha egy olyan karaktert kap az encoder amellyel még nem találkozott, akkor azt ritka karakterként kezelje, ahelyett, hogy leállna a predikáló program.
+
+Kialakítottam egy rendszert arra, hogy transzformációban extra lépések is megtehetõek legyenek, például az általam is használt \textit{lowercase}, azaz kisbetûs transzformáció.
+
+Ez a kód megtekinthetõ a Függelékben a \ref{encoder} szekcióban.
 
 \section{A modell}
+\label{model}
 %https://keras.io/
 
 %G: erre van forrás, mert akkor azt hivatkozni kellene. Amúgy 
@@ -585,12 +601,124 @@ Ekkor ha hagyjuk a modellnek hogy tovább tanuljon egyre rosszabbul teljesít majd
 Ezt egyszerûen megtehetjük, de elõbb pár a tanításhoz fontos fogalommal meg kell ismerkednünk.
 
 % EPOCH, BATCH, validation, test
+% https://towardsdatascience.com/epoch-vs-iterations-vs-batch-size-4dfb9c7ce9c9
+\subsection{Epoch, Validáció, Teszt}\label{epoch}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{train.png}
+	\label{log}
+	\caption{Itt látható a program tanulás közben, az elsõ szám az epoch száma, a többi a batch, valamit a metrikáké}
+\end{figure}
+Már említettem, hogy elõször a \textit{fit} függvényt használtam, mely a tanulás egészét elrejti elõlünk.
+Viszont a \textit{train\_on\_batch}-el való megvalósítással sokkal mélyebben belelátunk a tanulás folyamatába.
+A legkülsõ héja a tanulásnak az epoch, ez azt mondja meg, hányszor fusson át az egész adathalmazon a modell, mielõtt befejezi a tanulást. 
+Erre azért van szükség, mert a \textit{Gradient Descent}, az optimalizáló algoritmusok alapja iteratívan mûködik, így ha csak egyszer megyünk végig az adathalmazon nem látja eleget az adatot, nem tudja megtanulni a relációt az input és az output között, ekkor alultanulásról beszélünk.
+Ennek az ellentettje a túltanulás, ekkor túl sokszor nézte végig az adathalmazt a modell, bemagolta az abban lévõ input-output párokat, de új adatra romlik az ítélõképessége.
+Ennek a vizualizációjára szolgál a \ref{overfit} ábra, melyen látható a reláció a reprezentált tudás és az új adatokon való predikálás között.
+% https://github.com/begab/compsem/blob/master/eloadasok/02_optim_intro.pdf
+Az epochon belül, mint már említettem egyszer végig megy az összes adaton a program.
+Viszont ez hihetetlenül nagy memória igénnyel járhat, adathalmaztól függõen.
+Ezért szokták batch-ekre osztani az adatot, melyeket a \textit{read\_batches} generátor állít elõ, melyet egy for ciklus segítségével végig iterálunk és a már említett \textit{train\_on\_batch} függvényen keresztül odaadunk a kerasnak processzálásra. 
+Ekkor a keras az adott batch alapján egy gradiens frissítést végez, azaz frissíti a háló perceptronjainak súlyát és visszaadja nekünk a metrikákat amelyekre feliratkoztunk.
+Ez a mi esetünkben a hibaérték, pontosság és a perplexitás volt.
+A hibaérték és a pontosság között az a különbség, hogy az elõbbi az összes lehetséges kimenetre megnézi mennyire tér el a várt eredmény a kapottól és ezt a \textit{categorical\_crossentropy} egy valós értékre transzformálja, pontosabban megmondja mekkora különbség van a várt és a kapott eloszlás között, az utóbbi pedig megmondja hány százalékban volt a kapott kimenet egyenlõ a várt eredménnyel.
+A hibaérték láthatóan több információt tartalmaz, de késõbb észrevehetõ, hogy magas a negatív korreláció a kettõ között (, mivel minél kisebb a loss, annál nagyobb az accuracy).
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{epoch.png}
+	\label{overfit}
+	\caption{Balról jobbra: Túltanulás, optimális tanulás, alultanulás. Észrevehetõ hogy az optimumnál a legkisebb a távolság a görbe és a piros négyzet, azaz az új adat között.}
+\end{figure}
+Minden egyes epoch végén validálom a modellem, azaz megnézem a javulását.
+Ehhez a \textit{test\_on\_batch} függvényt használom. 
+Ennek megegyezik a visszatérési értékének formája mint a \textit{train\_on\_batch}-ével, viszont nem végez módosítást a háló súlyain.
+Nagyon fontos megjegyezni, hogy a validáció adaton kell elvégezni, amit nem használtunk tanítás folyamán, különben irreálisan nagy értéket kaphatunk, és késõbb ismeretlen adatra rosszabb predikciót végez.
+
+A tanítás legvégén hasonlóan a még nem látott adattal tesztelhetjük a modellünket, ugyanúgy a \textit{test\_on\_batch} függvénnyel.
+
+Az ebben a szekcióben leírtak megtalálhatóak a függelék \ref{train} részében.
 
 % early stopping megvalósítása
-
 % tensorboard logolások
+\subsection{Eredmények feldolgozása}
+Most hogy megismerkedtünk a tanulás folyamatával megnézzük mit kell tennie egy epoch folyamán a rendszerünknek.
+Már említettem a korai megállást.
+Célja, hogy ne tanítsuk túl a modellünket, azaz meg kell néznünk hogy az új validáció során jobban viselkedett-e a modell mint az elõtte levõben.
+Ha jobb volt archiváljuk késõbbi felhasználásra, ha ezt nem tesszük meg akkor a program lefutása után a modell elveszik.
+Ha nem akkor megbüntetjük a modellt, ha túl sok büntetést szerzett, azaz elérte a türelmi szintet (\textit{patience\_limit}), akkor leállítjuk a tanulást, ezt a szintet mi állíthatjuk be ha parancssorról indítjuk a programot.
+
+Másik fontos dolog az adatvizualizáció.
+A program összegyûjti a metrikákat melyet a keras visszaad számára, aggregálja azt, majd az epoch végén veszi az átlagait mind a tanulásnak, mind a validálásnak és átadja a tensorboard objektumnak archiválásra.
+Szemléltetés céljából a batch-en végzett módosításokat is elmenti a program, viszont erre legtöbb esetben nincs szükség.
+
+\section{Parancssori interfész}
+A lyrics.py futtatható parancssorból is, ahol a hiperparamétereit lehet szabályozni tanulás elõtt.
+Elsõ kötelezõ paramétere a --artist, mely arra utal hogy a dataset mappából mely zenefájlt használja tanításhoz. 
+Ezen kívül választható paraméterként ott vannak a korábban már említett értékek. 
+Ilyen az --epoch, hogy hány iteráción keresztül menjen végig az adathalmazon a program, --patience\_limit, hogy hány olyan epoch után álljon le a tanítás melyben nem sikerült a validáción jobb eredményt elérni, ezekrõl a \ref{epoch} szekcióban volt szó. 
+Az --lstm\_layers és --lstm\_units pedig azt határozzák meg hogy hány darab lstm réteg legyen, és egy lstm rétegnek hány rejtett egységet adjunk. 
+A --embedding az embedding egységek számára utal, melyet a \ref{model} szekció tárgyalt ki bõvebben. 
+A -size\_x azt határozza meg hány karakter után próbálja megítélni a modell hogy mi lesz a következõ karakter.
+Az utolsó paraméter pedig azt kérdezi milyen névem mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a tensorboard fel tudja dolgozni.
+Angol nyelvû segítséget tud nyújtani még a --help, mely látható a \ref{cli} ábrán.
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.4]{help.png}
+	\label{cli}
+	\caption{A `python lyrics.py --help' -et beütve a parancssorba ez jelenik meg.}
+\end{figure}
 
 \chapter{Tanulás eredményei}
+Mikor elkezdtem a keras-t használni, hogy kitanítsa a modelleket úgy validáltam a munkámat, hogy lefuttattam a \textit{demo.py}-t mely vagy a legvalószínûbb értékû outputot választotta, vagy a softmax által létrehozott disztribúciót vette alapul, és ez alapján döntötte el a következõ karaktert, így esélyt adva a kevésbé esélyeseknek is.
+Ez viszont nem egy olyan megoldás amellyel hosszú távon érdemes egy mélytanuló algoritmust ellenõrizni.
+Ezért döntöttem úgy hogy a TensorBoard-ot használom munkám során a fejlesztés könnyítéséhez.
+A board lokális szerverként indul el, csak be kell írni a terminálba hogy `tensorboard --logdir target/tran\_log' amennyiben a tensorboard telepítve van.
+A target/train\_log mappa az ahova ment a tensorflow a vizualizációs eszközben szükséges logfileokat. A tanításnak megadott --name paraméterrel, vagy az adott dátumot és elõadót figyelembe véve egy generált nevet kap.
+
+\section{Skalárisok}
+
+
+Ha van legalább egy modellünk, akár kész akár éppen tanul, ha egy böngészõablakkal odanavigálunk az oldalra amit a konzol kiadott, akkor látni fogjuk a modell tanulásának fázisait.
+
+Ha több modellünk van kiválaszthatjuk az általunk látni kívántat, valamint filterezhetünk rá reguláris kifejezéssel a \textit{Runs} szekcióban. 
+Ekkor megjelenik az összes tanulással kapcsolatos idõben változó metrika.
+
+Rákattintva a keresés gombra és beírva a `.*' reguláris kifejezést az összes metrika megjelenik összecsoportosítva. 
+Ezek jelentései a \ref{metrics} táblázatban kerül leírásra.
+
+\begin{table}[!h]\label{metrics}
+	\caption{A tensorboard skalárként ábrázolt metrikái}
+	\begin{center}
+		\begin{tabular}{r|r}
+			Név&Jelentés\\
+			\hline\hline
+			train\_batch\_accuracy&Az adott batch tanulása közben adott pontos találatok\\
+			train\_batch\_loss&Az adott batch tanulása közben számolt keresztentrópia\\
+			train\_batch\_perplexity&Az adott batch perplexitása\\
+			train\_epoch\_accuracy&Az adott epochban visszaadott pontosságok átlaga\\
+			train\_epoch\_loss&Az adott epochban visszaadott keresztentrópia átlaga\\
+			train\_epoch\_perplexity&Az adott epochban visszaadott perplexitás átlaga\\
+			val\_accuracy&A validálás során adott jó találatok átlaga\\
+			val\_loss&0A validálás során számolt keresztentrópia átlaga\\
+			val\_perplexity&A validálás során számolt perplexitás átlaga\\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+Észre vehetjük hogy tanulás elején a hiba mind a validáción, mind a tanító halmazon nagyon magas.
+Ez a \textit{Gradient Descent} miatt van, próbálja megközelíteni a tanuló halmaz által reprezentált halmazt, így azt fogjuk észre venni, hogy a tanuló halmaz hibaértéke valamivel gyorsabban csökken, a pontossága nõ.
+
+
+\chapter{Összegzés}
+
+\chapter{Függelék}
+
+\section{CharEncoder}
+\label{encoder}
+\lstinputlisting[language=Python,  firstline=131, lastline=172, breaklines=true]{../utils.py}
+\section{Training}
+\label{train}
+\lstinputlisting[language=Python, breaklines=true]{../lyrics.py}
 
 \chapter*{Nyilatkozat}
 %Egy üres sort adunk a tartalomjegyzékhez:
