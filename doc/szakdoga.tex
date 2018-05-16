@@ -659,7 +659,7 @@ Ilyen az --epoch, hogy hány iteráción keresztül menjen végig az adathalmazon a p
 Az --lstm\_layers és --lstm\_units pedig azt határozzák meg hogy hány darab lstm réteg legyen, és egy lstm rétegnek hány rejtett egységet adjunk. 
 A --embedding az embedding egységek számára utal, melyet a \ref{model} szekció tárgyalt ki bõvebben. 
 A -size\_x azt határozza meg hány karakter után próbálja megítélni a modell hogy mi lesz a következõ karakter.
-Az utolsó paraméter pedig azt kérdezi milyen névem mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a tensorboard fel tudja dolgozni.
+Az utolsó paraméter pedig azt kérdezi milyen néven mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a tensorboard fel tudja dolgozni, ez a --model\_name.
 Angol nyelvû segítséget tud nyújtani még a --help, mely látható a \ref{cli} ábrán.
 \begin{figure}
 	\centering
@@ -670,13 +670,13 @@ Angol nyelvû segítséget tud nyújtani még a --help, mely látható a \ref{cli} ábrá
 
 \chapter{Tanulás eredményei}
 Mikor elkezdtem a keras-t használni, hogy kitanítsa a modelleket úgy validáltam a munkámat, hogy lefuttattam a \textit{demo.py}-t mely vagy a legvalószínûbb értékû outputot választotta, vagy a softmax által létrehozott disztribúciót vette alapul, és ez alapján döntötte el a következõ karaktert, így esélyt adva a kevésbé esélyeseknek is.
-Ez viszont nem egy olyan megoldás amellyel hosszú távon érdemes egy mélytanuló algoritmust ellenõrizni.
-Ezért döntöttem úgy hogy a TensorBoard-ot használom munkám során a fejlesztés könnyítéséhez.
+Ez viszont nem egy olyan megoldás amellyel hosszú távon érdemes egy mélytanuló algoritmust ellenõrizni, így a karban tartását felfüggesztettem.
+
+Ez után döntöttem úgy hogy a TensorBoard-ot használom munkám során a fejlesztés könnyítéséhez.
 A board lokális szerverként indul el, csak be kell írni a terminálba hogy `tensorboard --logdir target/tran\_log' amennyiben a tensorboard telepítve van.
 A target/train\_log mappa az ahova ment a tensorflow a vizualizációs eszközben szükséges logfileokat. A tanításnak megadott --name paraméterrel, vagy az adott dátumot és elõadót figyelembe véve egy generált nevet kap.
 
 \section{Skalárisok}
-
 
 Ha van legalább egy modellünk, akár kész akár éppen tanul, ha egy böngészõablakkal odanavigálunk az oldalra amit a konzol kiadott, akkor látni fogjuk a modell tanulásának fázisait.
 
@@ -689,7 +689,7 @@ Ezek jelentései a \ref{metrics} táblázatban kerül leírásra.
 \begin{table}[!h]\label{metrics}
 	\caption{A tensorboard skalárként ábrázolt metrikái}
 	\begin{center}
-		\begin{tabular}{r|r}
+		\begin{tabular}{r|l}
 			Név&Jelentés\\
 			\hline\hline
 			train\_batch\_accuracy&Az adott batch tanulása közben adott pontos találatok\\
@@ -699,17 +699,54 @@ Ezek jelentései a \ref{metrics} táblázatban kerül leírásra.
 			train\_epoch\_loss&Az adott epochban visszaadott keresztentrópia átlaga\\
 			train\_epoch\_perplexity&Az adott epochban visszaadott perplexitás átlaga\\
 			val\_accuracy&A validálás során adott jó találatok átlaga\\
-			val\_loss&0A validálás során számolt keresztentrópia átlaga\\
+			val\_loss&A validálás során számolt keresztentrópia átlaga\\
 			val\_perplexity&A validálás során számolt perplexitás átlaga\\
 		\end{tabular}
 	\end{center}
 \end{table}
 
 Észre vehetjük hogy tanulás elején a hiba mind a validáción, mind a tanító halmazon nagyon magas.
-Ez a \textit{Gradient Descent} miatt van, próbálja megközelíteni a tanuló halmaz által reprezentált halmazt, így azt fogjuk észre venni, hogy a tanuló halmaz hibaértéke valamivel gyorsabban csökken, a pontossága nõ.
+Ez a \textit{Gradient Descent} miatt van, próbálja megközelíteni a tanuló halmaz által reprezentált halmazt, így azt vehetjük észre, hogy a tanuló halmaz hibaértéke valamivel gyorsabban csökken, a pontossága nõ.
+Ezen kívül egy idõ után elkerülhetetlen a már említett túltanulás jelensége, ekkor azt fogjuk látni, hogy a validációs halmazon elkezd nõni a hibaérték, még a tanulóhalmazon csökken. Erre egy konkrét esetet mutat be a \ref{over-learn} ábra.
 
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.4]{over-learn.png}
+	\label{over-learn}
+	\caption{A túltanulás jelensége egy 1 lstm réteget, 250 rejtett reprezentációval tartalmazó 30y-t tanuló modell túltanulása.}
+\end{figure}
+
+\section{A modell}
+
+A modell gráf reprezentációja tekinthetõ meg a Graph fülön. 
+Ez egy hasznos eszköz, hiszen ha nem látni hogy néz ki a modell, az ember hajlamos figyelmetlen módon elírni.
+Ez történt pontosan velem is, a TimeDistributed wrapper-t véletlenül az lstm-re helyeztem, így az összes lstm kapott egy wrapper-t és az egész gráp átláthatatlan volt.
+Komplexebb modellnél elengedhetetlennek tartom a gráf használatát, sõt akkor még name scope-ok használata is ajánlott nagyobb átláthatóság érdekében.
+
+\section{Projektor}
+
+A projektorral képesek vagyunk vizualizálni többdimenziós tereket, azaz levetíthetjük õket két vagy három dimenzióra úgy, hogy a vektorok közötti kapcsolatok konzisztensek maradnak.
+Ezt megtehetjük a tensorflow összes rétegének belsõ állapotaival, viszont nem mindegyikkel van értelme.
+Az Embedding egy különleges réteg, mely az inputot alakítja át, hogy ne lineárisan függetlenek legyenek, hanem viselkedésük alapján össze tudjanak csoportosulni. 
+Ez nem elég ahhoz, hogy olvasható legyen az Embedding, hisz a tensorflow nem tudja hogy az adott kódolt szám milyen jelentéssel bír.
+Szükségünk van egy leképezésre a szám és a karakter között, ehhez a tensorboard egy tsv fájlt kér be, mely ha sikeres volt a beolvasás megjelennek a benne található címkék a vektortérben.
+
+Ekkor láthatjuk, mely karakter melyikhez hasonlít legjobban.
+Ahogyan a \ref{embedding} ábra is mutatja a számok összecsoportosulnak.
+Ez azért van, mert a ugyanabban a kontextusban helyezkednek el.
+Ez különösen igaz zeneszövegekre, ahol a szám csak metaadatként jelenik meg (például: `(3x)'), és ez magyarázza azt is, hogy a különleges karakterek miért kerültek olyan közel a számokhoz.
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.4]{embedding.png}
+	\label{embedding}
+	\caption{A PCA vizualizáció az egyik tanítás eredményére. Látható, hogy a számok egymás szomszédságában helyezkedtek fel.}
+\end{figure}
 
 \chapter{Összegzés}
+
 
 \chapter{Függelék}
 
