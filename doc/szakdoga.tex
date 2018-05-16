@@ -707,7 +707,20 @@ Ezek jelentései a \ref{metrics} táblázatban kerül leírásra.
 
 Észre vehetjük hogy tanulás elején a hiba mind a validáción, mind a tanító halmazon nagyon magas.
 Ez a \textit{Gradient Descent} miatt van, próbálja megközelíteni a tanuló halmaz által reprezentált halmazt, így azt vehetjük észre, hogy a tanuló halmaz hibaértéke valamivel gyorsabban csökken, a pontossága nõ.
-Ezen kívül egy idõ után elkerülhetetlen a már említett túltanulás jelensége, ekkor azt fogjuk látni, hogy a validációs halmazon elkezd nõni a hibaérték, még a tanulóhalmazon csökken. Erre egy konkrét esetet mutat be a \ref{over-learn} ábra.
+Ezen kívül egy idõ után elkerülhetetlen a már említett túltanulás jelensége, ekkor azt fogjuk látni, hogy a validációs halmazon elkezd nõni a hibaérték, még a tanulóhalmazon csökken. 
+Erre egy konkrét esetet mutat be a \ref{over-learn} ábra.
+
+A Modellünk pontossága 50-60\% közötti értéket ér el becsléseivel a teszt halmazon.
+Ez a gépi tanulás területén nem számít kimagasló teljesítménynek.
+A modellt legalább 50\% pontosra kellett volna optimalizálni.
+%https://arxiv.org/pdf/1409.2329.pdf
+Ez az érték független attól, hogy dropout segítségével, vagy nélküle futtatjuk, bár már bebizonyították, hogy a dropout nem segíti az lstm tanulását.
+Viszont érdekes módon ha adam optimalizálóval tanítjuk a modellt a rekurrens hálókhoz ajánlott rmsprop helyett a preplexitást alacsonyan tudjuk tartani, habár a teszt halmazon rosszabb eredményt mutat vele a modell.
+Tanuláshoz általában száz hosszú inputhoz mértem az egy hosszúságú outputot.
+A kis-grofo korpuszhoz viszont szükségem volt egy kisebb input méretre, mivel túl kicsi az adatmennyiség, hogy rendesen szét lehessen osztani a tanuló-teszt-validáció között.
+Ezért egy harminc hosszú inputtal próbálkoztam, ekkor érte el a modell a 80\% feletti \textit{train\_batch\_accuracy}-t, viszont ekkor nagyon gyorsan észlelhetõ volt a túltanulás hiszen a hibafüggvény már 150-200 iterációnál megjelent (az összes 400-ból).
+A perplexitás csökkenése érthetõ, hiszen a definíció szerint a kettõ a kategorizált keresztentrópia értékére emelve, hiszen nagyobb korpuszban kevesebb karakter található, így a keresztentrópia értéke is csökken.
+
 
 \begin{figure}
 	\centering
