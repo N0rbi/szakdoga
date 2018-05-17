@@ -652,14 +652,14 @@ Szemléltetés céljából a batch-en végzett módosításokat is elmenti a program, vis
 
 \section{Parancssori interfész}
 A lyrics.py futtatható parancssorból is, ahol a hiperparamétereit lehet szabályozni tanulás elõtt.
-Elsõ kötelezõ paramétere a --artist, mely arra utal hogy a dataset mappából mely zenefájlt használja tanításhoz. 
+Elsõ kötelezõ paramétere a \texttt{-{}-}artist, mely arra utal hogy a dataset mappából mely zenefájlt használja tanításhoz. 
 Ezen kívül választható paraméterként ott vannak a korábban már említett értékek. 
-Ilyen az --epoch, hogy hány iteráción keresztül menjen végig az adathalmazon a program, --patience\_limit, hogy hány olyan epoch után álljon le a tanítás melyben nem sikerült a validáción jobb eredményt elérni, ezekrõl a \ref{epoch} szekcióban volt szó. 
-Az --LSTM\_layers és --LSTM\_units pedig azt határozzák meg hogy hány darab LSTM réteg legyen, és egy LSTM rétegnek hány rejtett egységet adjunk. 
-A --embedding az embedding egységek számára utal, melyet a \ref{model} szekció tárgyalt ki bõvebben. 
-A -size\_x azt határozza meg hány karakter után próbálja megítélni a modell hogy mi lesz a következõ karakter.
-Az utolsó paraméter pedig azt kérdezi milyen néven mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a tensorboard fel tudja dolgozni, ez a --model\_name.
-Angol nyelvû segítséget tud nyújtani még a --help, mely látható a \ref{cli} ábrán.
+Ilyen az \texttt{-{}-}epoch, hogy hány iteráción keresztül menjen végig az adathalmazon a program, \texttt{-{}-}patience\_limit, hogy hány olyan epoch után álljon le a tanítás melyben nem sikerült a validáción jobb eredményt elérni, ezekrõl a \ref{epoch} szekcióban volt szó. 
+Az \texttt{-{}-}LSTM\_layers és \texttt{-{}-}LSTM\_units pedig azt határozzák meg hogy hány darab LSTM réteg legyen, és egy LSTM rétegnek hány rejtett egységet adjunk. 
+A \texttt{-{}-}embedding az embedding egységek számára utal, melyet a \ref{model} szekció tárgyalt ki bõvebben. 
+A \texttt{-{}-}size\_x azt határozza meg hány karakter után próbálja megítélni a modell hogy mi lesz a következõ karakter.
+Az utolsó paraméter pedig azt kérdezi milyen néven mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a tensorboard fel tudja dolgozni, ez a \texttt{-{}-}model\_name.
+Angol nyelvû segítséget tud nyújtani még a \texttt{-{}-}help, mely látható a \ref{cli} ábrán.
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.4]{help.png}
@@ -673,7 +673,7 @@ Ez viszont nem egy olyan megoldás amellyel hosszú távon érdemes egy mélytanuló a
 
 Ez után döntöttem úgy hogy a TensorBoard-ot használom munkám során a fejlesztés könnyítéséhez.
 A board lokális szerverként indul el, csak be kell írni a terminálba hogy `tensorboard --logdir target/tran\_log' amennyiben a tensorboard telepítve van.
-A target/train\_log mappa az ahova ment a tensorflow a vizualizációs eszközben szükséges logfileokat. A tanításnak megadott --name paraméterrel, vagy az adott dátumot és elõadót figyelembe véve egy generált nevet kap.
+A target/train\_log mappa az ahova ment a tensorflow a vizualizációs eszközben szükséges logfileokat. A tanításnak megadott \texttt{-{}-}model\_name paraméterrel, vagy az adott dátumot és elõadót figyelembe véve egy generált nevet kap.
 
 \section{Skalárisok}
 
