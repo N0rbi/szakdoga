@@ -39,6 +39,10 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     classifier = get_classifier(BATCH_SIZE, size_x, len(encoder.vocab), lstm_layers, embedding, lstm_units)
     tensorboard.set_model(classifier)
 
+    read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x)
+
+    exit(1)
+
     min_loss = math.inf
     patience = 0
     global_steps = 0

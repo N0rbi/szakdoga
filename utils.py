@@ -31,7 +31,9 @@ def read_file(file_content):
 
 class ModelArtifact:
 
-    def __init__(self, artist, size_x, model_id=None):
+    def __init__(self, artist=None, size_x=None, model_id=None):
+        if not artist:
+            return
         self.__id = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + "_" + artist \
             if not model_id else model_id
         # Create target dirs
@@ -54,18 +56,20 @@ class ModelArtifact:
 
         model.save_weights(os.path.join(MODELS_DIR, self.__id+".h5"))
 
-    def load_model(self):
+    def load_model(self, name):
         from keras.models import model_from_json
-        loaded = open(os.path.join(MODELS_DIR, self.__id+".json"), 'r')
+        loaded = open(os.path.join(MODELS_DIR, name+".json"), 'r')
         model = loaded.read()
         loaded.close()
         model = model_from_json(model)
-        model.load_weights(os.path.join(MODELS_DIR, self.__id+".h5"))
+        model.load_weights(os.path.join(MODELS_DIR, name+".h5"))
 
         return model
 
-    def load_or_create_encoder(self, data):
-        file_name = os.path.join(ENCODERS_DIR, '%s.pickle' % self.__id)
+    def load_or_create_encoder(self, data, name=None):
+        if not name:
+            name = self.__id
+        file_name = os.path.join(ENCODERS_DIR, '%s.pickle' % name)
         try:
             with open(file_name, 'rb') as file_stream:
                 encoder = pickle.load(file_stream)
