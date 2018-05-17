@@ -636,7 +636,7 @@ Nagyon fontos megjegyezni, hogy a validáció adaton kell elvégezni, amit nem hasz
 
 A tanítás legvégén hasonlóan a még nem látott adattal tesztelhetjük a modellünket, ugyanúgy a \textit{test\_on\_batch} függvénnyel.
 
-Az ebben a szekcióben leírtak megtalálhatóak a függelék \ref{train} részében.
+Az ebben a szekcióban leírtak megtalálhatóak a \textit{lyrics.py} fájlban.
 
 % early stopping megvalósítása
 % tensorboard logolások
@@ -747,7 +747,27 @@ Szükségünk van egy leképezésre a szám és a karakter között, ehhez a tensorboard 
 Ekkor láthatjuk, mely karakter melyikhez hasonlít legjobban.
 Ahogyan a \ref{embedding} ábra is mutatja a számok összecsoportosulnak.
 Ez azért van, mert a ugyanabban a kontextusban helyezkednek el.
-Ez különösen igaz zeneszövegekre, ahol a szám csak metaadatként jelenik meg (például: `(3x)'), és ez magyarázza azt is, hogy a különleges karakterek miért kerültek olyan közel a számokhoz.
+Ez különösen igaz zeneszövegekre, ahol a szám csak metaadatként jelenik meg (például: `(3x)' jelzi azt hogy az adott szakaszt meg kell ismételni, ahelyett, hogy kiírnánk háromszor az adott részt), és ez magyarázza azt is, hogy a különleges karakterek miért kerültek olyan közel a számokhoz.
+
+Viszont az ábrán elsõ ránézésre az euklideszi távolság látható, ami nem az elsõdleges mértékegység szóbeágyazások kapcsolatának vizsgálatára.
+A koszinusz távolságot vesszük alapértelmezettnek, amely azt mondja meg, hogy az origótól nézve milyen szöget zár be a két vektor.
+Minél kisebb a szög annál jobban hasonlít a két szó, függetlenül attól, hogy euklideszi távolságuk mekkora, habár a mi példánkba észrevehetõ, hogy nem nagy az eltérés a kettõ metrika között. Ezt szemlélteti a \ref{neighbor} táblázat is.
+
+\begin{table}[!h]
+	\caption{A '3' karakter öt legközelebbi szomszédja, egy 30y adathalmazon.}
+	\begin{center}
+		\begin{tabular}{r||l|l}
+			Pozíció a '3' karakterhez képest&Koszinusz&Euklideszi\\
+			\hline\hline
+			1&1&1\\
+			2&.&x\\
+			3&x&|\\
+			4&|&2\\
+			5&8&$\times$\\
+		\end{tabular}
+	\label{neighbor}
+	\end{center}
+\end{table}
 
 
 
@@ -766,9 +786,6 @@ Ez különösen igaz zeneszövegekre, ahol a szám csak metaadatként jelenik meg (pél
 \section{CharEncoder}
 \label{encoder}
 \lstinputlisting[language=Python,  firstline=131, lastline=172, breaklines=true]{../utils.py}
-\section{Training}
-\label{train}
-\lstinputlisting[language=Python, breaklines=true]{../lyrics.py}
 
 \chapter*{Nyilatkozat}
 %Egy üres sort adunk a tartalomjegyzékhez:
