@@ -28,8 +28,11 @@
 
 %A fejléc láblécek kialakításához:
 \usepackage{fancyhdr}
+
+%A függelékhez, és a kód ábraként használatához
 \usepackage{fancyvrb}
 \usepackage{listings}
+
 
 %Természetesen további csomagok is használhatók,
 %például ábrák beillesztéséhez a graphix és a psfrag,
@@ -532,23 +535,18 @@ Ezeket begépelhetjük sztringként az alábbi táblázat alapján, vagy a \textit{kera
 \begin{table}[!h]\label{loss}
 	\caption{Keras keretrendszer elõredefiniált hibafüggvényei}
 	\begin{center}
-		\begin{tabular}{r|r}
+		\begin{tabular}{r|p{10cm}}
 			Név&Leírás\\
 			\hline\hline
-			mean\_squared\_error&n\\
-			mean\_absolute\_error&n\\
-			mean\_absolute\_percentage\_error&n\\
-			mean\_squared\_logarithmic\_error&n\\
-			squared\_hinge&n\\
-			hinge&n\\
-			categorical\_hinge&n\\
-			logcosh&n\\
-			categorical\_crossentropy&n\\
-			sparse\_categorical\_crossentropy&n\\
-			binary\_crossentropy&n\\
-			kullback\_leibler\_divergence&n\\
-			poisson&n\\
-			cosine\_proximity&n\\
+			mean\_squared\_error&Regresszióhoz használt hibafüggvény\\
+			mean\_absolute\_error&Regresszióhoz használt, nehezebb differenciálni mint a mean\_squared\_error-t a nullában lévõ töréspont miatt\\
+			mean\_squared\_logarithmic\_error&mean\_squared\_error olyan változata, mely kevésbé bünteti a rossz megoldásokat (a logaritmus lassú növése miatt).\\
+			hinge&Egy nem lineáris hibafüggvény, mely nem engedi a hiba értékét 0 alá.\\
+			categorical\_hinge&A hinge kategorizáláshoz használt változata.\\
+			categorical\_crossentropy&Az output adat entrópiája alapján számolt hibafüggvény.\\
+			binary\_crossentropy&Akkor használatos ha igen nem választ várunk, vagyis csak kettõ kategóriánk van.\\
+			%https://groups.google.com/forum/#!topic/keras-users/aeKkiws7KfE
+			cosine\_proximity&Koszinusz távolság, Vektorok szorzatának kvantifikálására.\\
 		\end{tabular}
 	\end{center}
 \end{table}
@@ -558,25 +556,24 @@ A mi esetünkben a megfelelõ választás a categorical\_crossentropy lesz, mivel mi
 \subsection{Optimalizáló függvény}
 %https://towardsdatascience.com/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f
 A compile függvény másik kötelezõ paramétere az optimalizáló függvény, melyet megadhatunk sztringként is valamint egy callback-el is hozzáadhatjuk a modellünkhöz. 
-A keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak. 
+A keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{optimizer} táblázat mutatja a kerasban található optimalizálókat.
 Az optimalizáló célja minimalizálni a hibafüggvény értékét. 
 Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol ha a hibafüggvényünk $f(x) = y$, akkor megkeresi azt az értéket ahol $f'(x)$ értéke negatív, azaz $y$ $x$ viszonylatában csökken. 
 Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát számításköltséges kiszámolni.
+A keras optimalizálói mind a Sztohasztikus gradiens módszerre épülnek.
+A \ref{optimizer} táblázatban felsoroltak mind az SGD nagy hibáját próbálják kiküszöbölni, az eltompuló tanulási ráta, azaz hogy a gradiens változósa idõvel jelentéktelenül kicsi lesz.
 
 \begin{table}[!h]\label{optimizer}
 	\caption{Keras keretrendszer elõredefiniált optimalizáló függvényei}
 	\begin{center}
-		\begin{tabular}{r|r}
-			Név&Leírás\\
-			\hline\hline
-			SGD&n\\
-			RMSProp&n\\
-			Adagrad&n\\
-			Adadelta&n\\
-			Adam&n\\
-			Adamax&n\\
-			Nadam&n\\
-			TFOptimizer&n\\
+		\begin{tabular}{r}
+			SGD\\
+			Adagrad\\
+			Adadelta\\
+			RMSProp\\
+			Adam\\
+			Adamax\\
+			Nadam\\
 		\end{tabular}
 	\end{center}
 \end{table}

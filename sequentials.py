@@ -18,6 +18,6 @@ def get_classifier(batch_size, seq_len, vocab_size, layers, embedding, units):
 
     classifier.add(TimeDistributed(Dense(vocab_size)))
     classifier.add(Activation('softmax'))
-    classifier.compile(optimizer="adam", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
+    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
     return classifier
