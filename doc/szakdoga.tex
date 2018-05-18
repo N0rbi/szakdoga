@@ -144,7 +144,7 @@ Szeged
 A rekurrens neurális hálók igen sikeres és népszerû megoldásnak számítanak 
 számos nyelvtechnológiai probléma megoldása során. A hallgató feladata 
 (zene)szövegek generálására képes karakterszintû nyelvi modellek létrehozása 
-rekurrens neurális hálók segítségével Keras környezetben Tensorflow backend 
+rekurrens neurális hálók segítségével Keras környezetben TensorFlow backend 
 használata mellett.
 
 \chapter*{Tartalmi összefoglaló}
@@ -157,12 +157,12 @@ Ezt a hálótípust alkalmazom dolgozatomban.
 
 Dolgozatom célja LSTM rétegekkel létrehozni egy modellt, amely képes megtanulni egy adott elõadó zenei stílusát karakterek sorozatát nézve.
 Pontosabban felteszi magában a kérdést: "ha ezt az x hosszú szöveget látom, vajon az elõadó mit írna x+1. karakternek?".
-A model létrehozásában a python nyelven elérhetõ keras és annak hátterében a tensorflow keretrendszereket használom.
-Keras egy API amely elfedi a neurális hálókhoz szükséges matematika nagy részét a fejlesztõ elõl, így átláthatóbbá téve a kódot, tensorflow pedig egy eszköz mellyel gépi tanuló szoftvereket könnyedén lehet tanítani gyorsasága miatt, valamint átláthatóvá teszi a fejlesztést a TensorBoard segítségével, mely egy 
+A model létrehozásában a python nyelven elérhetõ Keras és annak hátterében a TensorFlow keretrendszereket használom.
+Keras egy API amely elfedi a neurális hálókhoz szükséges matematika nagy részét a fejlesztõ elõl, így átláthatóbbá téve a kódot, TensorFlow pedig egy eszköz mellyel gépi tanuló szoftvereket könnyedén lehet tanítani gyorsasága miatt, valamint átláthatóvá teszi a fejlesztést a TensorBoard segítségével, mely egy 
 vizualizációs eszköz.
 
 Szakdolgozatomban elõször ismertetem az egyszerû neurális hálókat, mûködésüket, majd ismertetem a rekurrens hálókat, azok hasznát, és kitérek a problémájukra melyet az LSTM old meg.
-Ezután ismertetem a keras keretrendszerét, a TensorFlow mûködését és ezen belül a TensorBoard-ot.
+Ezután ismertetem a Keras keretrendszerét, a TensorFlow mûködését és ezen belül a TensorBoard-ot.
 Ezek ismeretében már olvasható a TensorBoard vizualizációja, így megmutatom a tanítások eredményeit.
 
 Kulcsszavak: gépi tanulás, neurális hálók, természetesnyelv-feldolgozás, rekurrens neurális hálók, LSTM
@@ -459,7 +459,7 @@ Ez után átalakítjuk a számokat one-hot kódolást használva, azaz minden karakter 
 Ezzel azt érjük el, hogy miközben a modellünk tanul, nem próbál meg relációt vonni a karakterek között például ha nem használunk kódolást, és azt mondjuk hogy 'a' indexe 1 és 'b' indexe 2, azt is gondolhatja a modellünk hogy b kétszer olyan értékes mint a, ezért van szükségünk a lineáris függetlenségre, hisz akkor nem állhat fenn rezonancia.
 
 Az újabb megvalósításhoz egy másik módszert használunk, melyhez nincs szükségünk a one-hot kódolásra, mert a modell meg fogja tanítani az adott karaktert reprezentáló vektorokat minden vektorra, de ezek nem lesznek lineárisan függetlenek, relációba ál\-lít\-ha\-tó\-ak a karakterek, viszont ezek a relációk várhatóan relevánsak lesznek, nem úgy mint az elõbb felhozott példám. 
-Ezt a megvalósítást a keras \textit{Embedding} rétege fogja megvalósítani.
+Ezt a megvalósítást a Keras \textit{Embedding} rétege fogja megvalósítani.
 
 A preprocesszálást a \textit{scikit-learn} csomag által definiált encoder séma szerint csináltam.
 Lényegében van egy \textit{fit} függvénye, mely beállítja az encoder-t az input alapján, egy \textit{transform}, mely visszaadja a megváltoztatott inputot, ezeknek a kombinációja a \textit{fit\_trans\-form}, mely sor-folytonosan meghívja a két függvényt.
@@ -518,7 +518,7 @@ A \textit{softmax}-al azt érjük el, hogy az inputot 0 és 1 közé szorítjuk, úgy h
 \label{softmax}
 \caption{A softmax függvény matematikai leírása\cite{softmax}}
 \end{figure}
-Ezzel elkészül a magas szintû keras modellünk, ez után a \textit{compile} függvénnyel elkészül ebbõl a TensorFlow modellünk. 
+Ezzel elkészül a magas szintû Keras modellünk, ez után a \textit{compile} függvénnyel elkészül ebbõl a TensorFlow modellünk. 
 De ehhez elõbb még meg kell említenünk a \textit{compile} metódus összes szükséges paraméterét. 
 Ezek a hibafüggvény, az optimalizáló és opcionális a metrikák.
 
@@ -559,11 +559,11 @@ A kategorikus keresztentrópia pedig pont azt a viselkedést vizsgálja, hogy a kar
 \subsection{Optimalizáló függvény} \cite{opt2}\cite{opt}
 %https://towardsdatascience.com/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f
 A compile függvény másik kötelezõ paramétere az optimalizáló függvény, melyet meg\-ad\-hat\-unk sztringként is valamint egy callback-el is hozzáadhatjuk a modellünkhöz. 
-A keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{optimizer} táblázat mutatja a kerasban található optimalizálókat.
+A Keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{optimizer} táblázat mutatja a kerasban található optimalizálókat.
 Az optimalizáló célja minimalizálni a hibafüggvény értékét. 
 Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol a hibafüggvény csökkenése várhatólag a legnagyobb lesz. 
 Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát valamint az inverzét számításköltséges kiszámolni.
-A keras optimalizálói mind a Szto\-hasz\-ti\-kus gradiens mód\-szer\-re épülnek.
+A Keras optimalizálói mind a Szto\-hasz\-ti\-kus gradiens mód\-szer\-re épülnek.
 A \ref{optimizer} táblázatban felsoroltak mind az SGD nagy hibáját próbálják ki\-kü\-szö\-böl\-ni, az eltompuló tanulási ráta, azaz hogy a gradiens változósa idõvel jelentéktelenül kicsi lesz.
 
 \begin{table}[!h]\label{optimizer}
@@ -583,17 +583,17 @@ A \ref{optimizer} táblázatban felsoroltak mind az SGD nagy hibáját próbálják ki\
 
 \subsection{Metrikák}
 
-Szintén megadható paraméterként a compile-nak a \textit{metrics}, mely egy tömböt vár, melynek elemei vagy sztringek, vagy egy callback függvény. A kódban ez az egyetlen példa, ahol kihasználom a callback függvénnyel való definiálást, mivel a keras alapból nem tartalmazza a perplexitás metrikát. 
+Szintén megadható paraméterként a compile-nak a \textit{metrics}, mely egy tömböt vár, melynek elemei vagy sztringek, vagy egy callback függvény. A kódban ez az egyetlen példa, ahol kihasználom a callback függvénnyel való definiálást, mivel a Keras alapból nem tartalmazza a perplexitás metrikát. 
 A perplexitás a természetes nyelvfeldolgozás egy alap metrikája, jelentése az, hogy a modell milyen jól másolja a valódi korupusz eloszlását. 
-A másik felhasznált metrika a pontosság, lényegében visszakérjük a kerastól hogy a modell milyen pontosan határozta meg a várt értéket a tanítás során. 
+A másik felhasznált metrika a pontosság, lényegében visszakérjük a Kerastól hogy a modell milyen pontosan határozta meg a várt értéket a tanítás során. 
 
 A metrika egy olyan egysége a modellnek, melyet nem használ fel a tanulás során, ez csak a fejlesztõ számára nyújt segítséget, hogy megértse hogyan viselkedik a modellje.
 
 \section{A tanulás menete}
 
-Ott tartunk hogy van egy modellünk, az input tanításra kész állapotban van, és a modell le lett compile-olva az adott alacsony szintû nyelvre, adott esetben TensorFlow-ra.
+Ott tartunk hogy van egy modellünk, az input tanításra kész állapotban van, és a modell le lett compile-olva az adott alacsony szintû nyelvre, adott esetben TensorFlowra.
 
-A keras több módot is felkínál a modellünk tanítására, melyekrõl már szó esett a kerasról szóló \ref{keras} fejezetben. 
+A Keras több módot is felkínál a modellünk tanítására, melyekrõl már szó esett a Kerasról szóló \ref{keras} fejezetben. 
 Személy szerint az alacsony szintû \textit{train\_on\_batch} meg\-va\-ló\-sít\-ást választottam, mivel az elsõ próbálkozás alkalmával a fit nem bizonyult hasz\-nál\-ha\-tó\-nak a hatalmas tármennyiségnek amit a preprocesszált input adat megkövetel. 
 Erre használhattam volna a \textit{fit\_generator}-t, viszont mikor ezt észrevettem már hatalmas refaktorálásra lett volna szükségem a \textit{lyrics.py} fájlban, mivel az összes callback-et, melyet a \textit{fit} támogat meg kellett valósítanom a saját kódomban, ennek köszönhetõen jobban megértettem a tanulás folyamatát.
 Ezek a TensorBoard vizualizációi, valamint az korai megállás.
@@ -620,8 +620,8 @@ Ennek a vizualizációjára szolgál a \ref{overfit} ábra, melyen látható a reláció 
 % https://github.com/begab/compsem/blob/master/eloadasok/02_optim_intro.pdf
 Az epochon belül, mint már említettem egyszer végig megy az összes adaton a program.
 Viszont ez hihetetlenül nagy memória igénnyel járhat, adathalmaztól függõen.
-Ezért szokták batch-ekre osztani az adatot, melyeket a \textit{read\_batches} generátor állít elõ, melyet egy for ciklus segítségével végig iterálunk és a már említett \textit{train\_on\_batch} függvényen keresztül odaadunk a kerasnak processzálásra. 
-Ekkor a keras az adott batch alapján egy gradiens frissítést végez, azaz frissíti a háló perceptronjainak súlyát és visszaadja nekünk a metrikákat amelyekre feliratkoztunk.
+Ezért szokták batch-ekre osztani az adatot, melyeket a \textit{read\_batches} generátor állít elõ, melyet egy for ciklus segítségével végig iterálunk és a már említett \textit{train\_on\_batch} függvényen keresztül odaadunk a Kerasnak processzálásra. 
+Ekkor a Keras az adott batch alapján egy gradiens frissítést végez, azaz frissíti a háló perceptronjainak súlyát és visszaadja nekünk a metrikákat amelyekre feliratkoztunk.
 Ez a mi esetünkben a hibaérték, pontosság és a perplexitás\cite{perplex} volt.
 A hibaérték és a pontosság között az a különbség, hogy az elõbbi az összes lehetséges kimenetre megnézi mennyire tér el a várt eredmény a kapottól és ezt a \textit{categorical\_crossentropy} egy valós értékre transzformálja, pontosabban megmondja mekkora különbség van a várt és a kapott el\-oszlás között, az utóbbi pedig megmondja hány százalékban volt a kapott kimenet egyenlõ a várt eredménnyel.
 A hibaérték láthatóan több információt tartalmaz, de késõbb ész\-re\-ve\-he\-tõ, hogy magas a negatív korreláció a kettõ között (, mivel minél kisebb a loss, annál nagyobb az accuracy).
@@ -650,7 +650,7 @@ Ha jobb volt, archiváljuk késõbbi felhasználásra, ha ezt nem tesszük meg akkor a
 Ha nem, akkor megbüntetjük a modellt, ha túl sok büntetést szerzett, azaz elérte a türelmi szintet (\textit{patience\_limit}), akkor leállítjuk a tanulást, ezt a szintet mi állíthatjuk be ha parancssorról indítjuk a programot.
 
 Másik fontos dolog az adatvizualizáció.
-A program összegyûjti a metrikákat, melyeket a keras visszaad számára, aggregálja azokat, majd az epoch végén veszi az átlagait mind a tanulásnak, mind a validálásnak és átadja a TensorBoard objektumnak archiválásra.
+A program összegyûjti a metrikákat, melyeket a Keras visszaad számára, aggregálja azokat, majd az epoch végén veszi az átlagait mind a tanulásnak, mind a validálásnak és átadja a TensorBoard objektumnak archiválásra.
 Szem\-lél\-te\-tés céljából a batch-en végzett módosításokat is elmenti a program, viszont erre legtöbb esetben nincs szükség.
 
 \section{Parancssori interfész}
@@ -671,7 +671,7 @@ Angol nyelvû segítséget tud nyújtani még a \texttt{-{}-}help, mely látható a \re
 \end{figure}
 
 \chapter{Tanulás eredményei}
-Mikor elkezdtem a keras-t használni, hogy betanítsa a modelleket úgy validáltam a mun\-ká\-mat, hogy lefuttattam a \textit{demo.py}-t mely vagy a legvalószínûbb értékû outputot választotta, vagy a softmax által létrehozott disztribúciót vette alapul, és ez alapján döntötte el a következõ karaktert, így esélyt adva a kevésbé esélyeseknek is.
+Mikor elkezdtem a Kerast használni, hogy betanítsa a modelleket úgy validáltam a mun\-ká\-mat, hogy lefuttattam a \textit{demo.py}-t mely vagy a legvalószínûbb értékû outputot választotta, vagy a softmax által létrehozott disztribúciót vette alapul, és ez alapján döntötte el a következõ karaktert, így esélyt adva a kevésbé esélyeseknek is.
 Ez viszont nem egy olyan megoldás amellyel hosszú távon érdemes egy mélytanuló algoritmust ellenõrizni, így új eszközt kellett keresnem erre a célra.
 \begin{figure}
 \begin{verbatim}
@@ -858,11 +858,14 @@ Minél kisebb a szög annál jobban hasonlít a két szó, függetlenül attól, hogy euk
 
 A modell fejlesztésére több lehetõség is van. Az egyik, hogy absztraktabb egységét kell venni alapegységként a modellnek, például tokenizált szöveg, vagy szó alapú szö\-veg\-ér\-tel\-me\-zés.
 Viszont ehhez nagyobb adathalmazra van szükség.
-Másik irány a modell módosítása, hogy képes legyen másodlagos célt is megtanulni tanulás közben. Ilyen pél\-dá\-ul a karakter zöngéssége, zöngés-zöngétlen párok közötti kapcsolatok értelmezése.
+Másik irány a modell módosítása, hogy képes legyen másodlagos célt is megtanulni tanulás közben. Ilyen pél\-dá\-ul a karakter zöngéssége, zöngés-zöngétlen párok közötti kapcsolatok értelmezése, ezzel feltehetõen elsajátítva zenei szövegekre jellemzõ ritmusos zene generálást.
+A kettõ együttes alkalmazása viszont nehezebb feladat lenne, hiszen szavakról és tokenekrõl nem egyszerû eldönteni milyen hangzást ad.
 
 \chapter{Összegzés}
 
 Dolgozatom alatt sikerült egy rendszert kialakítanom karakter alapú dalszöveg generátort, mely az esetek majdnem felében képes eltalálni, hogy az adott elõadó mely karaktert választaná következõnek a megadott szövegtõl függõen, és ezt vizuálisan be tudom mu\-tat\-ni egy statisztikai program, a TensorBoard segítségével.
+Megmutattam, hogy a korpusz zenestílusa nem befolyásolja a kiértékelés minõségét.
+Észrevehetõ volt, hogy a rekurrens hálókhoz ajánlott RMSProp jobb teljesítményt ér el az általam elkészített modellen, viszont a javulás minõsége elenyészõ az általánosabb Adam-éhez képest.
 
 
 \chapter{Függelék}
