@@ -487,7 +487,7 @@ Ennek 3 paraméterét adjuk meg, a szótár mérete, az elvárt embedding egységek szá
 Ezt a számot magunknak kell megtapasztalnunk hogyan szeretnénk alkalmazni, ajánlott 50 és 1000 között megkeresni az optimálisat. 
 A lényeg az hogy a hasonló szavak közelebb kerüljenek egymáshoz a kialakult vektortérben.
 
-Az \textit{Embedding} a Keras keretrendszeren belül valójában egy \textit{Dense} olyan réteg, mely paraméterül vár egy one-hot kódolással ellátott vektort. 
+Az \textit{Embedding} a Keras keretrendszeren belül valójában egy olyan \textit{Dense} réteg, mely paraméterül vár egy one-hot kódolással ellátott vektort. 
 Ez csak egy segítség a fejlesztõ számára, hogy levegye a terhet a válláról, valamint a TensorBoard használatával vi\-zu\-a\-li\-zál\-hat\-juk az szótár elemei közötti kapcsolatokat.
 
 Az embedding tulajdonképpen egy adathalmaz elemeit próbálja relációba állítani. 
@@ -551,7 +551,8 @@ Ezeket be\-gép\-el\-het\-jük sztringként az alábbi táblázat alapján, vagy a \tex
 	\end{center}
 \end{table}
 
-A mi esetünkben a megfelelõ választás a categorical\_crossentropy lesz, mivel minden karakter egy különálló kategória és azt akarjuk megmondani hogy az adott kategóriának mekkora esélye van a következõnek lenni az input alapján.
+A mi esetünkben a megfelelõ választás a categorical\_crossentropy lesz, mivel minden karakter egy különálló kategória és azt akarjuk megmondani hogy az adott kategóriának mekkora esélye van a következõnek lenni az input alapján. 
+A kategorikus keresztentrópia pedig pont azt a viselkedést vizsgálja, hogy a karakterek milyen eloszlást követnek az elvárthoz képest, ha megegyezik a két eloszlás a keresztentrópia értéke nulla lesz, ezzel kommunikálva az optimalizáló függvénynek, hogy a jelenlegi reprezentáció optimális.
 
 \subsection{Optimalizáló függvény}
 %https://towardsdatascience.com/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f
@@ -559,8 +560,8 @@ A compile függvény másik kötelezõ paramétere az optimalizáló függvény, melyet me
 A keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{optimizer} táblázat mutatja a kerasban található optimalizálókat.
 Az optimalizáló célja minimalizálni a hibafüggvény értékét. 
 Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol ha a hibafüggvényünk $f(x) = y$, akkor megkeresi azt az értéket ahol $f'(x)$ értéke negatív, azaz $y$ $x$ viszonylatában csökken. 
-Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát számításköltséges kiszámolni.
-A keras optimalizálói mind a Sztohasztikus gradiens mód\-szer\-re épülnek.
+Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát valamint az inverzét számításköltséges kiszámolni.
+A keras optimalizálói mind a Szto\-hasz\-ti\-kus gradiens mód\-szer\-re épülnek.
 A \ref{optimizer} táblázatban felsoroltak mind az SGD nagy hibáját próbálják ki\-kü\-szö\-böl\-ni, az eltompuló tanulási ráta, azaz hogy a gradiens változósa idõvel jelentéktelenül kicsi lesz.
 
 \begin{table}[!h]\label{optimizer}
@@ -802,7 +803,7 @@ Meglepõ módon a perplexitás értékeken látható, hogy az RMSProp eset\-ében nagyob
 \end{figure}
 
 
-\section{A modell}
+\section{A modell vizuális reprezentációja}
 
 A modell gráf reprezentációja tekinthetõ meg a Graph fülön. 
 Ez egy hasznos eszköz, hiszen ha nem látni hogy néz ki a modell, az ember hajlamos figyelmetlen módon elírni.
