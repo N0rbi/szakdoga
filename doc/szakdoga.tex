@@ -258,7 +258,7 @@ Szóval ha hozzáadjuk az aktivációs függvény \textit{g}-t az elõzõ példánkhoz a k
 A neurális háló attól lesz mély neurális háló, hogy több perceptron réteget egymás után kötünk. 
 Ekkor lesz egy input réteg, lesznek köztes, azaz rejtett rétegek és lesz egy output réteg. 
 Több réteggel mélyebb tudást tud szerezni egy modell, viszont feladatfüggõ, mivel van olyan feladat amely jobban teljesít egy rejtett réteggel mint többel.\cite{ann}
-
+\newpage
 \section{Rekurrens neurális hálók} \cite{rnn_wiki}
 
 Az emberek új gondolatai nem törlik ki az elõzõeket. 
@@ -286,7 +286,7 @@ Eltûnõ gradiens: súlyok inicializálása, valamit az RNN-ek egy altípusa, amelyet 
 %megjelölésével együtt)
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.3]{lstm-pipe.png}
+	\includegraphics[width=\linewidth]{lstm-pipe.png}
 	\caption{Az LSTM megoldása a gradiens kritikus szélsõértékének elkerülésére \cite{lstm_visual}}
 	\label{pipe}
 \end{figure}
@@ -342,7 +342,7 @@ A Python egy interpretált nyelv, csak úgy mint a böngészõkben futó JavaScript ny
 
 A nyelv szintaxisa megközelíti a pszeudokódét, például a hármas operátort, vagy az egysoros ciklust a \ref{code} forráskódban látható módon definiáljuk, valamint sok vezérlési szerkezet helyettesítve lett.
 \begin{figure}
-	\caption{A hármas if-then-else operátor és az egysoros for ciklus pythonban}
+	\caption{A hármas if-then-else operátor és az egysoros for ciklus Pythonban}
 	\centering
 	\begin{BVerbatim}
 	a = b if x else c
@@ -537,7 +537,7 @@ Ezeket be\-gép\-el\-het\-jük sztringként az alábbi táblázat alapján, vagy a \tex
 \begin{table}[!h]\label{loss}
 	\caption{Keras keretrendszer elõredefiniált hibafüggvényei}
 	\begin{center}
-		\begin{tabular}{r|p{10cm}}
+		\begin{tabular}{r|p{8cm}}
 			Név&Leírás\\
 			\hline\hline
 			mean\_squared\_error&Regresszióhoz használt hibafüggvény\\
@@ -564,22 +564,8 @@ Az optimalizáló célja minimalizálni a hibafüggvény értékét.
 Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol a hibafüggvény csökkenése várhatólag a legnagyobb lesz. 
 Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát valamint az inverzét számításköltséges kiszámolni.
 A Keras optimalizálói mind a Szto\-hasz\-ti\-kus gradiens mód\-szer\-re épülnek.
-A \ref{optimizer} táblázatban felsoroltak mind az SGD nagy hibáját próbálják ki\-kü\-szö\-böl\-ni, az eltompuló tanulási ráta, azaz hogy a gradiens változósa idõvel jelentéktelenül kicsi lesz.
-
-\begin{table}[!h]\label{optimizer}
-	\caption{Keras keretrendszer elõredefiniált optimalizáló függvényei}
-	\begin{center}
-		\begin{tabular}{r}
-			SGD\\
-			Adagrad\\
-			Adadelta\\
-			RMSProp\\
-			Adam\\
-			Adamax\\
-			Nadam\\
-		\end{tabular}
-	\end{center}
-\end{table}
+A Keras által támogatott optimalizálók a következõk: SGD, Adagrad, Adadelta, RMSProp, Adam, Adamax, Nadam.
+Ezek mind az SGD nagy hibáját próbálják ki\-kü\-szö\-böl\-ni, az eltompuló tanulási ráta, azaz hogy a gradiens változósa idõvel jelentéktelenül kicsi lesz.
 
 \subsection{Metrikák}
 
@@ -607,7 +593,7 @@ Ezt egyszerûen megtehetjük, de elõbb pár a tanításhoz fontos fogalommal meg kell
 \subsection{Epoch, Validáció, Teszt}\label{epoch} \cite{batch_epoch}
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.5]{train.png}
+	\includegraphics[width=\linewidth]{train.png}
 	\label{log}
 	\caption{Itt látható a program tanulás közben, az elsõ szám az epoch száma, a többi a batch, valamit a metrikáké}
 \end{figure}
@@ -627,7 +613,7 @@ A hibaérték és a pontosság között az a különbség, hogy az elõbbi az összes lehet
 A hibaérték láthatóan több információt tartalmaz, de késõbb ész\-re\-ve\-he\-tõ, hogy magas a negatív korreláció a kettõ között (, mivel minél kisebb a loss, annál nagyobb az accuracy).
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.3]{epoch.png}
+	\includegraphics[width=\linewidth]{epoch.png}
 	\label{overfit}
 	\caption{Balról jobbra: Túltanulás, optimális tanulás, alultanulás. Észrevehetõ hogy az optimumnál a legkisebb a távolság a görbe és a piros négyzet, azaz az új adat között.}
 \end{figure}
@@ -658,11 +644,16 @@ A lyrics.py futtatható parancssorból is, ahol a hiperparamétereit lehet szabályo
 Elsõ kötelezõ paramétere a \texttt{-{}-}artist, mely arra utal hogy a dataset mappából mely zenefájlt használja tanításhoz. 
 Ezen kívül választható paraméterként ott vannak a korábban már említett értékek. 
 Ilyen az \texttt{-{}-}epoch, hogy hány iteráción keresztül menjen végig az adathalmazon a program, \texttt{-{}-}patience\_limit, hogy hány olyan epoch után álljon le a tanítás melyben nem sikerült a validáción jobb eredményt elérni, ezekrõl a \ref{epoch} szekcióban volt szó. 
-Az \texttt{-{}-}LSTM\_layers és \texttt{-{}-}LSTM\_units pedig azt határozzák meg hogy hány darab LSTM réteg legyen, és egy LSTM rétegnek hány rejtett egységet adjunk. 
+Az \texttt{-{}-}lstm\_layers és \texttt{-{}-}lstm\_units pedig azt határozzák meg hogy hány darab LSTM réteg legyen, és egy LSTM rétegnek hány rejtett egységet adjunk. 
 A \texttt{-{}-}embedding az embedding egységek számára utal, melyet a \ref{model} szekció tárgyalt ki bõvebben. 
 Ezen kívül a \texttt{-{}-}size\_x azt határozza meg hány karakter után próbálja megítélni a modell hogy mi lesz a következõ karakter.
 Az utolsó paraméter pedig azt kérdezi milyen néven mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a TensorBoard fel tudja dolgozni, ez a \texttt{-{}-}model\_name.
 Angol nyelvû segítséget tud nyújtani még a \texttt{-{}-}help, mely látható a \ref{cli} ábrán.
+
+A lyricshez hasonlóan a demo is futtatható parancssorból. 
+Paraméterként vár a \texttt{-{}-}sample\_data-n keresztül egy sztringet melyet inputként átad a modellnek, erre kezdõdik el a predikció.
+A másik paraméter a \texttt{-{}-}model\_name, ha ezt üresen hagyjuk egy lista jelenik meg, melyen minden tanított modell egy sorszámot kap, ezt a számot beírva a választott modellen predikálhatunk.
+
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.6]{help.png}
@@ -727,7 +718,7 @@ Erre egy konkrét esetet mutat be a \ref{over-learn} ábra.
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.4]{over-learn.png}
+	\includegraphics[width=\linewidth]{over-learn.png}
 	\label{over-learn}
 	\caption{A túltanulás jelensége egy 1 LSTM réteget, 250 rejtett reprezentációval tartalmazó 30y-t tanuló modell túltanulása.}
 \end{figure}
@@ -799,7 +790,7 @@ Meglepõ módon a perplexitás értékeken látható, hogy az RMSProp eset\-ében nagyob
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.4]{perplexity.png}
+	\includegraphics[width=\linewidth]{perplexity.png}
 	\label{perplexity}
 	\caption{A perplexitás különbsége más optimalizálókkal az egy (bal oldal) és a három rétegû (jobb oldal) LSTM hálóknál.}
 \end{figure}
