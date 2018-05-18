@@ -845,18 +845,22 @@ Minél kisebb a szög annál jobban hasonlít a két szó, függetlenül attól, hogy euk
 	\caption{A PCA vizualizáció az egyik tanítás eredményére. Látható, hogy a számok egymás szomszédságában helyezkedtek fel.}
 \end{figure}
 
-\chapter{Fejlesztési lehetõségek}
-
-A modell fejlesztésére több lehetõség is van. Az egyik, hogy absztraktabb egységét kell venni alapegységként a modellnek, például tokenizált szöveg, vagy szó alapú szö\-veg\-ér\-tel\-me\-zés.
-Viszont ehhez nagyobb adathalmazra van szükség.
-Másik irány a modell módosítása, hogy képes legyen másodlagos célt is megtanulni tanulás közben. Ilyen pél\-dá\-ul a karakter zöngéssége, zöngés-zöngétlen párok közötti kapcsolatok értelmezése, ezzel feltehetõen elsajátítva zenei szövegekre jellemzõ ritmusos zene generálást.
-A kettõ együttes alkalmazása viszont nehezebb feladat lenne, hiszen szavakról és tokenekrõl nem egyszerû eldönteni milyen hangzást ad.
-
 \chapter{Összegzés}
 
 Dolgozatom alatt sikerült egy rendszert kialakítanom karakter alapú dalszöveg generátort, mely az esetek majdnem felében képes eltalálni, hogy az adott elõadó mely karaktert választaná következõnek a megadott szövegtõl függõen, és ezt vizuálisan be tudom mu\-tat\-ni egy statisztikai program, a TensorBoard segítségével.
 Megmutattam, hogy a korpusz zenestílusa nem befolyásolja a kiértékelés minõségét.
 Észrevehetõ volt, hogy a rekurrens hálókhoz ajánlott RMSProp jobb teljesítményt ér el az általam elkészített modellen, viszont a javulás minõsége elenyészõ az általánosabb Adam-éhez képest.
+
+A modell fejlesztésére több lehetõség is van. 
+Az egyik, hogy absztraktabb egységét kell venni alapegységként a modellnek, például tokenizált szöveg, vagy szó alapú szö\-veg\-ér\-tel\-me\-zés.
+Viszont ehhez nagyobb adathalmazra van szükség.
+Másik irány a modell módosítása, hogy képes legyen másodlagos célt is megtanulni tanulás közben. Ilyen pél\-dá\-ul a karakter zöngéssége, zöngés-zöngétlen párok közötti kapcsolatok értelmezése, ezzel feltehetõen elsajátítva zenei szövegekre jellemzõ ritmusos zene generálást.
+A kettõ együttes alkalmazása viszont nehezebb feladat lenne, hiszen szavakról és tokenekrõl nem egyszerû eldönteni milyen hangzást ad. 
+
+Ahogyan a \cite{multitask} cikkben a kutatók képesek voltak egy kétirányú LSTM-et betanítani szótag felismerésre, úgy hogy több feladatot kellett a modelljüknek elvégezni.
+A szótagoláson kívül sikeresen megtanították arra is, hogy képes legyen ritka karakterekkel is úgy, hogy a ritka karakterek csoportosítása lett a modell másodlagos feladata.
+
+Ez alapján a dolgozatban bemutatott cikk is elsajátíthatja a zöngés zöngétlen párok mely kontextusba illenek bele, így várhatóan a modell jobban reprezentálni tudja az adott zenekar stílusát, jobb eredményeket tud produkálni a fõ outputon.
 
 
 \chapter{Függelék}
