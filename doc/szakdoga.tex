@@ -141,8 +141,8 @@ Szeged
 
 A rekurrens neurális hálók igen sikeres és népszerû megoldásnak számítanak 
 számos nyelvtechnológiai probléma megoldása során. A hallgató feladata 
-(zene)szövegek generálására képes karakterszintû nyelvi modellek létrehozása 
-rekurrens neurális hálók segítségével Keras környezetben TensorFlow backend 
+(zene)szövegek ge\-ne\-rá\-lá\-sá\-ra képes karakterszintû nyelvi modellek létrehozása 
+rekurrens neurális hálók se\-gít\-sé\-gé\-vel Keras környezetben TensorFlow backend 
 használata mellett.
 
 \chapter*{Tartalmi összefoglaló}
@@ -161,7 +161,7 @@ vizualizációs eszköz.
 
 Szakdolgozatomban elõször ismertetem az egyszerû neurális hálókat, mûködésüket, majd ismertetem a rekurrens hálókat, azok hasznát, és kitérek a problémájukra melyet az LSTM old meg.
 Ezután ismertetem a Keras keretrendszerét, a TensorFlow mûködését és ezen belül a TensorBoard-ot.
-Ezek ismeretében már olvasható a TensorBoard vizualizációja, így megmutatom a tanítások eredményeit.
+Ezek ismeretében már olvasható a TensorBoard vi\-zu\-a\-li\-zá\-ci\-ó\-ja, így megmutatom a tanítások eredményeit.
 
 Kulcsszavak: gépi tanulás, neurális hálók, természetesnyelv-feldolgozás, rekurrens neurális hálók, LSTM
 
@@ -203,7 +203,7 @@ A neurális hálók az agyunkban elõforduló neuronok hálózata.
 Ezek határozzák meg a gondolatainkat, ez alapján hozunk döntést a minket körülvevõ világról. 
 Ahhoz, hogy ezt számítani lehessen szükség van egy matematikai formulára, egy modellre. 
 A neurológia jelenleg elfogadott elméletére építjük a mesterséges neurális hálókat, és ezeknek az alapjait ebben a fejezetben fogom ismertetni.\cite{ann}
-Minden mély háló õse az elõrecsatolt mesterséges neurális háló, így a dolgozatban használt rekurrens, azaz hosszú távú memóriával rendel\-kezõ háló az LSTM alapja is.
+Minden mély háló õse az elõrecsatolt mes\-ter\-sé\-ges neurális háló, így a dolgozatban használt rekurrens, azaz hosszú távú memóriával rendel\-kezõ háló az LSTM alapja is.
 A fejezet ezeket a témákat fogja jobban szemügyre venni. A továbbiakban neurális hálók alatt a mesterséges neurális hálókat értem.
 
 
@@ -258,7 +258,6 @@ Ekkor lesz egy input réteg, lesznek köztes, azaz rejtett rétegek és lesz egy out
 Több réteggel mélyebb tudást tud szerezni egy modell, viszont feladatfüggõ, mivel van olyan feladat amely jobban teljesít egy rejtett réteggel mint többel.\cite{ann}
 \newpage
 \section{Rekurrens neurális hálók} \cite{rnn_wiki}
-
 Az emberek új gondolatai nem törlik ki az elõzõeket. 
 Nem az adott pillanatból ítéljük meg a helyzetünket, vagy hozunk döntést azzal kapcsolatban. 
 Ez egy hasznos tulajdonság, hiszen kevés dolog van az életben, ami nem egy folyamat része. 
@@ -268,7 +267,6 @@ Jól látható hogy a $h_t$ egy az \textit{t}-tõl függõ egyenlet, mely egy általáno
 Az eltûnõ és kirobbanó gradiens problémájához.
 
 \subsection{Az RNN-ek problémája} \cite{exploding_vanishing}
-
 A rekurrens neurális hálók képesek nagyon nagy pontossággal dönteni, de hihetetlenül nehéz õket jól betanítani, elsõsorban az eltûnõ és kirobbanó gradiens problémája miatt. 
 Ugyanúgy ahogy az elõrecsatolt neurális hálók, a rekurrens hálók is hiba-vissza\-ter\-jesz\-tés\-sel optimalizálják perceptronjaikat, mely egy olyan iteratív folyamat, melyben a hiba\-függvény gradiensét vizsgálva a döntéshozatal születik a perceptron súlyainak frissítésére.
 A prob\-lé\-ma ott mutatkozik, hogy a rejtett rétegek összeköttetésben vannak egymással, így ha frissíteni akarjuk az egyik réteget akkor az összes elõtte lévõt frissíteni kell. 
@@ -396,15 +394,15 @@ Ha szeretnénk egy konkrét predikciót kapni akkor a \textit{predict} függvényre v
 \section{TensorFlow} \cite{tf}
 % https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
 A TensorFlow egy a Google által karbantartott keretrendszer, mely az elmúlt idõben egyre jobban fejlõdik. 
-Alapból c++ -hoz készítették, valamint egy Python interfészen keresztül kényelmesen fejleszthetõ, gyorsaság romlása nélkül, mert a Python is a motorháztetõ alatt ezt a c++ -os optimalizált könyvtárat használja. 
+Alapból c++ -hoz készítették, valamint egy Python interfészen keresztül kényelmesen fejleszthetõ, gyorsaság romlása nélkül, mert a Python is a mo\-tor\-ház\-te\-tõ alatt ezt a c++ -os optimalizált könyvtárat használja. 
 Viszont már létezik JavaScript-es és telefon kompatibilis (TensorFlow Lite) változata is. 
 Az alap verzió is fejlõdött, hiszen már nem csak CPU-val tudunk számítani, hanem GPU-val és TPU-val, azaz tensor processing unit, mely egy konkrétan a TensorFlow-hoz készített hardver. 
-Ezen felül elosztott rend\-szer\-eket is támogatja.
+Ezen felül el\-osz\-tott rend\-szer\-eket is támogatja.
 %G: nem a mûveleteket optimalizáljuk, hanem egy modell paramétereit
 A TensorFlow egy matematikai optimalizációért felelõs könyvtár, mely rendkívüli gyorsasága miatt lett közkedvelt a mesterséges intelligenciával fog\-lal\-ko\-zók körében. 
 A Python programozási nyelv egy szkriptnyelv. 
 Ezzel nagyon sokat nyerünk, hiszen egy sor kód felelõs lehet több sornyi c kódért,
-mivel a Python rendelkezik magas szintû adatszerkezetek pl: generátor, inline for ciklus, trenary operátor egy emberileg olvashatóbb formája.
+mivel a Python rendelkezik magas szintû adatszerkezetek pl: generátor, inline for ciklus, trenary operátor egy em\-ber\-i\-leg olvashatóbb formája.
  %G: fordítás (compiling) értelemben nem történik, hanem a már fordított c kódot 
  %kényelmesen hivogathatod a python interpreterrel
  Viszont ezzel gyorsaságot veszítünk, hiszen a Python sorról sorra fordítja át a kódot c kóddá, majd ezt hívja a python interpreter, ha szükség van az adott kódrészletre. 
@@ -420,7 +418,6 @@ Mivel matematikai számításokra fejlesztették hasznos mélytanuláshoz, sõt még nag
 Dolgozatom kezdete óta a Keras is része lett a TensorFlow könyvtárnak.
 
 \subsection{TensorBoard} \cite{tb}
-
 Az elõzõ szekcióban említett mélytanuló könyvtár egy nagyon nagy elõnye ellenfeleivel szemben a beépített vizualizációs eszköz, a TensorBoard. 
 Ennek segítségével kevés kóddal nagyszerû vizualizációkat figyelhetünk meg tanulás közben és után is. 
 %G: ez a "számokra van szüksége" elég furán hangzik
@@ -431,7 +428,6 @@ A modell architektúráját is közelebbrõl szemügyre vehetjük, hiszen van egy olyan
 Viszont dolgozatom megkezdése óta a TensorBoard egy újabb verziója már támogatja a dinamikus hibakeresést is.
 
 \chapter{Karakter alapú szöveg modellezés} \cite{nlp_wiki}
-
 % https://en.wikipedia.org/wiki/Natural-language_processing
 %G: "how to program computers to fruitfully process large amounts of natural       
 %language data" ez nem (csak) a kommunikációt jelenti
@@ -472,7 +468,6 @@ Ez a kód megtekinthetõ a Függelékben a \ref{encoder} szekcióban.
 \section{A modell} \cite{keras}
 \label{model}
 %https://keras.io/
-
 %G: erre van forrás, mert akkor azt hivatkozni kellene. Amúgy 
 %nagy általánosságban ez biztos nincs így, mert pl. amikor szóalakokhoz 
 %tanulnak 
@@ -557,7 +552,7 @@ A kategorikus keresztentrópia pedig pont azt a viselkedést vizsgálja, hogy a kar
 \subsection{Optimalizáló függvény} \cite{opt2}\cite{opt}
 %https://towardsdatascience.com/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f
 A compile függvény másik kötelezõ paramétere az optimalizáló függvény, melyet meg\-ad\-hat\-unk sztringként is valamint egy callback-el is hozzáadhatjuk a modellünkhöz. 
-A Keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{optimizer} táblázat mutatja a kerasban található optimalizálókat.
+A Keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{loss} táblázat mutatja a kerasban található optimalizálókat.
 Az optimalizáló célja minimalizálni a hibafüggvény értékét. 
 Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol a hibafüggvény csökkenése várhatólag a legnagyobb lesz. 
 Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát valamint az inverzét számításköltséges kiszámolni.
@@ -845,7 +840,7 @@ Minél kisebb a szög annál jobban hasonlít a két szó, függetlenül attól, hogy euk
 
 \chapter{Összegzés}
 
-Dolgozatom alatt sikerült egy rendszert kialakítanom karakter alapú dalszöveg generátort, mely az esetek majdnem felében képes eltalálni, hogy az adott elõadó mely karaktert választaná következõnek a megadott szövegtõl függõen, és ezt vizuálisan be tudom mu\-tat\-ni egy statisztikai program, a TensorBoard segítségével.
+Dolgozatom alatt sikerült egy rendszert kialakítanom karakter alapú dalszöveg generátort, mely az esetek majdnem felében képes eltalálni, hogy az adott elõadó mely karaktert választaná következõnek a megadott szövegtõl függõen, és ezt vizuálisan be tudom mu\-tat\-ni egy vizualizációs program, a TensorBoard segítségével.
 Megmutattam, hogy a korpusz zenestílusa nem befolyásolja a kiértékelés minõségét.
 Észrevehetõ volt, hogy a rekurrens hálókhoz ajánlott RMSProp jobb teljesítményt ér el az általam elkészített modellen, viszont a javulás minõsége elenyészõ az általánosabb Adam-éhez képest.
 
