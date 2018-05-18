@@ -857,8 +857,8 @@ Viszont ehhez nagyobb adathalmazra van szükség.
 Másik irány a modell módosítása, hogy képes legyen másodlagos célt is megtanulni tanulás közben. Ilyen pél\-dá\-ul a karakter zöngéssége, zöngés-zöngétlen párok közötti kapcsolatok értelmezése, ezzel feltehetõen elsajátítva zenei szövegekre jellemzõ ritmusos zene generálást.
 A kettõ együttes alkalmazása viszont nehezebb feladat lenne, hiszen szavakról és tokenekrõl nem egyszerû eldönteni milyen hangzást ad. 
 
-Ahogyan a \cite{multitask} cikkben a kutatók képesek voltak egy kétirányú LSTM-et betanítani szótag felismerésre, úgy hogy több feladatot kellett a modelljüknek elvégezni.
-A szótagoláson kívül sikeresen megtanították arra is, hogy képes legyen ritka karakterekkel is úgy, hogy a ritka karakterek csoportosítása lett a modell másodlagos feladata.
+Látható hogy a \cite{multitask} cikkben a kutatók képesek voltak egy kétirányú LSTM-et betanítani szótag felismerésre, úgy hogy több feladatot kellett a modelljüknek elvégezni.
+A szótagoláson kívül sikeresen megtanították arra is, hogy képes legyen ritka karakterek osztályozására is úgy, hogy másodlagos outputként még nem látott karaktereket a már megtanult karakterekhez viszonyítva sikeresen szótagolta.
 
 Ez alapján a dolgozatban bemutatott cikk is elsajátíthatja a zöngés zöngétlen párok mely kontextusba illenek bele, így várhatóan a modell jobban reprezentálni tudja az adott zenekar stílusát, jobb eredményeket tud produkálni a fõ outputon.
 
