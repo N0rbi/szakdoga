@@ -41,8 +41,6 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
 
     read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x)
 
-    exit(1)
-
     min_loss = math.inf
     patience = 0
     global_steps = 0
