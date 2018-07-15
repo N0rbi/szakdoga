@@ -115,6 +115,7 @@ class ModelArtifact:
         model_names = list(map(extract_model_name, model_weights))
         return model_names
 
+
 class CharEncoder:
 
     def __init__(self):
@@ -161,7 +162,7 @@ def strip_quotes(str):
     return strip1 if len(strip2) > len(strip1) else strip2
 
 
-def read_batches(data, vocab_size, batch_size, seq_length, nb_epochs):
+def read_batches(data, vocab_size, batch_size, seq_length, nb_epochs, encoder):
     length = data.shape[0]
     batch_chars = length // batch_size
     for _ in range(nb_epochs):
@@ -172,5 +173,20 @@ def read_batches(data, vocab_size, batch_size, seq_length, nb_epochs):
                 for i in range(0, seq_length):
                     X[batch_idx, i] = data[batch_chars * batch_idx + start + i]
                     Y[batch_idx, i, data[batch_chars * batch_idx + start + i + 1]] = 1
-            yield X, Y
 
+            aux = list()
+            for y in Y:
+                aux.append([get_aux(yy, encoder) for yy in y])
+            yield X, [Y, aux]
+
+
+def get_aux(y, encoder):
+    real_value = encoder.inverse_transform(y)
+    result = []
+    for char in real_value:
+        result.append(int(is_vowel(char)))
+    return np.array(result)
+
+
+def is_vowel(y):
+    return y in "aáeéiíoóöőuúüű"

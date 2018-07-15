@@ -30,19 +30,19 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     val_data = encoder.transform(data[0: DATA_SLICE], with_onehot=False)
     test_data = encoder.transform(data[DATA_SLICE:2*DATA_SLICE], with_onehot=False)
     data = encoder.transform(data[DATA_SLICE:], with_onehot=False)
-    classifier = get_classifier(BATCH_SIZE, size_x, len(encoder.vocab), lstm_layers, embedding, lstm_units)
+    classifier = get_multitask_classifier(BATCH_SIZE, size_x, len(encoder.vocab), 2, lstm_layers, embedding, lstm_units)
 
     callbacks = [tensorboard, earlyStop]
 
-    classifier.fit_generator(read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x, epochs),
+    classifier.fit_generator(read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x, epochs, encoder),
                              steps_per_epoch=int(data.shape[0]/size_x / BATCH_SIZE),
                              epochs=epochs,
                              callbacks=callbacks,
-                             validation_data=read_batches(val_data, len(encoder.vocab), BATCH_SIZE, size_x, epochs),
+                             validation_data=read_batches(val_data, len(encoder.vocab), BATCH_SIZE, size_x, epochs, encoder),
                              validation_steps=1,
                              )
 
-    classifier.evaluate_generator(read_batches(test_data, len(encoder.vocab), BATCH_SIZE, size_x, 1),
+    classifier.evaluate_generator(read_batches(test_data, len(encoder.vocab), BATCH_SIZE, size_x, 1, encoder),
                                   steps=int(test_data.shape[0]/ size_x / BATCH_SIZE))
 
 

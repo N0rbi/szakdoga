@@ -23,7 +23,7 @@ def get_classifier(batch_size, seq_len, vocab_size, layers, embedding, units):
     return classifier
 
 
-def get_multitask_classifier(batch_size, seq_len, vocab_size, aux_vocab_size, layers, embedding, units):
+def get_multitask_classifier(batch_size, seq_len, vocab_size, aux_vocab_size, layers, embedding, units, is_aux_trainable=True):
     from keras.models import Model
     from keras.layers import Dense, LSTM, Dropout, Embedding, Input, TimeDistributed, Activation
     input = Input(batch_shape=(batch_size, seq_len))
@@ -33,9 +33,9 @@ def get_multitask_classifier(batch_size, seq_len, vocab_size, aux_vocab_size, la
         x = Dropout(rate=0.2)(x)
 
     main_out = TimeDistributed(Dense(vocab_size))(x)
-    aux_out = TimeDistributed(Dense(aux_vocab_size))(x)
+    aux_out = TimeDistributed(Dense(aux_vocab_size, trainable=is_aux_trainable), trainable=is_aux_trainable)(x)
     main_out = Activation('softmax', name='main_out')(main_out)
-    aux_out = Activation('softmax', name='aux_out')(aux_out)
+    aux_out = Activation('softmax', name='aux_out', trainable=is_aux_trainable)(aux_out)
     model = Model(inputs=[input], outputs=[main_out, aux_out])
     model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
 
