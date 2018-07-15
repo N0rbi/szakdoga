@@ -1,22 +1,22 @@
-% LaTeX mintafájl szakdolgozat és diplomamunkáknak az
-% SZTE Informatikai Tanszekcsoportja által megkövetelt
-% formai követelményeinek megvalósításához
+% LaTeX mintafï¿½jl szakdolgozat ï¿½s diplomamunkï¿½knak az
+% SZTE Informatikai Tanszekcsoportja ï¿½ltal megkï¿½vetelt
+% formai kï¿½vetelmï¿½nyeinek megvalï¿½sï¿½tï¿½sï¿½hoz
 % Modositva: 2011.04.28 Nemeth L. Zoltan
-% A fájl használatához szükséges a magyar.ldf 2005/05/12 v1.5-ös vagy késõbbi verziója
-% ez letölthetõ a http://www.math.bme.hu/latex/ weblapról, a magyar nyelvû szedéshez
-% Hasznos információk, linekek, LaTeX leirasok a www.latex.lap.hu weboldalon vannak.
+% A fï¿½jl hasznï¿½latï¿½hoz szï¿½ksï¿½ges a magyar.ldf 2005/05/12 v1.5-ï¿½s vagy kï¿½sï¿½bbi verziï¿½ja
+% ez letï¿½lthetï¿½ a http://www.math.bme.hu/latex/ weblaprï¿½l, a magyar nyelvï¿½ szedï¿½shez
+% Hasznos informï¿½ciï¿½k, linekek, LaTeX leirasok a www.latex.lap.hu weboldalon vannak.
 %
 \documentclass[12pt]{report}
 
-%Magyar nyelvi támogatás (Babel 3.7 vagy késõbbi kell!)
+%Magyar nyelvi tï¿½mogatï¿½s (Babel 3.7 vagy kï¿½sï¿½bbi kell!)
 \def\magyarOptions{defaults=hu-min}
 \usepackage[magyar]{babel}
 
-%Az ékezetes betûk használatához:
-\usepackage{t1enc}% ékezetes szavak automatikus elválasztásához
-\usepackage[latin2]{inputenc}% ékezetes szavak beviteléhez
+%Az ï¿½kezetes betï¿½k hasznï¿½latï¿½hoz:
+\usepackage{t1enc}% ï¿½kezetes szavak automatikus elvï¿½lasztï¿½sï¿½hoz
+\usepackage[latin2]{inputenc}% ï¿½kezetes szavak bevitelï¿½hez
 
-% A formai kovetelmenyekben megkövetelt Times betûtípus hasznalata:
+% A formai kovetelmenyekben megkï¿½vetelt Times betï¿½tï¿½pus hasznalata:
 \usepackage{times}
 
 %Az AMS csomagjai
@@ -24,7 +24,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 
-%A fejléc láblécek kialakításához:
+%A fejlï¿½c lï¿½blï¿½cek kialakï¿½tï¿½sï¿½hoz:
 \usepackage{fancyhdr}
 
 %A függelékhez, és a kód ábraként használatához
@@ -38,18 +38,18 @@
 \usepackage{graphicx}
 \usepackage{psfrag}
 
-%Tételszerû környezetek definiálhatók, ezek most fejezetenkent egyutt szamozodnak, pl.
-\newtheorem{tét}{Tétel}[chapter]
-\newtheorem{defi}[tét]{Definíció}
-\newtheorem{lemma}[tét]{Lemma}
-\newtheorem{áll}[tét]{Állítás}
-\newtheorem{köv}[tét]{Következmény}
+%Tï¿½telszerï¿½ kï¿½rnyezetek definiï¿½lhatï¿½k, ezek most fejezetenkent egyutt szamozodnak, pl.
+\newtheorem{tï¿½t}{Tï¿½tel}[chapter]
+\newtheorem{defi}[tï¿½t]{Definï¿½ciï¿½}
+\newtheorem{lemma}[tï¿½t]{Lemma}
+\newtheorem{ï¿½ll}[tï¿½t]{ï¿½llï¿½tï¿½s}
+\newtheorem{kï¿½v}[tï¿½t]{Kï¿½vetkezmï¿½ny}
 
-%Ha a megjegyzések és a példak szövegét nem akarjuk dõlten szedni, akkor
-%az alábbi parancs után kell õket definiální:
+%Ha a megjegyzï¿½sek ï¿½s a pï¿½ldak szï¿½vegï¿½t nem akarjuk dï¿½lten szedni, akkor
+%az alï¿½bbi parancs utï¿½n kell ï¿½ket definiï¿½lnï¿½:
 \theoremstyle{definition}
-\newtheorem{megj}[tét]{Megjegyzés}
-\newtheorem{pld}[tét]{Példa}
+\newtheorem{megj}[tï¿½t]{Megjegyzï¿½s}
+\newtheorem{pld}[tï¿½t]{Pï¿½lda}
 
 \usepackage{setspace}
 
@@ -69,34 +69,34 @@
 
 \begin{document}
 
-%A FEJEZETEK KEZDÕOLDALAINAK FEJ ES LÁBLÉCE:
-%a plain oldalstílust kell átdefiniálni, hogy ott ne legyen fejléc:
+%A FEJEZETEK KEZDï¿½OLDALAINAK FEJ ES Lï¿½BLï¿½CE:
+%a plain oldalstï¿½lust kell ï¿½tdefiniï¿½lni, hogy ott ne legyen fejlï¿½c:
 \fancypagestyle{plain}{%
-%ez mindent töröl:
+%ez mindent tï¿½rï¿½l:
 \fancyhf{}
-% a láblécbe jobboldalra kerüljön az oldalszám:
+% a lï¿½blï¿½cbe jobboldalra kerï¿½ljï¿½n az oldalszï¿½m:
 \fancyfoot[R]{\thepage}
-%elválasztó vonal sem kell:
+%elvï¿½lasztï¿½ vonal sem kell:
 \renewcommand{\headrulewidth}{0pt}
 }
 
-%A TÖBBI OLDAL FEJ ÉS LÁBLÉCE:
+%A Tï¿½BBI OLDAL FEJ ï¿½S Lï¿½BLï¿½CE:
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{Zeneszövegek generálása karakteralapú rekurrens neurális hálózatok segítségével}
+\fancyhead[L]{Zeneszï¿½vegek generï¿½lï¿½sa karakteralapï¿½ rekurrens neurï¿½lis hï¿½lï¿½zatok segï¿½tsï¿½gï¿½vel}
 \fancyfoot[R]{\thepage}
 
 
-%A címoldalra se fej- se lábléc nem kell:
+%A cï¿½moldalra se fej- se lï¿½blï¿½c nem kell:
 \thispagestyle{empty}
 
 \begin{center}
 \vspace*{1cm}
-{\Large\bf Szegedi Tudományegyetem}
+{\Large\bf Szegedi Tudomï¿½nyegyetem}
 
 \vspace{0.5cm}
 
-{\Large\bf Informatikai Intézet}
+{\Large\bf Informatikai Intï¿½zet}
 
 \vspace*{3.4cm}
 
@@ -110,13 +110,13 @@
 
 \vspace*{2.8cm}
 
-%Értelemszerûen megváltoztatandó:
+%ï¿½rtelemszerï¿½en megvï¿½ltoztatandï¿½:
 {\large
 \begin{tabular}{c@{\hspace{4cm}}c}
-\emph{Készítette:}     &\emph{Témavezetõ:}\\
-\bf{Kis-Szabó Norbert}  &\bf{Berend Gábor}\\
-programtervezõ informatika     &Számítógépes Algoritmusok és\\
-szakos hallgató               &Mesterséges Intelligencia Tanszék\\
+\emph{Kï¿½szï¿½tette:}     &\emph{Tï¿½mavezetï¿½:}\\
+\bf{Kis-Szabï¿½ Norbert}  &\bf{Berend Gï¿½bor}\\
+programtervezï¿½ informatika     &Szï¿½mï¿½tï¿½gï¿½pes Algoritmusok ï¿½s\\
+szakos hallgatï¿½               &Mestersï¿½ges Intelligencia Tanszï¿½k\\
 \end{tabular}
 }
 
@@ -131,7 +131,7 @@ Szeged
 \end{center}
 
 
-%A tartalomjegyzék:
+%A tartalomjegyzï¿½k:
 \tableofcontents
 
 %A \chapter* parancs nem ad a fejezetnek sorszámot
@@ -862,25 +862,25 @@ Ez alapján a dolgozatban bemutatott cikk is elsajátíthatja a zöngés zöngétlen pá
 \label{encoder}
 \lstinputlisting[language=Python,  firstline=135, lastline=176, breaklines=true]{../utils.py}
 \chapter*{Nyilatkozat}
-%Egy üres sort adunk a tartalomjegyzékhez:
+%Egy ï¿½res sort adunk a tartalomjegyzï¿½khez:
 \addtocontents{toc}{\ }
 \addcontentsline{toc}{section}{Nyilatkozat}
 %\hspace{\parindent}
 
-% A nyilatkozat szövege más titkos és nem titkos dolgozatok esetében.
-% Csak az egyik tipusú myilatokzatnak kell a dolgozatban szerepelni
-% A ponok helyére az adatok értelemszerûen behelyettesídendõk es
+% A nyilatkozat szï¿½vege mï¿½s titkos ï¿½s nem titkos dolgozatok esetï¿½ben.
+% Csak az egyik tipusï¿½ myilatokzatnak kell a dolgozatban szerepelni
+% A ponok helyï¿½re az adatok ï¿½rtelemszerï¿½en behelyettesï¿½dendï¿½k es
 % a szakdolgozat /diplomamunka szo megfeleloen kivalasztando.
 
 
-%A nyilatkozat szövege TITKOSNAK NEM MINÕSÍTETT dolgozatban a következõ:
-%A pontokkal jelölt szövegrészek értelemszerûen a szövegszerkesztõben és
-%nem kézzel helyettesítendõk:
+%A nyilatkozat szï¿½vege TITKOSNAK NEM MINï¿½Sï¿½TETT dolgozatban a kï¿½vetkezï¿½:
+%A pontokkal jelï¿½lt szï¿½vegrï¿½szek ï¿½rtelemszerï¿½en a szï¿½vegszerkesztï¿½ben ï¿½s
+%nem kï¿½zzel helyettesï¿½tendï¿½k:
 
 \noindent
 Alulírott programtervezõ szakos hallgató, kijelentem, hogy a dolgozatomat a Sze\-ge\-di Tudományegyetem, Informatikai Intézet Számítógépes Algoritmusok és Mesterséges In\-tel\-li\-gen\-cia Tanszékén készítettem, BSc diploma meg\-szer\-zé\-se érdekében.
 
-Kijelentem, hogy a dolgozatot más szakon korábban nem védtem meg, saját munkám eredménye, és csak a hivatkozott forrásokat (szakirodalom, eszközök, stb.) használtam fel.
+Kijelentem, hogy a dolgozatot mï¿½s szakon korï¿½bban nem vï¿½dtem meg, sajï¿½t munkï¿½m eredmï¿½nye, ï¿½s csak a hivatkozott forrï¿½sokat (szakirodalom, eszkï¿½zï¿½k, stb.) hasznï¿½ltam fel.
 
 Tudomásul veszem, hogy szakdolgozatomat / diplomamunkámat a Szegedi Tu\-do\-mány\-e\-gye\-tem Informatikai Intézet könyvtárában, a helyben olvasható könyvek között helyezik el.
 
@@ -889,7 +889,7 @@ Tudomásul veszem, hogy szakdolgozatomat / diplomamunkámat a Szegedi Tu\-do\-mány
 \begin{tabular}{lc}
 Szeged, \today\
 \hspace{2cm} & \makebox[6cm]{\dotfill} \\
-& aláírás \\
+& alï¿½ï¿½rï¿½s \\
 \end{tabular}
 
 
@@ -898,8 +898,8 @@ Szeged, \today\
 
 
 
-\chapter*{Köszönetnyilvánítás}
-\addcontentsline{toc}{section}{Köszönetnyilvánítás}
+\chapter*{Kï¿½szï¿½netnyilvï¿½nï¿½tï¿½s}
+\addcontentsline{toc}{section}{Kï¿½szï¿½netnyilvï¿½nï¿½tï¿½s}
 
 Ezúton szeretnék köszönetet mondani konzulensemnek, \textbf{Berend Gábornak}, odaadó segítségéért, valamint nagyszerû mentorálásáért.
 Szintén köszönettel tartozom \textbf{hallgatótársaimnak} és \textbf{barátaimnak}, akikre bármikor számíthattam.
@@ -911,7 +911,7 @@ Végül de nem utolsó sorban köszönöm \textbf{Szegednek} és a \textbf{Szegedi Tu\-
 \bibliography{diploma}
 \bibliographystyle{plain}
 
-%Elso szerzok vezetekneve alapjan ábécérendben rendezve.
+%Elso szerzok vezetekneve alapjan ï¿½bï¿½cï¿½rendben rendezve.
 
 
 
