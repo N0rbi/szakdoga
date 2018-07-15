@@ -4,9 +4,7 @@ from utils import *
 
 def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, size_x, model_name):
     from sequentials import get_classifier
-    from keras.callbacks import TensorBoard
-    from metrics import perplexity
-    import math
+    from keras.callbacks import TensorBoard, EarlyStopping
 
     if not artist:
         print('You need to pick an artist first')
@@ -24,82 +22,27 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     metadata_file_name = os.path.abspath(os.path.join(artifact.get_tensorflow_logdir(), "metadata" + ".tsv"))
     save_metadata_of_embedding(metadata_file_name, encoder.vocab)
 
-    # embeddings_freq=True is a hack for embeddings to be shown
-    tensorboard = TensorBoard(tensor_logger, embeddings_metadata=metadata_file_name, embeddings_freq=True)
-    # we need the callback to init the visualizer
-    train_log_per_batch_names = ['train_batch_loss', 'train_batch_accuracy', 'train_batch_perplexity']
-    train_log_per_epoch_names = ['train_epoch_loss', 'train_epoch_accuracy', 'train_epoch_perplexity']
-    val_log_names = ['val_loss', 'val_accuracy', 'val_perplexity']
-    test_log_names = ['test_loss', 'test_accuracy']
+    tensorboard = TensorBoard(tensor_logger, embeddings_metadata=metadata_file_name, embeddings_freq=30)
+    earlyStop = EarlyStopping(monitor='val_loss', min_delta=0.0002, patience=patience_limit, verbose=0, mode='auto')
 
     # Split data for testing and validating purposes
     val_data = encoder.transform(data[0: DATA_SLICE], with_onehot=False)
     test_data = encoder.transform(data[DATA_SLICE:2*DATA_SLICE], with_onehot=False)
     data = encoder.transform(data[DATA_SLICE:], with_onehot=False)
     classifier = get_classifier(BATCH_SIZE, size_x, len(encoder.vocab), lstm_layers, embedding, lstm_units)
-    tensorboard.set_model(classifier)
 
-    read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x)
+    callbacks = [tensorboard, earlyStop]
 
-    min_loss = math.inf
-    patience = 0
-    global_steps = 0
-    for epoch in range(epochs):
-        print('\n[%d]Epoch %d/%d' % (epoch + 1, epoch + 1, epochs))
-        losses, accs, perps, v_losses, v_accs, v_perps = [], [], [], [], [], []
+    classifier.fit_generator(read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x, epochs),
+                             steps_per_epoch=int(data.shape[0]/size_x / BATCH_SIZE),
+                             epochs=epochs,
+                             callbacks=callbacks,
+                             validation_data=read_batches(val_data, len(encoder.vocab), BATCH_SIZE, size_x, epochs),
+                             validation_steps=1,
+                             )
 
-        for i, (X, Y) in enumerate(read_batches(data, len(encoder.vocab), BATCH_SIZE, size_x)):
-            loss, acc, perp = classifier.train_on_batch(X, Y)
-            print('[%d]Batch %d: loss = %f, acc = %f, perp = %f' % (epoch + 1, i + 1, loss, acc, perp))
-            write_log_to_board(tensorboard, train_log_per_batch_names, (loss, acc, perp), global_steps)
-            losses.append(loss)
-            accs.append(acc)
-            perps.append(perp)
-            global_steps += 1
-
-        for (val_X, val_y) in read_batches(val_data, len(encoder.vocab), BATCH_SIZE, size_x):
-            val_loss, val_acc, v_perp = classifier.test_on_batch(val_X, val_y)
-            v_losses.append(val_loss)
-            v_accs.append(val_acc)
-            v_perps.append(v_perp)
-        val_loss_avg = np.average(v_losses)
-        val_acc_avg = np.average(v_accs)
-        val_perp_avg = np.average(v_perps)
-        train_loss_avg = np.average(losses)
-        train_acc_avg = np.average(accs)
-        train_perp_avg = np.average(perps)
-        write_log_to_board(tensorboard, val_log_names, (val_loss_avg, val_acc_avg, val_perp_avg), global_steps)
-        write_log_to_board(tensorboard, train_log_per_epoch_names,
-                           (train_loss_avg, train_acc_avg, train_perp_avg), global_steps)
-        if epoch % 20 == 0:
-            save_embedding_to_board(tensorboard.embeddings_ckpt_path, epoch)
-        print('[%d]FINISHING EPOCH.. val_loss = %f, val_acc = %f, val_perplexity = %f' %
-              (epoch + 1, val_loss_avg, val_acc_avg, val_perp_avg))
-
-        if val_loss_avg <= min_loss:
-            min_loss = val_loss_avg
-            patience = 0
-            artifact.persist_model(classifier)
-            print('[%d]New best model for validation set found.. val_loss = %f, val_acc = %f' %
-                  (epoch + 1, val_loss_avg, np.average(v_accs)))
-        elif patience >= patience_limit:
-            print('[%d]Patience limit (%d) reached stopping iteration. Best validation loss found was: %f' %
-                  (epoch + 1, patience_limit, min_loss))
-            break
-        else:
-            patience += 1
-
-    classifier = artifact.load_model()
-    classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy', perplexity])
-
-    t_losses, t_accs = [], []
-    for i, (test_X, test_y) in enumerate(read_batches(test_data, len(encoder.vocab), BATCH_SIZE, size_x)):
-        test_loss, test_acc, _ = classifier.test_on_batch(test_X, test_y)
-        write_log_to_board(tensorboard, test_log_names, (test_loss, test_acc), global_steps+i)
-        t_losses.append(test_loss)
-        t_accs.append(test_acc)
-
-    print('Best model\'s test_loss = %f, test_acc = %f' % (np.average(t_losses), np.average(t_accs)))
+    classifier.evaluate_generator(read_batches(test_data, len(encoder.vocab), BATCH_SIZE, size_x, 1),
+                                  steps=int(test_data.shape[0]/ size_x / BATCH_SIZE))
 
 
 def cli():

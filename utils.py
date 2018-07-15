@@ -74,7 +74,7 @@ class ModelArtifact:
             with open(file_name, 'rb') as file_stream:
                 encoder = pickle.load(file_stream)
         except FileNotFoundError:
-            encoder = CharEncoder(ENCODER_FORMAT_LOWERCASE)
+            encoder = CharEncoder()
             encoder.fit(data)
             if os.path.exists(file_name):
                 raise FileExistsError
@@ -115,46 +115,21 @@ class ModelArtifact:
         model_names = list(map(extract_model_name, model_weights))
         return model_names
 
-
-def write_log_to_board(tensorboard_callback, names, logs, batch_no):
-    """
-    [Source](https://gist.github.com/joelthchao/ef6caa586b647c3c032a4f84d52e3a11#file-demo-py-L24)
-    """
-    for name, value in zip(names, logs):
-        summary = tf.Summary()
-        summary_value = summary.value.add()
-        summary_value.simple_value = value
-        summary_value.tag = name
-        tensorboard_callback.writer.add_summary(summary, batch_no)
-        tensorboard_callback.writer.flush()
-
-
-ENCODER_FORMAT_LOWERCASE = {'lowercase': lambda t: t.lower()}
-
-
 class CharEncoder:
 
-    def __init__(self, formaters=dict()):
+    def __init__(self):
         self.onehot = OneHotEncoder()
         self._RARE = '<RARE_CHAR>'
         self.vocab = dict()
         self._onehotted_vocab = dict()
-        self._formaters = formaters
-
-    def _format(self, y):
-        for _, formater in self._formaters.items():
-            y = formater(y)
-        return y
 
     def transform(self, y, with_onehot=True):
-        y = self._format(y)
         if not with_onehot:
             return np.array([self.vocab[ch] if ch in self.vocab else self.vocab[self._RARE].flatten() for ch in y])
         else:
             return np.array([self._onehotted_vocab[ch] if ch in self.vocab else self.vocab[self._RARE].flatten() for ch in y])
 
     def fit(self, y):
-        y = self._format(y)
         vocab = sorted(list(set(y)))
         vocab.append(self._RARE)
         self.vocab = dict((c, i) for i, c in enumerate(vocab))
@@ -165,23 +140,11 @@ class CharEncoder:
 
     def fit_transform(self, y, with_onehot=True):
         self.fit(y)
-        y = self._format(y)
         return self.transform(y, with_onehot)
 
     def inverse_transform(self, y):
         rev_vocab = {v: k for k, v in self.vocab.items()}
         return ''.join([rev_vocab[i] for i in y])
-
-    def get_formaters_str(self):
-        return get_formaters_str(self._formaters)
-
-
-def get_formaters_str(format_dict):
-    """
-    with the same formaters you should get the same string
-    :return: formater identifier
-    """
-    return ''.join(sorted(list(map(lambda key: key[0], [key for key, _ in format_dict.items()]))))
 
 
 def save_metadata_of_embedding(path, vocab):
@@ -198,20 +161,16 @@ def strip_quotes(str):
     return strip1 if len(strip2) > len(strip1) else strip2
 
 
-def save_embedding_to_board(ckpt, epoch):
-    saver = tf.train.Saver()
-    saver.save(keras.backend.get_session(), ckpt, epoch)
-
-
-def read_batches(data, vocab_size, batch_size, seq_length):
+def read_batches(data, vocab_size, batch_size, seq_length, nb_epochs):
     length = data.shape[0]
     batch_chars = length // batch_size
+    for _ in range(nb_epochs):
+        for start in range(0, batch_chars - seq_length, seq_length):
+            X = np.zeros((batch_size, seq_length))
+            Y = np.zeros((batch_size, seq_length, vocab_size))
+            for batch_idx in range(0, batch_size):
+                for i in range(0, seq_length):
+                    X[batch_idx, i] = data[batch_chars * batch_idx + start + i]
+                    Y[batch_idx, i, data[batch_chars * batch_idx + start + i + 1]] = 1
+            yield X, Y
 
-    for start in range(0, batch_chars - seq_length, seq_length):
-        X = np.zeros((batch_size, seq_length))
-        Y = np.zeros((batch_size, seq_length, vocab_size))
-        for batch_idx in range(0, batch_size):
-            for i in range(0, seq_length):
-                X[batch_idx, i] = data[batch_chars * batch_idx + start + i]
-                Y[batch_idx, i, data[batch_chars * batch_idx + start + i + 1]] = 1
-        yield X, Y
