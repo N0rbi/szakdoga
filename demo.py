@@ -4,10 +4,12 @@ from utils import ModelArtifact
 def predict(model_name, sample_data):
     from metrics import perplexity
     import numpy as np
-    artifact = ModelArtifact("", model_name)
-    classifier = artifact.load_model()
+    artifact = ModelArtifact()
+    classifier = artifact.load_model(model_name)
+    # weights = classifier.get_weights()
+    # classifier = classifier(batch_size=1)
+    # classifier.set_weights(weights)
     classifier.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=["accuracy", perplexity])
-
     sample = sample_data if sample_data else \
         '''A buli íze a számban
 Lányok neonruhában
@@ -15,15 +17,19 @@ Oldódnak a színpadon
 Részeg vagyok, nem is tudom
 Mire jó, ha jó ez'''
 
-    encoder = artifact.load_or_create_encoder(None)
+    encoder = artifact.load_or_create_encoder(None, model_name)
 
     sample = encoder.transform(sample, False)
 
     def predict_next(text):
         x = text[-100:]
-        x = np.array([x])
-        probabilities = classifier.predict(x)
-        y = np.array([np.random.choice(len(prob), p=prob) for prob in probabilities])
+        #hack for not working batch_size
+        x = [x for i in range(32)]
+        x = np.array([x])[0]
+        prob = classifier.predict(x)[0][-1]
+
+        y = np.random.choice(len(prob), p=prob)
+
         text = np.append(text, y)
         return text
 

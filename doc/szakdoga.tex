@@ -1,24 +1,22 @@
-% LaTeX mintafájl szakdolgozat és diplomamunkáknak az
-% SZTE Informatikai Tanszekcsoportja által megkövetelt
-% formai követelményeinek megvalósításához
+% LaTeX mintafï¿½jl szakdolgozat ï¿½s diplomamunkï¿½knak az
+% SZTE Informatikai Tanszekcsoportja ï¿½ltal megkï¿½vetelt
+% formai kï¿½vetelmï¿½nyeinek megvalï¿½sï¿½tï¿½sï¿½hoz
 % Modositva: 2011.04.28 Nemeth L. Zoltan
-% A fájl használatához szükséges a magyar.ldf 2005/05/12 v1.5-ös vagy késõbbi verziója
-% ez letölthetõ a http://www.math.bme.hu/latex/ weblapról, a magyar nyelvû szedéshez
-% Hasznos információk, linekek, LaTeX leirasok a www.latex.lap.hu weboldalon vannak.
+% A fï¿½jl hasznï¿½latï¿½hoz szï¿½ksï¿½ges a magyar.ldf 2005/05/12 v1.5-ï¿½s vagy kï¿½sï¿½bbi verziï¿½ja
+% ez letï¿½lthetï¿½ a http://www.math.bme.hu/latex/ weblaprï¿½l, a magyar nyelvï¿½ szedï¿½shez
+% Hasznos informï¿½ciï¿½k, linekek, LaTeX leirasok a www.latex.lap.hu weboldalon vannak.
 %
-
-
 \documentclass[12pt]{report}
 
-%Magyar nyelvi támogatás (Babel 3.7 vagy késõbbi kell!)
+%Magyar nyelvi tï¿½mogatï¿½s (Babel 3.7 vagy kï¿½sï¿½bbi kell!)
 \def\magyarOptions{defaults=hu-min}
 \usepackage[magyar]{babel}
 
-%Az ékezetes betûk használatához:
-\usepackage{t1enc}% ékezetes szavak automatikus elválasztásához
-\usepackage[latin2]{inputenc}% ékezetes szavak beviteléhez
+%Az ï¿½kezetes betï¿½k hasznï¿½latï¿½hoz:
+\usepackage{t1enc}% ï¿½kezetes szavak automatikus elvï¿½lasztï¿½sï¿½hoz
+\usepackage[latin2]{inputenc}% ï¿½kezetes szavak bevitelï¿½hez
 
-% A formai kovetelmenyekben megkövetelt Times betûtípus hasznalata:
+% A formai kovetelmenyekben megkï¿½vetelt Times betï¿½tï¿½pus hasznalata:
 \usepackage{times}
 
 %Az AMS csomagjai
@@ -26,8 +24,13 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 
-%A fejléc láblécek kialakításához:
+%A fejlï¿½c lï¿½blï¿½cek kialakï¿½tï¿½sï¿½hoz:
 \usepackage{fancyhdr}
+
+%A függelékhez, és a kód ábraként használatához
+\usepackage{fancyvrb}
+\usepackage{listings}
+
 
 %Természetesen további csomagok is használhatók,
 %például ábrák beillesztéséhez a graphix és a psfrag,
@@ -35,18 +38,20 @@
 \usepackage{graphicx}
 \usepackage{psfrag}
 
-%Tételszerû környezetek definiálhatók, ezek most fejezetenkent egyutt szamozodnak, pl.
-\newtheorem{tét}{Tétel}[chapter]
-\newtheorem{defi}[tét]{Definíció}
-\newtheorem{lemma}[tét]{Lemma}
-\newtheorem{áll}[tét]{Állítás}
-\newtheorem{köv}[tét]{Következmény}
+%Tï¿½telszerï¿½ kï¿½rnyezetek definiï¿½lhatï¿½k, ezek most fejezetenkent egyutt szamozodnak, pl.
+\newtheorem{tï¿½t}{Tï¿½tel}[chapter]
+\newtheorem{defi}[tï¿½t]{Definï¿½ciï¿½}
+\newtheorem{lemma}[tï¿½t]{Lemma}
+\newtheorem{ï¿½ll}[tï¿½t]{ï¿½llï¿½tï¿½s}
+\newtheorem{kï¿½v}[tï¿½t]{Kï¿½vetkezmï¿½ny}
 
-%Ha a megjegyzések és a példak szövegét nem akarjuk dõlten szedni, akkor
-%az alábbi parancs után kell õket definiální:
+%Ha a megjegyzï¿½sek ï¿½s a pï¿½ldak szï¿½vegï¿½t nem akarjuk dï¿½lten szedni, akkor
+%az alï¿½bbi parancs utï¿½n kell ï¿½ket definiï¿½lnï¿½:
 \theoremstyle{definition}
-\newtheorem{megj}[tét]{Megjegyzés}
-\newtheorem{pld}[tét]{Példa}
+\newtheorem{megj}[tï¿½t]{Megjegyzï¿½s}
+\newtheorem{pld}[tï¿½t]{Pï¿½lda}
+
+\usepackage{setspace}
 
 %Margók:
 \hoffset -1in
@@ -58,61 +63,60 @@
 \headsep 5mm
 \textheight 237mm
 
+\setstretch{1.5}
 
 
 
 \begin{document}
 
-%A FEJEZETEK KEZDÕOLDALAINAK FEJ ES LÁBLÉCE:
-%a plain oldalstílust kell átdefiniálni, hogy ott ne legyen fejléc:
+%A FEJEZETEK KEZDï¿½OLDALAINAK FEJ ES Lï¿½BLï¿½CE:
+%a plain oldalstï¿½lust kell ï¿½tdefiniï¿½lni, hogy ott ne legyen fejlï¿½c:
 \fancypagestyle{plain}{%
-%ez mindent töröl:
+%ez mindent tï¿½rï¿½l:
 \fancyhf{}
-% a láblécbe jobboldalra kerüljön az oldalszám:
+% a lï¿½blï¿½cbe jobboldalra kerï¿½ljï¿½n az oldalszï¿½m:
 \fancyfoot[R]{\thepage}
-%elválasztó vonal sem kell:
+%elvï¿½lasztï¿½ vonal sem kell:
 \renewcommand{\headrulewidth}{0pt}
 }
 
-%A TÖBBI OLDAL FEJ ÉS LÁBLÉCE:
+%A Tï¿½BBI OLDAL FEJ ï¿½S Lï¿½BLï¿½CE:
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{Zeneszövegek generálása karakteralapú rekurrens neurális hálózatok segítségével}
+\fancyhead[L]{Zeneszï¿½vegek generï¿½lï¿½sa karakteralapï¿½ rekurrens neurï¿½lis hï¿½lï¿½zatok segï¿½tsï¿½gï¿½vel}
 \fancyfoot[R]{\thepage}
 
 
-%A címoldalra se fej- se lábléc nem kell:
+%A cï¿½moldalra se fej- se lï¿½blï¿½c nem kell:
 \thispagestyle{empty}
 
 \begin{center}
 \vspace*{1cm}
-{\Large\bf Szegedi Tudományegyetem}
+{\Large\bf Szegedi Tudomï¿½nyegyetem}
 
 \vspace{0.5cm}
 
-{\Large\bf Informatikai Intézet}
+{\Large\bf Informatikai Intï¿½zet}
 
-\vspace*{3.8cm}
-
-
-{\LARGE\bf }
+\vspace*{3.4cm}
 
 
-\vspace*{3.6cm}
-%\title{Zeneszövegek generálása karakteralapú rekurrens neurális hálózatok 
-%segítségével}
+{\LARGE\bf Zeneszövegek generálása karakteralapú rekurrens neurális hálózatok segítségével}
+
+
+\vspace*{3.2cm}
 {\Large Diplomamunka}
 % vagy {\Large Szakdolgozat}
 
-\vspace*{4cm}
+\vspace*{2.8cm}
 
-%Értelemszerûen megváltoztatandó:
+%ï¿½rtelemszerï¿½en megvï¿½ltoztatandï¿½:
 {\large
 \begin{tabular}{c@{\hspace{4cm}}c}
-\emph{Készítette:}     &\emph{Témavezetõ:}\\
-\bf{Kis-Szabó Norbert}  &\bf{Berend Gábor}\\
-programtervezõ informatika     &Számítógépes Algoritmusok és\\
-szakos hallgató               &Mesterséges Intelligencia Tanszék\\
+\emph{Kï¿½szï¿½tette:}     &\emph{Tï¿½mavezetï¿½:}\\
+\bf{Kis-Szabï¿½ Norbert}  &\bf{Berend Gï¿½bor}\\
+programtervezï¿½ informatika     &Szï¿½mï¿½tï¿½gï¿½pes Algoritmusok ï¿½s\\
+szakos hallgatï¿½               &Mestersï¿½ges Intelligencia Tanszï¿½k\\
 \end{tabular}
 }
 
@@ -127,7 +131,7 @@ Szeged
 \end{center}
 
 
-%A tartalomjegyzék:
+%A tartalomjegyzï¿½k:
 \tableofcontents
 
 %A \chapter* parancs nem ad a fejezetnek sorszámot
@@ -137,382 +141,777 @@ Szeged
 
 A rekurrens neurális hálók igen sikeres és népszerû megoldásnak számítanak 
 számos nyelvtechnológiai probléma megoldása során. A hallgató feladata 
-(zene)szövegek generálására képes karakterszintû nyelvi modellek létrehozása 
-rekurrens neurális hálók segítségével Keras környezetben Tensorflow backend 
-használata mellett. A szakdolgozat további célja annak vizsgálata, hogy a 
-nyelvi modellezés kontextusában milyen multi-task tanulási (\textit{multi-task 
-learning}) feladatok fogalmazhatók meg, illetve hogy ezek milyen eredmény 
-elérésére képesek.
+(zene)szövegek ge\-ne\-rá\-lá\-sá\-ra képes karakterszintû nyelvi modellek létrehozása 
+rekurrens neurális hálók se\-gít\-sé\-gé\-vel Keras környezetben TensorFlow backend 
+használata mellett.
 
 \chapter*{Tartalmi összefoglaló}
 \addcontentsline{toc}{section}{Tartalmi összefoglaló}
 
-A rekurrens neurális hálók már a 80-as években megjelentek. Ezek olyan neurális 
-hálók,
- melyek figyelembe veszik az elõzõ állapotokat a döntéshozatalban. A ma 
- használt rekurrens hálók közül az lstm azaz a
-long shot-term memory a legkedveltebb mind közül, mert megoldást talál az 
-rnn-ek egy alapvetõ problémájára,
-a gradiensek drasztikus növekedésére vagy csökkenésére, melyek ellehetetlenitik 
-a hosszútávú tanulást. Ezt a hálótípust alkalmazom dolgozatomban.
+A rekurrens neurális hálók már a 80-as években megjelentek. 
+Ezek olyan szekvenciális modellek, melyek figyelembe veszik a tanulás elõzõ állapotait a döntéshozatalban. 
+A ma használt rekurrens hálók közül az LSTM, azaz long shot-term memory a legkedveltebb mind közül, mert megoldást talál az RNN-ek egy alapvetõ problémájára, a gradiensek drasztikus növekedésére vagy csökkenésére, melyek ellehetetlenítik a hosszútávú tanulást. 
+Ezt a hálótípust alkalmazom dolgozatomban.
 
-Dolgozatom célja lstm rétegekkel létrehozni egy modellt, amely képes megtanulni 
-egy adott elõadó zenei stílusát karakterek sorozatát nézve.
-Pontosabban felteszi magában a kérdést: "ha ezt az x hosszú szöveget látom, 
-vajon az elõadó mit írna x+1. karakternek?".
-A model létrehozásában a python nyelven elérhetõ keras és annak hátterében a tensorflow keretrendszereket használom.
-Keras egy API amely elfedi a neurális hálókhoz szükséges matematikát, igy átláthatóbbá téve a kódot, tensorflow pedig
-egy eszköz mellyel gépi tanuló szoftvereket könnyedén tudsz tanítani gyorsasága 
-miatt, valamint
-átláthatóvá teszi a fejlesztést a tensorboard segítségével, mely egy 
+Dolgozatom célja LSTM rétegekkel létrehozni egy modellt, amely képes megtanulni egy adott elõadó zenei stílusát karakterek sorozatát nézve.
+Pontosabban felteszi magában a kérdést: "ha ezt az x hosszú szöveget látom, vajon az elõadó mit írna x+1. karakternek?".
+A model létrehozásában a python nyelven elérhetõ Keras és annak hátterében a TensorFlow keretrendszereket használom.
+Keras egy API amely elfedi a neurális hálókhoz szükséges matematika nagy részét a fejlesztõ elõl, így átláthatóbbá téve a kódot, TensorFlow pedig egy eszköz mellyel gépi tanuló szoftvereket könnyedén lehet tanítani gyorsasága miatt, valamint átláthatóvá teszi a fejlesztést a TensorBoard segítségével, mely egy 
 vizualizációs eszköz.
 
-Szakdolgozatomban elõször ismertetem az egyszerû neurális hálókat, mûködésüket,
-majd ismertetem a rekurrens hálókat azok hasznát, és kitérek a problémájukra melyet az lstm old meg.
-Ezután ismertetem a keras keretrendszerét, a tensorflow mûködését és ezen belül a tensorboard-ot.
-Ezek ismeretében már olvasható a tensorboard vizualizációja, így megmutatom a 
-tanítások eredményeit.
+Szakdolgozatomban elõször ismertetem az egyszerû neurális hálókat, mûködésüket, majd ismertetem a rekurrens hálókat, azok hasznát, és kitérek a problémájukra melyet az LSTM old meg.
+Ezután ismertetem a Keras keretrendszerét, a TensorFlow mûködését és ezen belül a TensorBoard-ot.
+Ezek ismeretében már olvasható a TensorBoard vi\-zu\-a\-li\-zá\-ci\-ó\-ja, így megmutatom a tanítások eredményeit.
+
+Kulcsszavak: gépi tanulás, neurális hálók, természetesnyelv-feldolgozás, rekurrens neurális hálók, LSTM
 
 \chapter*{Bevezetés}
 \addcontentsline{toc}{section}{Bevezetés}
+A neurális hálók egyre több figyelmet kapnak a mindennapokban, elképesztõ tel\-jesít\-mény\-ek\-re képesek mint például az AlphaGo mesterséges intelligencia képes volt legyõzni a világ legjobb go játékosát. 
+Ezt az eseményt nem várták a következõ évtized távlatában. 
 
-Itt kezdõdik a bevezetés, mely nem kap sorszámot.
+Egyesek úgy látják, hogy a neurális hálók leváltják a tradicionális programozást és az emberek csak felügyelni fogják az algoritmusok mûködését, finomhangolják a hiper\-paramétereket. 
+Rengeteg helyen már sikerült is áttörést elérnie az imperatív prog\-ram\-o\-zás\-sal szemben. 
+Ilyenek például a gépi látás, beszédfelismerés, robotika, de rengeteg más terület vár a hálók hódítására konstans számításigénye és memóriaigénye, könnyû áramkörbe égethetõsége és agilissága miatt.
+\cite{software2_0}
 
+Mások úgy gondolják ez is csak egy eszköz, és a mesterséges intelligencia öregebb mint a
+számítástudomány. Hiszen egy egysoros bash kód erõsebb tud lenni mint egy Hadoop klaszterek csoportja.
+\cite{ai_paradigm_debate}
 
+Bármi is vár a mesterséges intelligenciára az biztos, hogy egyre több jelentõsége lesz az életünkben.
+%G: a neurális hálók imperatív (vagy bármilyen) programozási paradigmával való
+%szembeállítása eléggé marketingszagú (kb. mint az AlphaGo-t általános
+%intelligenciának nevezni) 
+%https://softwareengineering.stackexchange.com/questions/350629/neural-networks-the-birth-of-a-new-programming-paradigm
+%G: a nyelvfelismerés más, az NLP fordítása természetesnyelv-feldolgozás
+A mesterséges intelligencia egy fontos kutatási területe a természetesnyelv-feldolgozás (angolul: natural language processing, röviden NLP). 
+Vannak imperatív algo\-ritmu\-sok hasonló feladatokra, de egyre nagyobb jelentõséget kap a feladat neurális hálók\-kal történõ megvalósítása. 
+\cite{nlp_nn}
+Ilyen feladatok például a gépi fordítás, chatbotok, text-to-speech. 
+Ezek mind olyan feladatok amelyek a gépek és az emberek közötti kommunikációt köny\-nyítik meg. 
+\cite{nlp_wiki}
 
-\chapter{Egy találó cím}
+Dolgozatom témája ebbe a témakörbe tartozik, célja automatikus dalszöveg generálás az elõzõ karakterek megfigyelése alapján. 
+A modell próbál értelmezhetõ magyar dal\-szöv\-eg\-et gyártani úgy, hogy közben követi az adott zenész/zenekar stílusát. 
+Mivel a ka\-rak\-te\-re\-ket választottuk absztrakciós rétegnek az inputnak, így nem várható el érhetõ magyar szöveg az outputban, jó eredménynek számít viszont, ha érthetõnek, természetesnek hat a generált szöveg, bár a validálást az utolsó fejezetben statisztikailag végezzük, nem példák segítségével.
+%https://medium.com/@karpathy/software-2-0-a64152b37c35
 
-Ez pedig már az elsõ fejezet, ...
+\chapter{Neurális hálók}
 
-\section{Alcím}
-Ebben alfejezetek is lehetnek
-
-\subsection{Al-al cím}
-Sõt al-al fejezetek is.
-
-\subsection{Másik}
-Na lássunk egy másodikat is.
-
-\subsection{Harmadik}
-Meg egy harmadikat is.
-
-\section{Mindjárt vége a fejezetnek}
-Tényleg, itt valóban vége.
-
-
-\chapter{Hosszú}
-\section{Részletek}
-Ebbe a fejezetbe pedig írunk sok sok szöveget. Szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg,   szöveg, szöveg, szöveg
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg,  szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg, szöveg,
-
-\chapter{Egyebek}
-
-\section{Környezetek}
-\begin{tét}
-\label{tét-alap}
-Ez itt egy tétel.
-\end{tét}
-
-%A bizonyítás \begin{proof} és \end{proof} közé kerül:
-\begin{proof}
-Ez pedig a bizonyítása, melyben szerepel egy képlet:
-\begin{equation}
-\begin{split}
-E^{\text{globális}} &= \text{tét}_1\cdot E_1^{\text{elemi}}+\text{tét}_2\cdot
-E_2^{\text{elemi}}+\ldots+\text{tét}_n\cdot E_n^{elemi} \\
-&=E^{\text{elemi}}\left(\text{tét}_1+\text{tét}_2+\ldots+\text{tét}_n\right)\\
-&=E^{\text{elemi}}\cdot\text{össztét}
-\end{split}
-\end{equation}
-A második egyenlõségnél azt használtunk ki, hogy ...
-
-Ezzel a bizonyítást befejeztük.
-\end{proof}
-
-\begin{defi}
-\label{def-pelda}
-Ez egy definíció. Számozása a tételekkel együtt történik.
-\end{defi}
-
-\begin{áll}
-A követekezõ négy állítás egymással ekvivalens:
-\label{áll-ekvivalencia}
-  \begin{itemize}
-  \item[(i)] $M$ és $N$ gyengén ekvivalensek.
-  \item[(ii)] Minden $n$
-  nemnegatív egész számra $|L_{M}\cap \Sigma_{1}^{n}|=|L_{N}\cap \Sigma_{2}^{n}|$ teljesül.
-  \item[(iii)] Minden $n$ nemnegatív egész szám esetén
-   létezik
-  $ \pi_{n}: L_{M}\cap \Sigma_{1}^{n} \rightarrow L_{N}\cap \Sigma_{2}^{n} $ kölcsönösen egyértelmû
-  leképezés.
-  \item[(iv)] Minden nemnegatív $n$-re $x A^{n} y^{T}=x' A'^{n} y'^{T}$.
-  \end{itemize}
-\end{áll}
-
-\begin{köv}
-  Ez pedig egy következmény.
-\end{köv}
-
-\begin{pld}
-  Ez lesz a példa, ezt nem szedjük dõlten.
-\end{pld}
-
-\begin{megj}
-  A fejezetet pedig egy megjegyzés zárja.
-\end{megj}
+A neurális hálók az agyunkban elõforduló neuronok hálózata. 
+Ezek határozzák meg a gondolatainkat, ez alapján hozunk döntést a minket körülvevõ világról. 
+Ahhoz, hogy ezt számítani lehessen szükség van egy matematikai formulára, egy modellre. 
+A neurológia jelenleg elfogadott elméletére építjük a mesterséges neurális hálókat, és ezeknek az alapjait ebben a fejezetben fogom ismertetni.\cite{ann}
+Minden mély háló õse az elõrecsatolt mes\-ter\-sé\-ges neurális háló, így a dolgozatban használt rekurrens, azaz hosszú távú memóriával rendel\-kezõ háló az LSTM alapja is.
+A fejezet ezeket a témákat fogja jobban szemügyre venni. A továbbiakban neurális hálók alatt a mesterséges neurális hálókat értem.
 
 
-\section{Listák}
+\section{Neurális hálók és a gépi tanulás}\cite{nn_vs_ml}
+%https://www.zendesk.com/blog/machine-learning-and-deep-learning/
+A mélytanulás és a gépi tanulás kifejezések a köznyelvben gyakran összemosódnak, vi\-szont lényeges különbség van a kettõ között. 
+A gépi tanulás feldolgozza az adatot, tanul a megfigyeltekbõl, és ezt késõbb felhasználja ha hasonló helyzetbe kerül. 
+Ezt úgy éri el hogy a programozó egy adott programozási nyelven leimplementálja az adott lépéseket: feldolgozás, tanulás, predikálás. 
+Szóval ha egy problémát észlel a rendszerben, megkeresi a probléma forrását és kijavítja az adott metódust/osztályt, amely a problémát elõidézte, mivel a kód logikai egységekre van bontva a programozó által.
+ 
+Ezzel szemben a mélytanulásban nem a részegységeit készíti elõ a programozó, hanem megadja az input adatot, valamint a várt eredményt, és beállítja a modell hiperparamétereit, úgy hogy a tanulás hatásos legyen. 
+Tulajdonképpen a mélytanulás részhalmaza a gépi tanulásnak, mert ugyanazt a célt szolgálják, viszont a mélytanulásban nem azt kell meg\-ha\-tá\-roz\-ni, hogy milyen alrendszerei vannak az adott rendszernek, hanem megadjuk az $(x,y)$ párokat úgy, hogy $f(x)=y$ legyen, és az \textit{f} függvényt a gép próbálja meg közelíteni úgy hogy nem ismert $(x', y')$ párra is jól tippeljen a háló.
 
-Ez egy felsorolás:
-\begin{itemize}
-    \item elsõ
-    \item második
-      \subitem elsõ
-      \subitem második
-    \item harmadik
-    \item[$\clubsuit$]  saját jel is alkalmazható
-\end{itemize}
-Ez pedig egy számozott lista:
-\begin{enumerate}
-            \item hétfõ
-            \item kedd
-            \item szerda
-\end{enumerate}
+\section{Felügyelt és felügyelet nélküli tanulás}\cite{supervised_vs_unsupervised}
+%https://www.youtube.com/watch?v=lEfrr0Yr684
+A tanulás egy másik csoportosítási szempontja, hogy felügyelt-e a modell tanulása. 
+A felügyelet azt jelenti jelent esetben, hogy az input adat egy címkét kap, azaz megmondjuk mi a várt output. 
+Ezzel szemben a felügyelet nélküli modell célja automatikus információ\-kinyerés az input adatból. 
 
-%Oldaltörést is alkalmazhatunk
-\pagebreak
+Ilyen például a SOM (azaz Self Organizing Map), mely egy adathalmaz klaszterizálását viszi véghez, vagy az autoencoder, mely célja, hogy kódolja az inputot, és visszaalakítsa azt. 
+Ennek egy felhasználási módja például az input zajmentesítése.\cite{som_deblur}\cite{auto_deblur}
 
+A rekurrens neurális hálók, amit én is fogok alkalmazni a dolgozatomban a felügyelt tanulás csoportjába tartoznak, mivel definíció szerint a rekurrencia azt mondja meg, hogy \textit{x} lépés után mi lesz az \textit{x+1}. lépés, ehhez az inputban meg kell adnunk az \textit{x+1}. lépést, ekkor ezek lesznek a címkék, melyekre a modell optimalizálja magát. \cite{rnn_wiki}
 
-\section{Egy táblázat és egy ábra}
+Ebbe a kategóriába tatoznak például az elõrecsatolt valamint a konvolúciós neurális hálók.
 
-A táblázat itt következik.
-\begin{table}[!h]\label{strategia}
-\caption{Példa stratégiatáblára a Black Jack esetében}
-\begin{center}
-\begin{tabular}{l||r|r|r|r|r|r|r|r|r|r}
-&ász&2&3&4&5&6&7&8&9&10\\
-\hline\hline
-21&n&n&n&n&n&n&n&n&n&n\\
-20&n&n&n&n&n&n&n&n&n&n\\
-19&n&n&n&n&n&n&n&n&n&n\\
-18&n&n&n&n&n&n&n&n&n&n\\
-17&n&n&n&n&n&n&n&n&n&n\\
-16&h&n&n&n&n&n&h&h&b&b\\
-15&h&n&n&n&n&n&h&h&h&b\\
-14&h&n&n&n&n&n&h&h&h&b\\
-13&h&n&n&n&n&n&h&h&h&h\\
-12&h&n&n&n&n&n&h&h&h&h\\
-11&h&D&D&D&D&D&D&D&D&h\\
-\end{tabular}
-\end{center}
+\section{Elõrecsatolt neurális hálók}
+
+Az elõrecsatolt neurális hálók olyan adatszerkezetek, melyek képesek megbecsülni az \textit{f} függvényt úgy, hogy $ y = f(x, T) $ ahol \textit{T} a hálónak adott legjobb eredménnyel becslõ hiperparamétereket tartalmazza. 
+A nevét onnan kapta, hogy az információ áramlásának iránya az inputtól az outputig tart, és nincsenek benne hurkok, ciklusok.
+
+A legegyszerûbb mûködõ neurális háló egyetlen perceptronból áll, melynek van egy súlya (\textit{W}) és egy ferdesége (\textit{b}). 
+Ezekbõl a neurális háló elõállítja a $ \hat{y}=Wx + b $ egyenletet, és ezt optimalizálja a tanuló inputra és outputra hiba-visszaterjesztés alkalmazásával. \cite{perceptron}
+% http://ataspinar.com/2016/12/22/the-perceptron/
+	\begin{figure}
+		\centering
+		\includegraphics[scale=0.6]{perceptron.png}
+		\caption{A perceptron\cite{perceptron}}
+	\end{figure}
+
+Sajnos ennek a megoldásnak van egy limitációja, csak lineáris regresszió elõállítására képes. 
+Erre hozták létre az aktivációs függvényeket, melyek nem lineáris függvények, és minden perceptron számításának a eredményére egy nem lineáris függvény hívódik meg. 
+Ezeket a függvényeket aktivációs függvényeknek nevezik. 
+Rengeteg létezik belõlük, de itt van néhány példa a leggyakrabban használtak közül: \textit{reLU}, \textit{sigmoid}, \textit{tanh}. \cite{activations}
+Szóval ha hozzáadjuk az aktivációs függvény \textit{g}-t az elõzõ példánkhoz a következõ egyenlõség\-rendszert kapjuk.
+\begin{displaymath}
+\hat{y}= g(z),\ ahol\ z = Wx + b
+\end{displaymath}
+
+A neurális háló attól lesz mély neurális háló, hogy több perceptron réteget egymás után kötünk. 
+Ekkor lesz egy input réteg, lesznek köztes, azaz rejtett rétegek és lesz egy output réteg. 
+Több réteggel mélyebb tudást tud szerezni egy modell, viszont feladatfüggõ, mivel van olyan feladat amely jobban teljesít egy rejtett réteggel mint többel.\cite{ann}
+\newpage
+\section{Rekurrens neurális hálók} \cite{rnn_wiki}
+Az emberek új gondolatai nem törlik ki az elõzõeket. 
+Nem az adott pillanatból ítéljük meg a helyzetünket, vagy hozunk döntést azzal kapcsolatban. 
+Ez egy hasznos tulajdonság, hiszen kevés dolog van az életben, ami nem egy folyamat része. 
+A rekurrens neurális hálók célja ezen folyamatok lemodellezése, így mivel tudja milyen állapotok elõzték meg, hosszútávú kapcsolatokkal is számításba venni modelljében.
+Minden egyes \textit{t} idõpillanat\-ban az adott állapot megkapja saját inputját $x_t$ valamint az elõzõ idõpillanat rejtett ál\-la\-po\-tá\-nak eredményét $h_{t-1}$, és ez alapján a következõ egyenlettel végzi el a predikciót az adott perceptron: $h_t = f(Wx_t + Uh_{t-1}+b)$. 
+Jól látható hogy a $h_t$ egy az \textit{t}-tõl függõ egyenlet, mely egy általános problémához vezet minket. 
+Az eltûnõ és kirobbanó gradiens problémájához.
+
+\subsection{Az RNN-ek problémája} \cite{exploding_vanishing}
+A rekurrens neurális hálók képesek nagyon nagy pontossággal dönteni, de hihetetlenül nehéz õket jól betanítani, elsõsorban az eltûnõ és kirobbanó gradiens problémája miatt. 
+Ugyanúgy ahogy az elõrecsatolt neurális hálók, a rekurrens hálók is hiba-vissza\-ter\-jesz\-tés\-sel optimalizálják perceptronjaikat, mely egy olyan iteratív folyamat, melyben a hiba\-függvény gradiensét vizsgálva a döntéshozatal születik a perceptron súlyainak frissítésére.
+A prob\-lé\-ma ott mutatkozik, hogy a rejtett rétegek összeköttetésben vannak egymással, így ha frissíteni akarjuk az egyik réteget akkor az összes elõtte lévõt frissíteni kell. 
+Ekkor a háló elsõ rétegei rengetegszer változnak a tanulás során, és ha a gradiens, mellyel beszorozzuk túl nagy vagy kicsi lesz, az értéktelenné teszi az adott perceptront, mivel az összes utána lévõ neuron visszaterjeszti a hibáját rá, és ha rengetegszer szorzunk egy kis számmal, vagy egy naggyal akkor az megközelíti a nullát vagy a végtelent. 
+Ekkor az elsõ neuronjaink használhatatlanná válnak, de mivel minden réteg megkapja az elõzõ réteg outputját, így az utolsó neuronok is értéküket vesztik. 
+Ezekre a problémákra született rengetek megoldás. 
+Kirobbanó gradiens: levágott hiba-visszaterjesztés, büntetõfüggvény\-ek, gradiens megfékezése. 
+Eltûnõ gradiens: súlyok inicializálása, valamit az RNN-ek egy altípusa, amelyet a következõ alfejezetben fejtek ki, az LSTM.
+
+\subsection{LSTM} \cite{lstm_visual}
+%G: az LSTM mint csõ elég furán hangzik
+%G: ide lehetne rakni egy ábrát pl. a colah blogról (természetesen a forrás 
+%megjelölésével együtt)
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{lstm-pipe.png}
+	\caption{Az LSTM megoldása a gradiens kritikus szélsõértékének elkerülésére \cite{lstm_visual}}
+	\label{pipe}
+\end{figure}
+A Long Short Term Memory (LSTM) kulcsa az úgynevezett cella, egy hosszú egyenes vezeték, melyen csak lineáris transzformációkat hajtunk végre, így nem lesz radikális a változás a kezdõ és végállapot között, ezzel elkerülve a parciális derivált kiugróan magas vagy alacsony értékeit. 
+Ennek a vizuális személtetése a \ref{pipe} ábrán látható. 
+Ez a vezeték felel a hosszútávú memóriáért, ez a hidden state amit minden réteg az elõzõ rétegtõl kap.
+Ezt a vezetéket módosítja az elfelejtõ kapu (forget gate) mely egy \textit{sigmoid} aktivációs függvényt tartalmazó réteg, valamint az új információt szolgáltató csõ, mely két részbõl épül fel. 
+Az egyik egy \textit{sigmoid} aktivációs függvénnyel ellátott réteg, a másik pedig \textit{tanh}-val van ellátva. 
+Elõször a \textit{tanh} kiszámolja az új információt amelyet továbbítani szeretne outputként majd átadja a \textit{sigmoid}-nak. 
+A \textit{sigmoid} 0 és 1 közé képzi le a az inputját, minden \textit{sigmoid} után áll egy elemenkénti szorzás operátor. 
+Ez a konstrukció képes eldönteni, hogy mely elemnek milyen jelentõsége van, mennyire releváns az adott kontextusban. 
+Ez után a szûrt outputot hozzáadja a szûrt hosszútávú memóriához, amelyet majd a következõ iteráció fog megkapni a késõbbiekben. 
+Az adott réteg outputja viszont úgy generálódik, hogy ezt a csövet, mely az új hosszútávú memóriát tartalmazza átvezetjük egy \textit{tanh}-s rétegen, hogy -1 és 1 közé kerüljenek az értékek, valamint alkalmazunk még egy \textit{sigmoid} szûrõt a kapott értéken ezzel megkapva az outputot, ami a következõ réteg inputja is egyben.
+
+Fontos megjegyezni, hogy mind a \textit{sigmoid}-ok, mind a \textit{tanh}-k neuronok, melyek tanulás alatt optimalizálják a változóikat ezzel megtanulva mit kell továbbítani a következõ rétegek\-nek, valamint a globális információból (a cella) mely információ releváns számára.
+Hiba-visszaterjesztéskor ezek változnak radikálisan, hisz ezeknek jóval kisebb vagy nagyobb tud lenni a gradiense, mint a lineáris transzformációknak.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.5]{lstm-inner-states.png}
+	\caption{Az LSTM belsõ állapotai balról jobbra sorban látható kapuk: elfelejt, megtanul, output \cite{lstm_visual}}
+	\label{lstm-inner}
+\end{figure}
+
+% LSTM verziókról pár szó ??
+
+\chapter{Használt eszközök}
+
+%python és a mélytanuló könyvtárai: pytorch, tf, CNTK, theano, caffe
+% http://diploma.bibl.u-szeged.hu/59970/ ?
+Rengeteg könyvtárat hoztak létre melyek segítik a mélytanulás leimplementálását. 
+Elõször is meg kell említeni, hogy az elmúlt években a Python nyelv vált a mélytanulás de facto standardjává. 
+Létezik más nyelvre is ismert könyvtár pl: Java -- DeepLearning4J, lua -- torch, Matlab -- Neural network toolbox, de kétségtelen a Python elõnye a piacon. \cite{dl_libs}
+
+Ott van például a Caffe\cite{jia2014caffe}, melyet a Berkeley egyetem egy tanulója, Yangqing Jia PhD tanulmányai során készített, és az óta is közkedvelt keretrendszer. 
+Másik példa a Microsoft Cognitive toolkit\cite{CNTK}, melyet az óriás vállalat tart karban, így plusz funkcióként az Azure-t is támogatja. 
+Hasonló helyzet áll fent a PyTorch-al\cite{torch} kapcsolatban is, melyet a Facebook kezel és a Torch\cite{torch_old} nevû lua framework Python-ra való portolása, mely támogatja a dinamikus hálókat. 
+Úgy mint a PyTorch, a dynet\cite{dynet}, mely a Carnegie Mellon Egyetemen született, is támogatja a dinamikus modellt.
+
+Amikor döntöttem keretrendszer választás tekintetében, akkor ezekrõl le kellett mon\-da\-nom, mivel szerettem volna használni a magas szintû API-t amelyet a Keras\cite{keras} nyújt, és amelyre a következõ szekcióban kitérek. 
+Amikor a kódot elkezdtem leimplementálni csak a TensorFlow\cite{tf} és a Theano\cite{2016arXiv160502688short} volt kompatibilis a Keras-sal (, igaz azóta a Microsoft Cognitive Toolkit is kompatibilis vele).
+
+Theano könyvtár egy matematikai se\-géd\-esz\-köz, mely gyors és pontos számításokra képes, mátrix mûveleteket optimalizálja, valamint CPU-n és GPU-n is futtatható. 
+Egyetlen probléma vele, hogy a fõ karbantartója MILA (Montreal Institute for Learning Algorithms) abba hagyta a fejlesztését, és jelentõsen visszaesett a fejlesztõi hozzájárulások száma az elmúlt fél évben.
+
+TensorFlow a ma használt egyik legkedveltebb mélytanuló könyvtár, jól dokumentált, minden megtalálható benne ami egy gépi tanulást alkalmazó programnak kell. 
+Igaz csak statikus modelleket képes létrehozni, de könnyû debuggolni, a hozzá lefejlesztett segéd\-eszköz, a TensorBoard\cite{tb} segítségével. Így a választásom a TensorFlow-ra esett.
+
+\section{Python} \cite{why_python} \
+%https://www.quora.com/Why-is-Python-so-popular-in-machine-learning
+%https://github.com/begab/compsem/blob/master/eloadasok/01_intro.pdf
+A Python egy interpretált nyelv, csak úgy mint a böngészõkben futó JavaScript nyelv, nagy elõnyük, hogy lehetõség van érthetõbb kód írására velük, viszont ezek a nem olyan gyorsak mint a fordított nyelvek, például: C, C++.
+
+A nyelv szintaxisa megközelíti a pszeudokódét, például a hármas operátort, vagy az egysoros ciklust a \ref{code} forráskódban látható módon definiáljuk, valamint sok vezérlési szerkezet helyettesítve lett.
+\begin{figure}
+	\caption{A hármas if-then-else operátor és az egysoros for ciklus Pythonban}
+	\centering
+	\begin{BVerbatim}
+	a = b if x else c
+	# a következõ sor a [0, 1, 4, 9, 16] listát generálja
+	d = [a*a for a in range(5)]
+	\end{BVerbatim}
+	\label{code}
+\end{figure}
+Például az \&\& valamint a || ki lett cserélve az \textit{and} és \textit{or} kulcsszóra, a kapcsos zárójelek helyett indentálással, azaz szóközök vagy tabulátor al\-kal\-ma\-zá\-sá\-val látható hogy az adott sor melyik függvény vagy vezérlési szerkezet látóköréhez tartozik.
+
+A választott nyelv nagy hasonlóságot mutat az R és a Matlab nyelvekhez, és ezek a kutatók legkedveltebb nyelvei könnyû szintaktikájuk miatt, viszont ezek nem általános programozási nyelvek, a Pythonnal ellentétben.
+Itt a webszerver épülhet részben ugyan\-azok\-ból az entitásokból, mint amit a tanító kód használt. 
+Ezt még az is segíti, hogy a nyelv objektumorientált, így a fejlesztõknek nem is kell foglalkoznia a tanítás részfolyamataival, elég csak integrálniuk a rendszerbe.
+
+Vannak funkciók melyek nyelvi szinten bele kerültek a Pythonba ami hasonlít a matlab szintaxishoz.
+Ilyen a tömb indexelés, ha leakarjuk kérni a tömb 2., 3. és 4. indexét, csak beírjuk hogy \texttt{tomb[2:5]}, vagy ha az utolsóra vagyunk kíváncsiak akkor lekérjük így: tomb[-1].
+
+Mivel a Python általános programozási nyelv, ezért nem várhatjuk el hogy minden szintaxis, amely mátrixspecifikus bekerüljön a nyelvbe, erre fel tudjuk használni a Numpy könyvtárat mely a Python mátrixszámolás hiányosságait hivatott orvosolni (ezt a \ref{numpy} táblázat szemlélteti).
+
+\begin{table}[!h]\label{numpy}
+	\caption{Numpy és Matlab \cite{compsem}}
+	\begin{center}
+		\begin{tabular}{l||r|r}
+			&Numpy&Matlab\\
+			\hline\hline
+			Transzponálás&Y=X.T&Y=X'\\
+			Mátrixszorzás&C=A.dot(B)&C=A*B\\
+			Elemenkénti szorzás&D=A*B&D=A.*B\\
+		\end{tabular}
+	\end{center}
 \end{table}
 
-Lássunk egy ábrát is!
-\begin{figure}[!h]
-\unitlength 8mm
-\begin{center}
-\begin{picture}(8,6)
-\thicklines
-\multiput(0,1)(0,1){2}{\line(1,0){5}}
-\multiput(3,0)(1,0){2}{\line(0,1){6}}
-\multiput(1,0)(1,0){2}{\line(0,1){1}}
-\multiput(6,0)(1,0){2}{\line(0,1){5}}
-\multiput(0,1)(1,0){3}{\line(0,1){1}}
-\multiput(2,4)(3,0){3}{\line(0,1){1}}
-\multiput(3,0)(0,3){3}{\line(1,0){1}}
-\multiput(6,0)(0,1){4}{\line(1,0){1}}
-\multiput(7,2)(0,1){2}{\line(1,0){1}}
-\multiput(2,4)(0,1){2}{\line(1,0){6}}
-\put(5,1){\line(0,1){1}}
-\put(8,2){\line(0,1){1}}
-\put(1,0){\line(1,0){1}}
-\put(1,1){\makebox(1,1){\(\sphericalangle\)}}
-\put(7,2){\makebox(1,1){\(\$\)}}
-\end{picture}
-\end{center}
-\caption{\label{labirintus}Labirintus bejárása}
+\section{Keras} \cite{keras}
+\label{keras}
+A Keras, mint már említésre került, egy magas szintû API, melynek fõ célja a gyors kísérletezés. 
+Ahogy a honlapjukon található idézet írja: `Az egyik legfontosabb dolog a kutatásban, hogy minél gyorsabban elérjünk az ötlettõl az eredményig.'. 
+Kulcsfontosságú volt a fejlesztése során a modularitás és a felhasználó barátság, cserébe nem kapunk olyan gyors algoritmust, melyet mondjuk akkor kapnánk, ha TensorFlow-t használnánk, Keras nélkül.
+
+Az API alapja a \textit{Model} osztály. 
+Ebbõl funkcionális programozás segítségével kom\-plex\-ebb modelleket tudunk létrehozni, de ha csak sor-folytonosan szeretnénk rétegeket hozzáadni akkor az ebbõl leszármazó \textit{Sequential} osztályt kell alkalmazni, melynek az \textit{add} metódusa paraméterül egy \textit{Layer} objektumot vár, és hozzáadja következõ elemként a modellhez. 
+Ez után a \textit{compile} függvénnyel megadhatjuk mit használjon, hibafüggvénynek, ami alapján megmondja hogy teljesít a modell, valamint mi legyen az optimalizáló függvény, ami a hiba-visszaterjesztést vezérli, valamint milyen metrikákat használjon pl: loss (hibaérték), accuracy (pontosság).
+
+A compile után a modell kész a tanulásra. 
+\textit{Numpy} tömböket vár inputként és azt is ad vissza outputként. 
+A tanulásnak több módja van, például a \textit{fit} a legegyszerûbb, két kötelezõ paramétere van: \textit{x}, azaz az input amibõl tanul a modell és \textit{y}, az output melyet képesnek kell lennie predikálni. 
+Az én esetemben viszont ez nem volt járható út, mivel a korpusz (így nevezik a szöveg alapú adatot, melybõl a modell tanulni képes,) amelybõl tanul elérheti a $(730441-100) * 101 = 73764441$ elemû multidimenziós tömböt (ezt a rock.txt választással, 100-as szekvencián tudjuk elérni). 
+Ebben az esetben használható az alacsonyabb szintû \textit{train\_on\_batch} függvény, így futásidõben képes voltam az inputot kigenerálni a Keras számára.
+
+Attól függõen hogy milyen módon adjuk meg az inputot, a tesztelés is másképp mûködik. 
+A \textit{fit}-hez hasonlóan tesztadatra megnézhetjük hogyan teljesít modellünk még nem látott adaton a \textit{evaluate} és a \textit{train\_on\_batch}-hez hasonlóan mûködik a \textit{test\_on\_batch}. 
+Ha szeretnénk egy konkrét predikciót kapni akkor a \textit{predict} függvényre van szükségünk, ahol egy adott \textit{x}-re visszakapjuk az output \textit{y}-t., ahol az \textit{x} megfelelõen formázott input, az \textit{y} pedig a predikció eredménye.
+
+\section{TensorFlow} \cite{tf}
+% https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+A TensorFlow egy a Google által karbantartott keretrendszer, mely az elmúlt idõben egyre jobban fejlõdik. 
+Alapból c++ -hoz készítették, valamint egy Python interfészen keresztül kényelmesen fejleszthetõ, gyorsaság romlása nélkül, mert a Python is a mo\-tor\-ház\-te\-tõ alatt ezt a c++ -os optimalizált könyvtárat használja. 
+Viszont már létezik JavaScript-es és telefon kompatibilis (TensorFlow Lite) változata is. 
+Az alap verzió is fejlõdött, hiszen már nem csak CPU-val tudunk számítani, hanem GPU-val és TPU-val, azaz tensor processing unit, mely egy konkrétan a TensorFlow-hoz készített hardver. 
+Ezen felül el\-osz\-tott rend\-szer\-eket is támogatja.
+%G: nem a mûveleteket optimalizáljuk, hanem egy modell paramétereit
+A TensorFlow egy matematikai optimalizációért felelõs könyvtár, mely rendkívüli gyorsasága miatt lett közkedvelt a mesterséges intelligenciával fog\-lal\-ko\-zók körében. 
+A Python programozási nyelv egy szkriptnyelv. 
+Ezzel nagyon sokat nyerünk, hiszen egy sor kód felelõs lehet több sornyi c kódért,
+mivel a Python rendelkezik magas szintû adatszerkezetek pl: generátor, inline for ciklus, trenary operátor egy em\-ber\-i\-leg olvashatóbb formája.
+ %G: fordítás (compiling) értelemben nem történik, hanem a már fordított c kódot 
+ %kényelmesen hivogathatod a python interpreterrel
+ Viszont ezzel gyorsaságot veszítünk, hiszen a Python sorról sorra fordítja át a kódot c kóddá, majd ezt hívja a python interpreter, ha szükség van az adott kódrészletre. 
+ Ennek a lassúságnak elkerülése érdekében találták ki a TensorFlow-t mely a háttérben elõre legenerálja a c kódot, optimalizálva a mûveleteket, így a neurális hálókhoz szükséges intenzív matematikai számítások napokról órákra csökkenhetnek.
+
+A keretrendszer elméleti háttere, hogy a modellünket egy adatfolyam gráfnak tekinti, melyekben a folyamok találkozási pontjánál transzformációk történnek. 
+Az adat amely keresztül megy a gráfon, egy tensor. 
+A tensor egy geometriai objektum, mely más tensorok, skalárisok és vektorok között ír le lineáris relációkat (mint például mátrixszorzat, skaláris szorzat).
+%https://en.wikipedia.org/wiki/Tensor
+%G: Ez az attól függetlenül felütés azt a látszatot kelti, mintha a matematikai 
+%számítások és a mélytanulás egymással össze nem függõ dolgok lennének
+Mivel matematikai számításokra fejlesztették hasznos mélytanuláshoz, sõt még nagyon sok mélytanuló tartalom is van benne, hibafüggvényektõl és optimalizáló függvény\-ek\-tõl kezdve kész modelleken át.
+Dolgozatom kezdete óta a Keras is része lett a TensorFlow könyvtárnak.
+
+\subsection{TensorBoard} \cite{tb}
+Az elõzõ szekcióban említett mélytanuló könyvtár egy nagyon nagy elõnye ellenfeleivel szemben a beépített vizualizációs eszköz, a TensorBoard. 
+Ennek segítségével kevés kóddal nagyszerû vizualizációkat figyelhetünk meg tanulás közben és után is. 
+%G: ez a "számokra van szüksége" elég furán hangzik
+A TensorFlow számokon keresztül képes tanulni, számot vár inputként, számot ad outputként, mivel ez egy optimalizálási feladat. 
+Ellenben az embereknek nehéz felfogni hatalmas adatok táblázatát, erre jó a vizualizáció, hogyha valami nincs rendben a modellel egy gyakorlott adattudós könnyen észreveheti hol rontotta el a modelljét, valamint egy kezdõ is meglátja hogyha valami probláma van a modellel. 
+Ilyen eszközök a skaláris vektorok, melyek az idõ függvényében mutatják meg egy tensor értékének változását, hisztogramok, melyek az eloszlását nézik az adott tensor értékeinek, a projektorral képes vagy egy vektorteret kirajzolni, melyet PCA (Principle Component Analysis) vagy T-SNE (T-distributed Stoc\-has\-tic Neighbour Rendering), esetleg egyéni leképezéssel. 
+A modell architektúráját is közelebbrõl szemügyre vehetjük, hiszen van egy olyan menüpont, mely egy gráfot generál nekünk az elkészült modellbõl amelyben láthatjuk hogy a tensorok hogyan folynak végig a számítási gráfon, azaz egy statikus képet kapunk, hogy futásidõben hogyan fog végig\-folyni az adat.
+Viszont dolgozatom megkezdése óta a TensorBoard egy újabb verziója már támogatja a dinamikus hibakeresést is.
+
+\chapter{Karakter alapú szöveg modellezés} \cite{nlp_wiki}
+% https://en.wikipedia.org/wiki/Natural-language_processing
+%G: "how to program computers to fruitfully process large amounts of natural       
+%language data" ez nem (csak) a kommunikációt jelenti
+% annyira nem régi dolog az NLP, hogy érdemes lenne elmúlt évszázadról 
+%beszélni. Legyen inkább elmúlt évtizedekben
+A természetes nyelvfeldolgozás egy olyan tudományág, melynek célja az emberek és a gépek közötti kommunikáció létrehozása, valamint az adatbányászatra használt eszköz. 
+Az utóbbihoz rendkívül hasznos, hisz rettentõ nagy mennyiségû ember által írt forrás található meg az interneten, mely bányászatához sokszor elengedhetetlen a nyelvtudás, ekkor tud segíteni a nyelvfeldolgozás. 
+A beszédfelismerés, természetes nyelv megértése valamint generálása is ezen tudományterület szerepkörei közé tartozik. 
+Ezekre a célokra nagyon sok algoritmus született az elmúlt évtizedben, viszont az idõ azt igazolta, hogy a neurális hálók legalább olyan jók erre a célra mint a létezõ NLP algoritmusok. 
+
+Dolgozatomban egy karakter alapú neurális hálót hoztam létre, mely az elõzõ ka\-rak\-te\-rek alapján képes megjósolni, hogy a tanult korpusz (egy zeneszerzõ) mely karakterrel folytatná a kapott sztringet (dalszöveget).
+
+Az írott szöveg modellezésének több absztrakciója is létezik: karakter, token, szó és mondat alapú.
+Ezek a balról jobbra egyre komplexebb egységek, ami azt jelenti, hogy több adatra van szükség, hogy a modell releváns értéket adjon vissza, hiszen például karakterbõl sokkal kevesebb van mint szóból, így ha szó alapú modellt használnánk ren\-ge\-teg irreleváns információt kapnánk ritka szavakról (bár erre is van megoldás, melyre az elsõ szekcióban kitérek). 
+Ez azt jelenti, hogy nagyon nagy adathalmazzal és szá\-mí\-tó\-ka\-pa\-ci\-tás\-sal megéri magasabb szintû absztrakciót használni, viszont én az egyszerûség és a könnyû fejlesztés (kevés várakozás a modellek futtatása között,) miatt a karakteralapú modellezést választottam.
+
+\section{Preprocesszálás}
+
+Minden neurális modell elsõ és az egyik legfontosabb része a preprocesszálás, azaz az adatok elõkészítése a tanulásra.
+ %G: map-re helyett mondjuk leképezésre?
+Jelen esetben a elõször is szükségünk van egy leképezésre, mely a karakternek egy egyéni azonosítót ad 0 és az összes eltérõ karakter száma (to\-váb\-bi\-ak\-ban \textit{N}) között. 
+Ez után átalakítjuk a számokat one-hot kódolást használva, azaz minden karakter kap egy \textit{N} dimenziós vektort, és az \textit{n}-edik azonosító lineárisan független az \textit{n+1}-ediktõl. 
+Ezzel azt érjük el, hogy miközben a modellünk tanul, nem próbál meg relációt vonni a karakterek között például ha nem használunk kódolást, és azt mondjuk hogy 'a' indexe 1 és 'b' indexe 2, azt is gondolhatja a modellünk hogy b kétszer olyan értékes mint a, ezért van szükségünk a lineáris függetlenségre, hisz akkor nem állhat fenn rezonancia.
+
+Az újabb megvalósításhoz egy másik módszert használunk, melyhez nincs szükségünk a one-hot kódolásra, mert a modell meg fogja tanítani az adott karaktert reprezentáló vektorokat minden vektorra, de ezek nem lesznek lineárisan függetlenek, relációba ál\-lít\-ha\-tó\-ak a karakterek, viszont ezek a relációk várhatóan relevánsak lesznek, nem úgy mint az elõbb felhozott példám. 
+Ezt a megvalósítást a Keras \textit{Embedding} rétege fogja megvalósítani.
+
+A preprocesszálást a \textit{scikit-learn} csomag által definiált encoder séma szerint csináltam.
+Lényegében van egy \textit{fit} függvénye, mely beállítja az encoder-t az input alapján, egy \textit{transform}, mely visszaadja a megváltoztatott inputot, ezeknek a kombinációja a \textit{fit\_trans\-form}, mely sor-folytonosan meghívja a két függvényt.
+Az \textit{inverse\_transform} melynek célja hogyha f a transform függvény és g az inverse transform, akkor $g(f(x)) = x$ bármely \textit{x}-re.
+
+Célom volt továbbra az, hogyha egy olyan karaktert kap az encoder amellyel még nem találkozott, akkor azt ritka karakterként kezelje, ahelyett, hogy leállna a predikáló program.
+
+Kialakítottam egy rendszert arra, hogy transzformációban extra lépések is megtehetõek legyenek, például az általam is használt \textit{lowercase}, azaz kisbetûs transzformáció.
+
+Ez a kód megtekinthetõ a Függelékben a \ref{encoder} szekcióban.
+
+\section{A modell} \cite{keras}
+\label{model}
+%https://keras.io/
+%G: erre van forrás, mert akkor azt hivatkozni kellene. Amúgy 
+%nagy általánosságban ez biztos nincs így, mert pl. amikor szóalakokhoz 
+%tanulnak 
+%embeddingeket, nem 300 fölé elég ritkán mennek, márpedig szóból jóval több 
+%van, 
+%mint 300.
+%https://www.quora.com/How-do-I-determine-the-number-of-dimensions-for-word-embedding
+A modell a Keras keretrendszer objektumaiból épül fel, a szekció ezekre tér ki. 
+Mivel dolgozatom során nem volt szükségem komplex modellre, elég volt a \textit{Sequential}-t hasz\-nál\-nom, melyhez a \textit{add} függvénnyel lehet hozzáadni réteget. 
+A legutoljára felhasznált osztály, melyre már említést tettem az \textit{Embedding} réteg, melyrõl a dokumentáció is írja, hogy csak a modell elsõ rétegként alkalmazható. 
+Ennek 3 paraméterét adjuk meg, a szótár mérete, az elvárt embedding egységek száma, azaz mennyi dimenzióra szeretnénk levetíteni az inputot. 
+Ezt a számot magunknak kell megtapasztalnunk hogyan szeretnénk alkalmazni, ajánlott 50 és 1000 között megkeresni az optimálisat. 
+A lényeg az hogy a hasonló szavak közelebb kerüljenek egymáshoz a kialakult vektortérben.
+
+Az \textit{Embedding} a Keras keretrendszeren belül valójában egy olyan \textit{Dense} réteg, mely paraméterül vár egy one-hot kódolással ellátott vektort. 
+Ez csak egy segítség a fejlesztõ számára, hogy levegye a terhet a válláról, valamint a TensorBoard használatával vi\-zu\-a\-li\-zál\-hat\-juk az szótár elemei közötti kapcsolatokat.
+
+Az embedding\cite{embedding} tulajdonképpen egy adathalmaz elemeit próbálja relációba állítani. 
+Fõleg szavak relációba állítására használják, de a fent említett példából látható, hogy az általam létrehozott karakter alapú embedding-nek is van emberileg felfogható értéke. 
+Léteznek nem mélytanuló algoritmusok szóbeágyazásokra, valamint vannak elõre tanított adathalmazok, ha olyan programot szeretnénk írni amiben szó alapú nyelvi felismerésre van szükség. 
+Ilyen például a Google által karban tartott \textit{word2vec} valamint a nagy riválisa a \textit{GloVe}.
+%https://github.com/begab/compsem/blob/master/eloadasok/01_intro.pdf
+A kettõ között a lényegi különbség hogy a \textit{word2vec} predikciókat végez, ameddig a \textit{GloVe} statisztikai alapon végzi a számolást, viszont a motorháztetõ alatt mindkettõ a szöveg kontextusából próbál meg rájönni az adott szó jelentésére.
+
+A már említett \textit{Dense} réteg egy teljesen összekapcsolt réteg, az input mindegyik eleme hozzá van kapcsolva az output összes részéhez. 
+Ha sima neurális hálóra lenne szükségünk ezeket kellene használnunk, különbözõ mennyiségben, különbözõ számú output egy\-sé\-gek\-kel.
+
+A következõ réteg az \textit{LSTM}, azaz a rekurrencia részét képzõ háló/hálók. 
+Egy olyan háló, mely önmagába csatolódik vissza minden input karakter után. 
+A következõ pa\-ra\-mé\-ter\-ek\-et használom: \textit{units}, azaz hány egység legyen benne, hasonlóan mûködik mint a \textit{Dense} egységek, \textit{return\_sequences}, mely ha igazra van állítva, mint jelen esetben, azt mondja meg hogy az összes állapotot adja-e vissza, valamint a \textit{statefulness}, azaz a kö\-vet\-ke\-zõ állapot az elõzõt vegye-e paraméterül, ami szintén igazra van állítva.
+
+%G: szigmoid helyett softmax, és annak a képlete is idekerülhetne
+Utoljára egy \textit{Dense} réteget adunk meg, \textit{softmax} függvénnyel, melynek output di\-men\-zi\-ó\-i\-nak meg kell egyeznie az \textit{y} dimenzióival, mivel ez a modellünk outputja.
+
+A \textit{softmax}-al azt érjük el, hogy az inputot 0 és 1 közé szorítjuk, úgy hogy ha inputnak a \textit{Dense} réteg outputját vesszük, akkor az visszaad egy tensort, mely elemei összegének a transzformáció után 1-et kell visszaadna. 
+Így a mi esetünkben megkapjuk, hogy melyik tensor milyen valószínûséggel aktiválódik, ami felhasználható késõbb predikálásra.A \ref{softmax} ábra mutatja a leírását, valójában ez egy normalizált exponenciális függvény ahol $z_k$ a \textit{Dense} réteg $k.$ outputja. 
+\begin{figure}
+\begin{displaymath}
+	\sigma (\mathbf {z} )_{j}={\frac {e^{z_{j}}}{\sum _{k=1}^{K}e^{z_{k}}}}
+\end{displaymath}
+\label{softmax}
+\caption{A softmax függvény matematikai leírása\cite{softmax}}
+\end{figure}
+Ezzel elkészül a magas szintû Keras modellünk, ez után a \textit{compile} függvénnyel elkészül ebbõl a TensorFlow modellünk. 
+De ehhez elõbb még meg kell említenünk a \textit{compile} metódus összes szükséges paraméterét. 
+Ezek a hibafüggvény, az optimalizáló és opcionális a metrikák.
+
+\subsection{Hibafüggvény} \cite{loss}
+% wikipédia
+A hibafüggvény a matematikai optimalizációban, statisztikában, gépi tanulásnál és mély\-ta\-nu\-lás\-nál használt kifejezés. 
+Tulajdonképp vektorokat, mátrixokat (a mi esetünkben ten\-sor\-o\-kat) egy valós számra vetít le, melyet a fent említett területeken használnak, hogy számszerûsíteni tudják a tanulás állapotait, azaz meg tudja nézni hogy javult-e a tanulás az adott iterációban (más néven kisebb-e a hibafüggvény értéke).
+
+A hibafüggvényt a programozó feladata meghatározni, hiszen rossz hibafüggvénnyel a tanulás értelmetlen.
+Kerasban a kész modellünk compile függvényében szerepel a hi\-ba\-füg\-gvény, kötelezõ paraméterként. 
+Mi magunk is létrehozhatunk hibafüggvényeket, melyben paraméterként kapunk egy \textit{y\_true} és egy \textit{y\_pred} tensort és ez alapján kell ki\-szám\-ol\-ni a hibát.
+Ha általános hibafüggvényre van szükség a Keras magába foglal ren\-ge\-te\-get közülük. 
+Ezeket jelentésükkel együtt a következõ táblázat fogja szemléltetni. 
+Ezeket be\-gép\-el\-het\-jük sztringként az alábbi táblázat alapján, vagy a \textit{keras.losses} csomagban található rájuk a referencia, mellyel saját paraméterekkel is meghívhatjuk õket, de a dokumentációban ki van emelve, hogy ez nem ajánlott.
+
+\begin{table}[!h]\label{loss}
+	\caption{Keras keretrendszer elõredefiniált hibafüggvényei}
+	\begin{center}
+		\begin{tabular}{r|p{8cm}}
+			Név&Leírás\\
+			\hline\hline
+			mean\_squared\_error&Regresszióhoz használt hibafüggvény\\
+			mean\_absolute\_error&Regresszióhoz használt, nehezebb differenciálni mint a mean\_squared\_error-t a nullában lévõ töréspont miatt\\
+			mean\_squared\_logarithmic\_error&mean\_squared\_error olyan változata, mely kevésbé bünteti a rossz megoldásokat (a logaritmus lassú növése miatt).\\
+			hinge&Egy nem lineáris hibafüggvény, mely nem engedi a hiba értékét 0 alá.\\
+			categorical\_hinge&A hinge kategorizáláshoz használt változata.\\
+			categorical\_crossentropy&Az output adat entrópiája alapján számolt hibafüggvény.\\
+			binary\_crossentropy&Akkor használatos ha igen nem választ várunk, vagyis csak kettõ kategóriánk van.\\
+			%https://groups.google.com/forum/#!topic/keras-users/aeKkiws7KfE
+			cosine\_proximity&Koszinusz távolság, Vektorok szorzatának kvantifikálására.\\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+A mi esetünkben a megfelelõ választás a categorical\_crossentropy lesz, mivel minden karakter egy különálló kategória és azt akarjuk megmondani hogy az adott kategóriának mekkora esélye van a következõnek lenni az input alapján. 
+A kategorikus keresztentrópia pedig pont azt a viselkedést vizsgálja, hogy a karakterek milyen eloszlást követnek az elvárthoz képest, ha megegyezik a két eloszlás a keresztentrópia értéke nulla lesz, ezzel kommunikálva az optimalizáló függvénynek, hogy a jelenlegi reprezentáció optimális.
+
+\subsection{Optimalizáló függvény} \cite{opt2}\cite{opt}
+%https://towardsdatascience.com/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f
+A compile függvény másik kötelezõ paramétere az optimalizáló függvény, melyet meg\-ad\-hat\-unk sztringként is valamint egy callback-el is hozzáadhatjuk a modellünkhöz. 
+A Keras elõredefiniált optimalizálói a \textit{keras.optimizers}-ben találhatóak, és a \ref{loss} táblázat mutatja a kerasban található optimalizálókat.
+Az optimalizáló célja minimalizálni a hibafüggvény értékét. 
+Ezek a hibafüggvény deriváltját veszik alapul, célja megtalálni azt a pontot, ahol a hibafüggvény csökkenése várhatólag a legnagyobb lesz. 
+Vannak esetek, mikor a második deriváltat is érdemes felhasználni, de ez ritka, mivel a második deriváltat, azaz a függvény \textit{Hesse} mátrixát valamint az inverzét számításköltséges kiszámolni.
+A Keras optimalizálói mind a Szto\-hasz\-ti\-kus gradiens mód\-szer\-re épülnek.
+A Keras által támogatott optimalizálók a következõk: SGD, Adagrad, Adadelta, RMSProp, Adam, Adamax, Nadam.
+Ezek mind az SGD nagy hibáját próbálják ki\-kü\-szö\-böl\-ni, az eltompuló tanulási ráta, azaz hogy a gradiens változósa idõvel jelentéktelenül kicsi lesz.
+
+\subsection{Metrikák}
+
+Szintén megadható paraméterként a compile-nak a \textit{metrics}, mely egy tömböt vár, melynek elemei vagy sztringek, vagy egy callback függvény. A kódban ez az egyetlen példa, ahol kihasználom a callback függvénnyel való definiálást, mivel a Keras alapból nem tartalmazza a perplexitás metrikát. 
+A perplexitás a természetes nyelvfeldolgozás egy alap metrikája, jelentése az, hogy a modell milyen jól másolja a valódi korupusz eloszlását. 
+A másik felhasznált metrika a pontosság, lényegében visszakérjük a Kerastól hogy a modell milyen pontosan határozta meg a várt értéket a tanítás során. 
+
+A metrika egy olyan egysége a modellnek, melyet nem használ fel a tanulás során, ez csak a fejlesztõ számára nyújt segítséget, hogy megértse hogyan viselkedik a modellje.
+
+\section{A tanulás menete}
+
+Ott tartunk hogy van egy modellünk, az input tanításra kész állapotban van, és a modell le lett compile-olva az adott alacsony szintû nyelvre, adott esetben TensorFlowra.
+
+A Keras több módot is felkínál a modellünk tanítására, melyekrõl már szó esett a Kerasról szóló \ref{keras} fejezetben. 
+Személy szerint az alacsony szintû \textit{train\_on\_batch} meg\-va\-ló\-sít\-ást választottam, mivel az elsõ próbálkozás alkalmával a fit nem bizonyult hasz\-nál\-ha\-tó\-nak a hatalmas tármennyiségnek amit a preprocesszált input adat megkövetel. 
+Erre használhattam volna a \textit{fit\_generator}-t, viszont mikor ezt észrevettem már hatalmas refaktorálásra lett volna szükségem a \textit{lyrics.py} fájlban, mivel az összes callback-et, melyet a \textit{fit} támogat meg kellett valósítanom a saját kódomban, ennek köszönhetõen jobban megértettem a tanulás folyamatát.
+Ezek a TensorBoard vizualizációi, valamint az korai megállás.
+
+Az early stopping, azaz korai megállás azt jelenti, hogy habár a tanuló adathalmazon állandóan egyre jobb értékeket sikerül elérnie, a validációs halmazon látszik, hogy van egy pont, ahol elkezd romlani az érték. 
+Ekkor ha hagyjuk a modellnek hogy tovább tanuljon egyre rosszabbul teljesít majd a validációs halmazon, és egyre jobb lesz a tanító inputon, ezt a jelenséget szeretnénk elkerülni. 
+Ezt egyszerûen megtehetjük, de elõbb pár a tanításhoz fontos fogalommal meg kell ismerkednünk.
+
+% EPOCH, BATCH, validation, test
+% https://towardsdatascience.com/epoch-vs-iterations-vs-batch-size-4dfb9c7ce9c9
+\subsection{Epoch, Validáció, Teszt}\label{epoch} \cite{batch_epoch}
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{train.png}
+	\label{log}
+	\caption{Itt látható a program tanulás közben, az elsõ szám az epoch száma, a többi a batch, valamit a metrikáké}
+\end{figure}
+Már említettem, hogy elõször a \textit{fit} függvényt használtam, mely a tanulás egészét elrejti elõlünk.
+Viszont a \textit{train\_on\_batch}-el való megvalósítással sokkal mélyebben belelátunk a tanulás folyamatába.
+A legkülsõ héja a tanulásnak az epoch, ez azt mondja meg, hányszor fusson át az egész adathalmazon a modell, mielõtt befejezi a tanulást. 
+Erre azért van szükség, mert a \textit{Gradient Descent}, az optimalizáló algoritmusok alapja iteratívan mûködik, így ha csak egyszer megyünk végig az adathalmazon nem látja eleget az adatot, nem tudja megtanulni a relációt az input és az output között, ekkor alultanulásról beszélünk.
+Ennek az ellentettje a túltanulás, ekkor túl sokszor nézte végig az adathalmazt a modell, bemagolta az abban lévõ input-output párokat, de új adatra romlik az ítélõképessége.
+Ennek a vizualizációjára szolgál a \ref{overfit} ábra, melyen látható a reláció a reprezentált tudás és az új adatokon való predikálás között.
+% https://github.com/begab/compsem/blob/master/eloadasok/02_optim_intro.pdf
+Az epochon belül, mint már említettem egyszer végig megy az összes adaton a program.
+Viszont ez hihetetlenül nagy memória igénnyel járhat, adathalmaztól függõen.
+Ezért szokták batch-ekre osztani az adatot, melyeket a \textit{read\_batches} generátor állít elõ, melyet egy for ciklus segítségével végig iterálunk és a már említett \textit{train\_on\_batch} függvényen keresztül odaadunk a Kerasnak processzálásra. 
+Ekkor a Keras az adott batch alapján egy gradiens frissítést végez, azaz frissíti a háló perceptronjainak súlyát és visszaadja nekünk a metrikákat amelyekre feliratkoztunk.
+Ez a mi esetünkben a hibaérték, pontosság és a perplexitás\cite{perplex} volt.
+A hibaérték és a pontosság között az a különbség, hogy az elõbbi az összes lehetséges kimenetre megnézi mennyire tér el a várt eredmény a kapottól és ezt a \textit{categorical\_crossentropy} egy valós értékre transzformálja, pontosabban megmondja mekkora különbség van a várt és a kapott el\-oszlás között, az utóbbi pedig megmondja hány százalékban volt a kapott kimenet egyenlõ a várt eredménnyel.
+A hibaérték láthatóan több információt tartalmaz, de késõbb ész\-re\-ve\-he\-tõ, hogy magas a negatív korreláció a kettõ között (, mivel minél kisebb a loss, annál nagyobb az accuracy).
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{epoch.png}
+	\label{overfit}
+	\caption{Balról jobbra: Túltanulás, optimális tanulás, alultanulás. Észrevehetõ hogy az optimumnál a legkisebb a távolság a görbe és a piros négyzet, azaz az új adat között.}
+\end{figure}
+Minden egyes epoch végén validálom a modellem, azaz megnézem a javulását.
+Ehhez a \textit{test\_on\_batch} függvényt használom. 
+Ennek megegyezik a visszatérési értékének formája mint a \textit{train\_on\_batch}-ével, viszont nem végez módosítást a háló súlyain.
+Nagyon fontos megjegyezni, hogy a validáció adaton kell elvégezni, amit nem használtunk tanítás folyamán, különben irreálisan nagy értéket kaphatunk, és késõbb ismeretlen adatra rosszabb predikciót végez.
+
+A tanítás legvégén hasonlóan a még nem látott adattal tesztelhetjük a modellünket, ugyanúgy a \textit{test\_on\_batch} függvénnyel.
+
+Az ebben a szekcióban leírtak megtalálhatóak a \textit{lyrics.py} fájlban.
+
+% early stopping megvalósítása
+% tensorboard logolások
+\subsection{Eredmények feldolgozása}
+Most hogy megismerkedtünk a tanulás folyamatával megnézzük mit kell tennie egy epoch folyamán a rendszerünknek.
+Már említettem a korai megállást. \cite{early_stop}
+Célja, hogy ne tanítsuk túl a modellünket, azaz meg kell néznünk hogy az új validáció során jobban viselkedett-e a modell mint az elõtte levõben.
+Ha jobb volt, archiváljuk késõbbi felhasználásra, ha ezt nem tesszük meg akkor a program lefutása után a modell elveszik.
+Ha nem, akkor megbüntetjük a modellt, ha túl sok büntetést szerzett, azaz elérte a türelmi szintet (\textit{patience\_limit}), akkor leállítjuk a tanulást, ezt a szintet mi állíthatjuk be ha parancssorról indítjuk a programot.
+
+Másik fontos dolog az adatvizualizáció.
+A program összegyûjti a metrikákat, melyeket a Keras visszaad számára, aggregálja azokat, majd az epoch végén veszi az átlagait mind a tanulásnak, mind a validálásnak és átadja a TensorBoard objektumnak archiválásra.
+Szem\-lél\-te\-tés céljából a batch-en végzett módosításokat is elmenti a program, viszont erre legtöbb esetben nincs szükség.
+
+\section{Parancssori interfész}
+A lyrics.py futtatható parancssorból is, ahol a hiperparamétereit lehet szabályozni tanulás elõtt.
+Elsõ kötelezõ paramétere a \texttt{-{}-}artist, mely arra utal hogy a dataset mappából mely zenefájlt használja tanításhoz. 
+Ezen kívül választható paraméterként ott vannak a korábban már említett értékek. 
+Ilyen az \texttt{-{}-}epoch, hogy hány iteráción keresztül menjen végig az adathalmazon a program, \texttt{-{}-}patience\_limit, hogy hány olyan epoch után álljon le a tanítás melyben nem sikerült a validáción jobb eredményt elérni, ezekrõl a \ref{epoch} szekcióban volt szó. 
+Az \texttt{-{}-}lstm\_layers és \texttt{-{}-}lstm\_units pedig azt határozzák meg hogy hány darab LSTM réteg legyen, és egy LSTM rétegnek hány rejtett egységet adjunk. 
+A \texttt{-{}-}embedding az embedding egységek számára utal, melyet a \ref{model} szekció tárgyalt ki bõvebben. 
+Ezen kívül a \texttt{-{}-}size\_x azt határozza meg hány karakter után próbálja megítélni a modell hogy mi lesz a következõ karakter.
+Az utolsó paraméter pedig azt kérdezi milyen néven mentse a modell-t, hogy aztán késõbb beolvasható legyen, valamint hogy a TensorBoard fel tudja dolgozni, ez a \texttt{-{}-}model\_name.
+Angol nyelvû segítséget tud nyújtani még a \texttt{-{}-}help, mely látható a \ref{cli} ábrán.
+
+A lyricshez hasonlóan a demo is futtatható parancssorból. 
+Paraméterként vár a \texttt{-{}-}sample\_data-n keresztül egy sztringet melyet inputként átad a modellnek, erre kezdõdik el a predikció.
+A másik paraméter a \texttt{-{}-}model\_name, ha ezt üresen hagyjuk egy lista jelenik meg, melyen minden tanított modell egy sorszámot kap, ezt a számot beírva a választott modellen predikálhatunk.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{help.png}
+	\label{cli}
+	\caption{A `python lyrics.py --help' -et beütve a parancssorba ez jelenik meg.}
 \end{figure}
 
-%laptörés:
-\newpage
+\chapter{Tanulás eredményei}
+Mikor elkezdtem a Kerast használni, hogy betanítsa a modelleket úgy validáltam a mun\-ká\-mat, hogy lefuttattam a \textit{demo.py}-t mely vagy a legvalószínûbb értékû outputot választotta, vagy a softmax által létrehozott disztribúciót vette alapul, és ez alapján döntötte el a következõ karaktert, így esélyt adva a kevésbé esélyeseknek is.
+Ez viszont nem egy olyan megoldás amellyel hosszú távon érdemes egy mélytanuló algoritmust ellenõrizni, így új eszközt kellett keresnem erre a célra.
+\begin{figure}
+\begin{verbatim}
+sarkukobon heszeretni
+ér a vegyit ma ennyek
+a lalna
+egyint csápám belelû,
+felhõ német feljánd majd
 
-Külön fájlban elkészített grafika beillesztését a \ref{abra-automata} ábra szemlélteti.
-\begin{figure}[h]
-\centering
-%A psfrag csomag használatával a (encapsulated)postcript abra feliratait LaTeX koddal helyettesíthatjük:
-\psfrag{a}[c][c]{$q_0$}
-\psfrag{b}[c][c]{$q_1$}
-\psfrag{c}[c][c]{$q_2$}
-\psfrag{d}[c][c]{$q_3$}
-\psfrag{e}[c][c]{$q_4$}
-\psfrag{f}[c][c]{$q_5$}
-\psfrag{g}[c][c]{$q_6$}
-\psfrag{h}[c][c]{$q_7$}
-\psfrag{0}[c][c]{$a_{0}$}
-\psfrag{9}[c][c]{$a_{9}$}
-\psfrag{3}[c][c]{$a_{3}$}
-\psfrag{12}[c][c]{$a_{12}$}
-\psfrag{15}[c][c]{$a_{15}$}
-%Garfika belillesztese, "scale2 a nagyitas/kicinyites merteke, itt 80%.
-\includegraphics[scale=0.8]{abra.eps}
-\caption{\label{abra-automata} A $4\times m$-es tábla lefedéseinek mátrixreprezentációit felismerõ automata}
+sokérek sok haj lenne.
+
+se kudta szelni ámbalmolyat.
+\end{verbatim}
+	\caption{Egy példa a output predikálás Halász Judit korpuszból tanulás után.}
 \end{figure}
+Ez után döntöttem úgy hogy a TensorBoard-ot használom munkám során a fejlesztés könnyítéséhez.
+A board lokális szerverként indul el, csak be kell írni a terminálba hogy `tensorboard --logdir target/tran\_log' amennyiben a TensorBoard telepítve van.
+A target/train\_log mappa az ahova ment a TensorFlow a vizualizációs eszközben szükséges logfileokat. A tanításnak megadott \texttt{-{}-}model\_name paraméterrel, vagy az adott dátumot és elõadót fi\-gye\-lem\-be véve egy generált nevet kap.
+
+\section{Skalárisok}
+
+Ha van legalább egy modellünk, akár kész akár éppen tanul, ha egy böngészõablakkal odanavigálunk az oldalra amit a konzol kiadott, akkor látni fogjuk a modell tanulásának fázisait.
+
+Ha több modellünk van kiválaszthatjuk az általunk látni kívántat, valamint fil\-ter\-ez\-het\-ünk rá reguláris kifejezéssel a \textit{Runs} szekcióban. 
+Ekkor megjelenik az összes tanulással kap\-cso\-la\-tos idõben változó metrika.
+
+Rákattintva a keresés gombra és beírva a `.*' reguláris kifejezést az összes metrika megjelenik összecsoportosítva. 
+Ezek jelentései a \ref{metrics} táblázatban kerül leírásra.
+
+\begin{table}[!h]\label{metrics}
+	\caption{A TensorBoard skalárként ábrázolt metrikái}
+	\begin{center}
+		\begin{tabular}{r|l}
+			Név&Jelentés\\
+			\hline\hline
+			train\_batch\_accuracy&Az adott batch tanulása közben adott pontos találatok\\
+			train\_batch\_loss&Az adott batch tanulása közben számolt keresztentrópia\\
+			train\_batch\_perplexity&Az adott batch perplexitása\\
+			train\_epoch\_accuracy&Az adott epochban visszaadott pontosságok átlaga\\
+			train\_epoch\_loss&Az adott epochban visszaadott keresztentrópia átlaga\\
+			train\_epoch\_perplexity&Az adott epochban visszaadott perplexitás átlaga\\
+			val\_accuracy&A validálás során adott jó találatok átlaga\\
+			val\_loss&A validálás során számolt keresztentrópia átlaga\\
+			val\_perplexity&A validálás során számolt perplexitás átlaga\\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+Észre vehetjük hogy tanulás elején a hiba mind a validáción, mind a tanító halmazon nagyon magas.
+Ez a \textit{Gradient Descent} miatt van, próbálja megközelíteni a tanuló halmaz által reprezentált halmazt, így azt vehetjük észre, hogy a tanuló halmaz hibaértéke valami\-vel gyorsabban csökken, a pontossága nõ.
+Ezen kívül egy idõ után elkerülhetetlen a már említett túltanulás jelensége, ekkor azt fogjuk látni, hogy a validációs halmazon elkezd nõni a hibaérték, még a tanulóhalmazon csökken. 
+Erre egy konkrét esetet mutat be a \ref{over-learn} ábra.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{over-learn.png}
+	\label{over-learn}
+	\caption{A túltanulás jelensége egy 1 LSTM réteget, 250 rejtett reprezentációval tartalmazó 30y-t tanuló modell túltanulása.}
+\end{figure}
+
+A Modellünk pontossága 50-60\% közötti értéket ér el becsléseivel a teszt halmazon.
+Ez a gépi tanulás területén nem számít kimagasló teljesítménynek.
+Az eredmény nem számít rossznak, hiszen ha 60 karakteres adathalmazt használunk, akkor véletlenszerû találgatással 1.6\% esélye van annak, hogy jó karaktert találjon el.
+%https://arxiv.org/pdf/1409.2329.pdf
+Ez az érték független attól, hogy dropout segítségével, vagy nélküle futtatjuk, bár már bebizonyították, hogy a dropout nem segíti az LSTM tanulását.
+Viszont érdekes módon ha adam optimalizálóval tanítjuk a modellt a rekurrens hálókhoz ajánlott rmsprop helyett a preplexitást alacsonyan tudjuk tartani, habár a teszt halmazon rosszabb eredményt mutat vele a modell.
+Tanuláshoz általában száz hosszú inputhoz mértem az egy hosszúságú outputot.
+A kis-grofo korpusz\-hoz viszont szükségem volt egy kisebb input méretre, mivel túl kicsi az adatmennyiség, hogy rendesen szét lehessen osztani a tanuló-teszt-validáció között.
+Ezért egy harminc hosszú inputtal próbálkoztam, ekkor érte el a modell a 80\% feletti \textit{train\_batch\_accuracy}-t, viszont ekkor nagyon gyorsan észlelhetõ volt a túltanulás hiszen a hibafüggvény már 150-200 iterációnál megjelent (az összes 400-ból).
+A perplexitás csökkenése érthetõ, hiszen a definíció szerint a kettõ a kategorizált keresztentrópia értékére emelve, hiszen nagyobb korpuszban kevesebb karakter található, így a keresztentrópia értéke is csökken.
+
+\subsection{Modellek összevetése}
+
+Skalárisokkal összetudunk vetni a különbözõ tanításokat. 
+Elõször is összevetünk három különbözõ együttes, hiperparaméterrel történõ tanítását. 
+A választott együttesek a 30y, Hiperkarma és Halász Judit. 
+A változó hiperparaméterek pedig az egymás után kötött LSTM rétegek a réteg számok lehetnek: 1, 2 vagy 3.
+Ezen kívül egy 300 outputtal ren\.del\-ke\-zõ szóbeágyazás tartozik hozzá adam optimalizálóval.
+Az összes rejtett réteg 64 output dimenziót kell hogy generáljon, ez azt jelenti, hogy a 3 rétegûek sokkal több szá\-mí\-tó\-ka\-pa\-ci\-tás\-sal rendelkeznek, könnyebb az adat reprezentálása számára.
+
+Ellenben mindhárom zenekarnál az vehetõ észre, hogy a validációs halmazon mind\-egyik hiperparaméter választásával körülbelül ugyanazt az értéket értük el, viszont vannak esetek, ahol minél több réteget alkalmazunk annál pontatlanabb lesz, valamint több idõ betanítani.
+Feltehetõ, hogy mivel karakter alapú a modellünk, nem tud absztraktabb in\-for\-má\-ci\-ót kiszûrni az input-output párból. 
+Ugyanez a tendencia mutatkozik a teszt halmazon is.
+A validációs és teszt végértékek a \ref{stats} táblázatban található.
+Látható, hogy a Hiperkarma érte el a legjobb eredményeket mindkét halmazon, viszont az eltérés nem szembetûnõ, mindegyik adathalmaz hasonló értéket tud elérni ugyanazon a modellen.
+
+Vegyük szemügyre a 30y zenekar elõzõ példában vett modelljét, és tanítsuk újra ugyanazt a modellt csak RMSProp optimalizálóval.
+Az RMSProp a legáltalánosabban használt optimalizáló a rekurrens hálókhoz, mivel a tanulási rátája hosszútávon is kielégítõ, még az Adam-et fõleg egyszerû elõrecsatolt vagy konvolúciós hálóknál használják. Vár\-ha\-tó\-an a perplexitás értéke is alacsonyabb lesz, az RMSProp esetén.
+A \ref{stats2} táblázatban látható, hogy ez a mindhárom példán fenn áll, viszont az eltérés minden esetben alacsony\-nak mondható.
+Meglepõ módon a perplexitás értékeken látható, hogy az RMSProp eset\-ében nagyobb a divegencia, mint az Adam-ében, mely látható a \ref{perplexity} ábrán.
+
+\begin{table}[!h]
+	\caption{A tanítás utolsó iterációinak eredménye. Felül a validáció, alul a teszt látható.}
+	\begin{center}
+		\begin{tabular}{r||l|l|l}
+			&1 LSTM réteg&2 LSTM réteg&3 LSTM réteg\\
+			\hline\hline
+			30y&2.007&2.000&2.027\\
+			Hiperkarma&1.99&1.994&2.019\\
+			Halász Judit&2.126&2.116&2.128\\
+			\hline\hline
+			30y&1.673&1.677&1.609\\
+			Hiperkarma&1.888&1.892&1.891\\
+			Halász Judit&1.848&1.810&1.803\\
+		\end{tabular}
+		\label{stats}
+	\end{center}
+\end{table}
+
+\begin{table}[!h]
+	\caption{Az Adam és RMSProp összehasonlítása a 30y halmazon.}
+	\begin{center}
+		\begin{tabular}{r||l|l|l}
+			&1 LSTM réteg&2 LSTM réteg&3 LSTM réteg\\
+			\hline\hline
+			Adam&2.007&2.000&2.027\\
+			RMSProp&1.99&1.994&2.019\\
+			\hline\hline
+			Adam&1.695&1.659&1.581\\
+			RMSProp&1.665&1.561&1.537\\
+		\end{tabular}
+		\label{stats2}
+	\end{center}
+\end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{perplexity.png}
+	\label{perplexity}
+	\caption{A perplexitás különbsége más optimalizálókkal az egy (bal oldal) és a három rétegû (jobb oldal) LSTM hálóknál.}
+\end{figure}
+
+
+\section{A modell vizuális reprezentációja}
+
+A modell gráf reprezentációja tekinthetõ meg a Graph fülön. 
+Ez egy hasznos eszköz, hiszen ha nem látni hogy néz ki a modell, az ember hajlamos figyelmetlen módon elírni.
+Ez történt pontosan velem is, a TimeDistributed wrapper-t véletlenül az LSTM-re he\-lyez\-tem, így az összes LSTM kapott egy wrapper-t és az egész gráp átláthatatlan volt.
+Komplexebb modellnél elengedhetetlennek tartom a gráf használatát, sõt akkor még name scope-ok használata is ajánlott nagyobb átláthatóság érdekében.
+
+\section{Projektor}
+
+A projektorral képesek vagyunk vizualizálni többdimenziós tereket, azaz levetíthetjük õket két vagy három dimenzióra úgy, hogy a vektorok közötti kapcsolatok konzisztensek maradnak.
+Ezt megtehetjük a TensorFlow összes rétegének belsõ állapotaival, viszont nem mindegyikkel van értelme.
+Az Embedding egy különleges réteg, mely az inputot alakítja át, hogy ne lineárisan függetlenek legyenek, hanem viselkedésük alapján össze tudjanak csoportosulni. 
+Ez nem elég ahhoz, hogy olvasható legyen az Embedding, hisz a TensorFlow nem tudja hogy az adott kódolt szám milyen jelentéssel bír.
+Szükségünk van egy le\-kép\-e\-zés\-re a szám és a karakter között, ehhez a TensorBoard egy tsv fájlt kér be, mely ha sikeres volt a beolvasás megjelennek a benne található címkék a vektortérben.
+
+Ekkor láthatjuk, mely karakter melyikhez hasonlít legjobban.
+Ahogyan a \ref{embedding} ábra is mutatja a számok összecsoportosulnak.
+Ez azért van, mert a ugyanabban a kontextusban helyezkednek el.
+Ez különösen igaz zeneszövegekre, ahol a szám csak metaadatként je\-le\-nik meg (például: `(3x)' jelzi azt hogy az adott szakaszt meg kell ismételni, ahelyett, hogy kiírnánk háromszor az adott részt), és ez magyarázza azt is, hogy a különleges karakterek miért kerültek olyan közel a számokhoz.
+
+Viszont az ábrán elsõ ránézésre az euklideszi távolság látható, ami nem az elsõdleges mértékegység szóbeágyazások kapcsolatának vizsgálatára.
+A koszinusz távolságot vesszük alapértelmezettnek, amely azt mondja meg, hogy az origótól nézve milyen szöget zár be a két vektor.
+Minél kisebb a szög annál jobban hasonlít a két szó, függetlenül attól, hogy euklideszi távolságuk mekkora, habár a mi példánkba észrevehetõ, hogy nem nagy az eltérés a kettõ metrika között. Ezt szemlélteti a \ref{neighbor} táblázat is.
+
+\begin{table}[!h]
+	\caption{A '3' karakter öt legközelebbi szomszédja, egy 30y adathalmazon.}
+	\begin{center}
+		\begin{tabular}{r||l|l}
+			Pozíció a '3' karakterhez képest&Koszinusz&Euklideszi\\
+			\hline\hline
+			1&1&1\\
+			2&.&x\\
+			3&x&|\\
+			4&|&2\\
+			5&8&$\times$\\
+		\end{tabular}
+	\label{neighbor}
+	\end{center}
+\end{table}
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.4]{embedding.png}
+	\label{embedding}
+	\caption{A PCA vizualizáció az egyik tanítás eredményére. Látható, hogy a számok egymás szomszédságában helyezkedtek fel.}
+\end{figure}
+
+\chapter{Összegzés}
+
+Dolgozatom alatt sikerült egy rendszert kialakítanom karakter alapú dalszöveg generátort, mely az esetek majdnem felében képes eltalálni, hogy az adott elõadó mely karaktert választaná következõnek a megadott szövegtõl függõen, és ezt vizuálisan be tudom mu\-tat\-ni egy vizualizációs program, a TensorBoard segítségével.
+Megmutattam, hogy a korpusz zenestílusa nem befolyásolja a kiértékelés minõségét.
+Észrevehetõ volt, hogy a rekurrens hálókhoz ajánlott RMSProp jobb teljesítményt ér el az általam elkészített modellen, viszont a javulás minõsége elenyészõ az általánosabb Adam-éhez képest.
+
+A modell fejlesztésére több lehetõség is van. 
+Az egyik, hogy absztraktabb egységét kell venni alapegységként a modellnek, például tokenizált szöveg, vagy szó alapú szö\-veg\-ér\-tel\-me\-zés.
+Viszont ehhez nagyobb adathalmazra van szükség.
+Másik irány a modell módosítása, hogy képes legyen másodlagos célt is megtanulni tanulás közben. Ilyen pél\-dá\-ul a karakter zöngéssége, zöngés-zöngétlen párok közötti kapcsolatok értelmezése, ezzel feltehetõen elsajátítva zenei szövegekre jellemzõ ritmusos zene generálást.
+A kettõ együttes alkalmazása viszont nehezebb feladat lenne, hiszen szavakról és tokenekrõl nem egyszerû eldönteni milyen hangzást ad. 
+
+Látható hogy a \cite{multitask} cikkben a kutatók képesek voltak egy kétirányú LSTM-et betanítani szótag felismerésre, úgy hogy több feladatot kellett a modelljüknek elvégezni.
+A szótagoláson kívül sikeresen megtanították arra is, hogy képes legyen ritka karakterek osztályozására is úgy, hogy másodlagos outputként még nem látott karaktereket a már megtanult karakterekhez viszonyítva sikeresen szótagolta.
+
+Ez alapján a dolgozatban bemutatott cikk is elsajátíthatja a zöngés zöngétlen párok mely kontextusba illenek bele, így várhatóan a modell jobban reprezentálni tudja az adott zenekar stílusát, jobb eredményeket tud produkálni a fõ outputon.
 
 
 \chapter{Függelék}
 
-\section{A program forráskódja}
-A függelékbe kerülhetnek a hosszú táblázatok, vagy mondjuk egy programlista:
-% A verbatim kornyezet hasznalatanal ügyeljünk rá, hogy az editor a szóközöjket át ne írja tab karakterekre!
-\begin{verbatim}
-   while (ujkmodosito[i]<0)
-   {
-      if (ujkmodosito[i]+kegyenletes[i]<0)
-      {
-         j=i+1;
-         while (j<14)
-         if (kegyenletes[i]+ujkmodosito[j]>-1) break;
-         else j++;
-         temp=ujkmodosito[j];
-         for (l=i;l<j;l++) ujkmodosito[l+1]=ujkmodosito[l];
-         ujkmodosito[i]=temp;
-      }
-      i++;
-   }
-\end{verbatim}
-
-
+\section{CharEncoder}
+\label{encoder}
+\lstinputlisting[language=Python,  firstline=135, lastline=176, breaklines=true]{../utils.py}
 \chapter*{Nyilatkozat}
-%Egy üres sort adunk a tartalomjegyzékhez:
+%Egy ï¿½res sort adunk a tartalomjegyzï¿½khez:
 \addtocontents{toc}{\ }
 \addcontentsline{toc}{section}{Nyilatkozat}
 %\hspace{\parindent}
 
-% A nyilatkozat szövege más titkos és nem titkos dolgozatok esetében.
-% Csak az egyik tipusú myilatokzatnak kell a dolgozatban szerepelni
-% A ponok helyére az adatok értelemszerûen behelyettesídendõk es
+% A nyilatkozat szï¿½vege mï¿½s titkos ï¿½s nem titkos dolgozatok esetï¿½ben.
+% Csak az egyik tipusï¿½ myilatokzatnak kell a dolgozatban szerepelni
+% A ponok helyï¿½re az adatok ï¿½rtelemszerï¿½en behelyettesï¿½dendï¿½k es
 % a szakdolgozat /diplomamunka szo megfeleloen kivalasztando.
 
 
-%A nyilatkozat szövege TITKOSNAK NEM MINÕSÍTETT dolgozatban a következõ:
-%A pontokkal jelölt szövegrészek értelemszerûen a szövegszerkesztõben és
-%nem kézzel helyettesítendõk:
+%A nyilatkozat szï¿½vege TITKOSNAK NEM MINï¿½Sï¿½TETT dolgozatban a kï¿½vetkezï¿½:
+%A pontokkal jelï¿½lt szï¿½vegrï¿½szek ï¿½rtelemszerï¿½en a szï¿½vegszerkesztï¿½ben ï¿½s
+%nem kï¿½zzel helyettesï¿½tendï¿½k:
 
 \noindent
-Alulírott \makebox[4cm]{\dotfill} szakos hallgató, kijelentem, hogy a dolgozatomat a Szegedi Tudományegyetem, Informatikai Intézet \makebox[4cm]{\dotfill} Tanszékén készítettem, \makebox[4cm]{\dotfill} diploma megszerzése érdekében.
+Alulírott programtervezõ szakos hallgató, kijelentem, hogy a dolgozatomat a Sze\-ge\-di Tudományegyetem, Informatikai Intézet Számítógépes Algoritmusok és Mesterséges In\-tel\-li\-gen\-cia Tanszékén készítettem, BSc diploma meg\-szer\-zé\-se érdekében.
 
-Kijelentem, hogy a dolgozatot más szakon korábban nem védtem meg, saját munkám eredménye, és csak a hivatkozott forrásokat (szakirodalom, eszközök, stb.) használtam fel.
+Kijelentem, hogy a dolgozatot mï¿½s szakon korï¿½bban nem vï¿½dtem meg, sajï¿½t munkï¿½m eredmï¿½nye, ï¿½s csak a hivatkozott forrï¿½sokat (szakirodalom, eszkï¿½zï¿½k, stb.) hasznï¿½ltam fel.
 
-Tudomásul veszem, hogy szakdolgozatomat / diplomamunkámat a Szegedi Tudományegyetem Informatikai Intézet könyvtárában, a helyben olvasható könyvek között helyezik el.
+Tudomásul veszem, hogy szakdolgozatomat / diplomamunkámat a Szegedi Tu\-do\-mány\-e\-gye\-tem Informatikai Intézet könyvtárában, a helyben olvasható könyvek között helyezik el.
 
 \vspace*{2cm}
 
 \begin{tabular}{lc}
 Szeged, \today\
 \hspace{2cm} & \makebox[6cm]{\dotfill} \\
-& aláírás \\
+& alï¿½ï¿½rï¿½s \\
 \end{tabular}
 
 
 \vspace*{4cm}
 
-%A nyilatkozat szövege TITKOSNAK MINÕSÍTETT dolgozatban a következõ:
-
-\noindent
-Alulírott \makebox[4cm]{\dotfill} szakos hallgató, kijelentem, hogy a dolgozatomat a Szegedi Tudományegyetem, Informatikai Intézet \makebox[4cm]{\dotfill} Tanszékén készítettem, \makebox[4cm]{\dotfill} diploma megszerzése érdekében.
-
-Kijelentem, hogy a dolgozatot más szakon korábban nem védtem meg, saját munkám eredménye, és csak a hivatkozott forrásokat (szakirodalom, eszközök, stb.) használtam fel.
-
-Tudomásul veszem, hogy szakdolgozatomat / diplomamunkámat a TVSZ 4. sz. mellékletében leírtak szerint kezelik.
-
-\vspace*{2cm}
-
-\begin{tabular}{lc}
-Szeged, \today\
-\hspace{2cm} & \makebox[6cm]{\dotfill} \\
-& aláírás \\
-\end{tabular}
 
 
 
+\chapter*{Kï¿½szï¿½netnyilvï¿½nï¿½tï¿½s}
+\addcontentsline{toc}{section}{Kï¿½szï¿½netnyilvï¿½nï¿½tï¿½s}
 
-
-\chapter*{Köszönetnyilvánítás}
-\addcontentsline{toc}{section}{Köszönetnyilvánítás}
-
-Ezúton szeretnék köszönetet mondani \textbf{X. Y-nak} ezért és ezért \ldots
+Ezúton szeretnék köszönetet mondani konzulensemnek, \textbf{Berend Gábornak}, odaadó segítségéért, valamint nagyszerû mentorálásáért.
+Szintén köszönettel tartozom \textbf{hallgatótársaimnak} és \textbf{barátaimnak}, akikre bármikor számíthattam.
+Köszönöm \textbf{szüleimnek} önzetlen támogatásukat, hogy megteremtették a tanulás lehetõségét, és hogy azzal foglalkozhatok amit mindennél jobban szeretek.
+Végül de nem utolsó sorban köszönöm \textbf{Szegednek} és a \textbf{Szegedi Tu\-do\-mány\-e\-gye\-tem\-nek} a rengeteg élményt amit az évek során szereztem.
 
 
 %% Az itrodalomjegyzek keszitheto a BibTeX segedprogrammal:
-%\bibliography{diploma}
-%\bibliographystyle{plain}
+\bibliography{diploma}
+\bibliographystyle{plain}
 
-%VAGY "kézzel" a következõ módon:
-
-\begin{thebibliography}{9}
-%10-nél kevesebb hivatkozás esetén
-
-%\begin{thebibliography}{99}
-% 10-nél több hivatkozás esetén
-
-\addcontentsline{toc}{section}{Irodalomjegyzék}
-
-%Elso szerzok vezetekneve alapjan ábécérendben rendezve.
-
-
-%folyóirat cikk: szerzok(k), a folyóirat neve kiemelve,
-%az evfolyam felkoveren, zarojelben az evszam, vegul az oldalszamok es pont.
-\bibitem{Gischer}
-J. L. Gischer,
-The equational theory of pomsets.
-\emph{Theoret. Comput. Sci.}, \textbf{61}(1988), 199--224.
-
-%könyv (szerzo(k), a könyv neve kiemelve, utana a kiado, a kiado szekhelye, az evszam es pont.)
-\bibitem{Pin}
-J.-E. Pin,
-\emph{Varieties of Formal Languages},
-Plenum Publishing Corp., New York, 1986.
-
-
-
-
-
-\end{thebibliography}
+%Elso szerzok vezetekneve alapjan ï¿½bï¿½cï¿½rendben rendezve.
 
 
 
