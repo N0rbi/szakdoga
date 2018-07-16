@@ -176,15 +176,15 @@ def read_batches(data, vocab_size, batch_size, seq_length, nb_epochs, encoder):
 
             aux = list()
             for y in Y:
-                aux.append([get_aux(yy, encoder) for yy in y])
-            yield X, [Y, aux]
+                aux.append(get_aux(y, encoder))
+            yield X, [Y, np.array(aux)]
 
 
 def get_aux(y, encoder):
-    real_value = encoder.inverse_transform(y)
+    real_value = encoder.inverse_transform(np.argmax(y, axis=1))
     result = []
     for char in real_value:
-        result.append(int(is_vowel(char)))
+        result.append([0, 1] if is_vowel(char) else [1, 0])
     return np.array(result)
 
 
