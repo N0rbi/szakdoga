@@ -182,11 +182,30 @@ def read_batches(data, vocab_size, batch_size, seq_length, nb_epochs, encoder):
 
 def get_aux(y, encoder):
     real_value = encoder.inverse_transform(np.argmax(y, axis=1))
+    normalized = real_value.lower()
+    vowel = "aáeéiíoóöőuúüű"
+    voiced = ['b', 'd', 'dz', 'dzs', 'g', 'gy', 'j', 'l',
+                'ly', 'm', 'n', 'ny', 'r', 'v', 'z', 'zs']
+    unvoiced = ['c', 'cs', 'f', 'h', 'k', 'p', 's', 'sz', 't', 'ty']
+    vowel_encode = [1, 1, 0, 0]
+    voiced_encode = [0, 1, 0, 0]
+    unvoiced_encode = [0, 0, 1, 0]
+    oov_encode = [0, 0, 0, 1]
+
+    for type in [vowel, sorted(voiced, key=len), sorted(unvoiced, key=len)]:
+        for char in type:
+            normalized = normalized.replace(char, type[0]*len(char))
+
     result = []
-    for char in real_value:
-        result.append([0, 1] if is_vowel(char) else [1, 0])
+    for char in normalized:
+        if char == vowel[0]:
+            result.append(vowel_encode)
+        elif char == voiced[0]:
+            result.append(voiced_encode)
+        elif char == unvoiced[0]:
+            result.append(unvoiced_encode)
+        else:
+            result.append(oov_encode)
+
     return np.array(result)
 
-
-def is_vowel(y):
-    return y in "aáeéiíoóöőuúüű"

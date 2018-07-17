@@ -30,8 +30,7 @@ def train(artist, epochs, patience_limit, lstm_layers, lstm_units, embedding, si
     val_data = encoder.transform(data[0: DATA_SLICE], with_onehot=False)
     test_data = encoder.transform(data[DATA_SLICE:2*DATA_SLICE], with_onehot=False)
     data = encoder.transform(data[DATA_SLICE:], with_onehot=False)
-    classifier = get_multitask_classifier(BATCH_SIZE, size_x, len(encoder.vocab), 2, lstm_layers, embedding, lstm_units,
-                                          is_aux_trainable=False)
+    classifier = get_multitask_classifier(BATCH_SIZE, size_x, len(encoder.vocab), 4, lstm_layers, embedding, lstm_units)
 
     callbacks = [tensorboard, earlyStop]
 
